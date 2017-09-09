@@ -1,0 +1,24 @@
+{
+  "name": "minimalist-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "lint": "standard --fix",
+    "start": "node app/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Shwery",
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "express": "^4.15.4",
+    "helmet": "^3.8.1",
+    "http-errors": "^1.6.2",
+    "nconf": "^0.8.4",
+    "pg": "^7.3.0"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
+  }
+}
