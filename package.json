@@ -4,6 +4,10 @@
   "description": "",
   "main": "app/server.js",
   "private": true,
+  "engines": {
+    "node": ">=8.x",
+    "npm": ">=5.x"
+  },
   "scripts": {
     "lint": "standard --fix config app",
     "migrate": "db-migrate up",
