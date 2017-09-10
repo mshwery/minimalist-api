@@ -3,7 +3,6 @@
  */
 
 const router = require('express').Router()
-const asyncHandler = require('../utils/asyncHandler')
 const lists = require('./lists')
 const tasks = require('./tasks')
 
@@ -11,19 +10,19 @@ const tasks = require('./tasks')
 router.get('/health', (req, res) => res.end())
 
 /** list handlers */
-router.get('/api/lists', asyncHandler(lists.getLists))
-router.get('/api/lists/:listId', asyncHandler(lists.getList))
-router.post('/api/lists', asyncHandler(lists.createList))
-router.put('/api/lists/:listId', asyncHandler(lists.updateList))
-router.patch('/api/lists/:listId', asyncHandler(lists.patchList))
-router.delete('/api/lists/:listId', asyncHandler(lists.deleteList))
+router.get('/api/lists', lists.getLists)
+router.get('/api/lists/:listId', lists.getList)
+router.post('/api/lists', lists.createList)
+router.put('/api/lists/:listId', lists.updateList)
+router.patch('/api/lists/:listId', lists.patchList)
+router.delete('/api/lists/:listId', lists.deleteList)
 
 /** task handlers */
-router.get('/api/tasks', asyncHandler(tasks.getTasks))
-router.get('/api/tasks/:taskId', asyncHandler(tasks.getTask))
-router.post('/api/tasks', asyncHandler(tasks.createTask))
-router.put('/api/tasks/:taskId', asyncHandler(tasks.updateTask))
-router.patch('/api/tasks/:taskId', asyncHandler(tasks.patchTask))
-router.delete('/api/tasks/:taskId', asyncHandler(tasks.deleteTask))
+router.get('/api/tasks', tasks.getTasks)
+router.get('/api/tasks/:taskId', tasks.getTask)
+router.post('/api/tasks', tasks.createTask)
+router.put('/api/tasks/:taskId', tasks.updateTask)
+router.patch('/api/tasks/:taskId', tasks.patchTask)
+router.delete('/api/tasks/:taskId', tasks.deleteTask)
 
 module.exports = router
