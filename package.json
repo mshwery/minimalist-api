@@ -2,7 +2,7 @@
   "name": "minimalist-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/server.js",
   "private": true,
   "scripts": {
     "lint": "standard --fix",
@@ -16,7 +16,8 @@
     "helmet": "^3.8.1",
     "http-errors": "^1.6.2",
     "nconf": "^0.8.4",
-    "pg": "^7.3.0"
+    "pg": "^7.3.0",
+    "sql-template-strings": "^2.2.2"
   },
   "devDependencies": {
     "standard": "^10.0.3"

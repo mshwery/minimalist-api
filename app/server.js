@@ -4,11 +4,12 @@
 
 'use strict'
 
+const bodyParser = require('body-parser')
 const express = require('express')
 const helmet = require('helmet')
 const config = require('../config')
 const routes = require('./routes')
-const { handleNotFound } = require('./lib/errors')
+const { handleNotFound, handleErrorResponse } = require('./utils/errors')
 
 const app = express()
 const host = process.env.HOST || null
@@ -21,14 +22,17 @@ app.enable('trust proxy')
 /** node security modules */
 app.use(helmet())
 
-/** basic health endpoint */
-app.get('/health', (req, res) => res.end())
+/** accept json */
+app.use(bodyParser.json())
 
-/** api routes */
+/** route handlers */
 app.use('/', routes)
 
 /** 404 handler */
 app.use(handleNotFound)
+
+/** global error catch-all */
+app.use(handleErrorResponse)
 
 /** start the server */
 app.listen(app.get('port'), host, (err) => {

@@ -7,12 +7,30 @@
 const createError = require('http-errors')
 
 /**
- * NotFound constructor
+ * BadRequestError constructor
+ * @param {string} message - the error message
+ * @returns {Error}
+ */
+function BadRequestError (message) {
+  return new createError.BadRequest(message)
+}
+
+/**
+ * NotFoundError constructor
  * @param {string} message - the error message
  * @returns {Error}
  */
 function NotFoundError (message) {
   return new createError.NotFound(message)
+}
+
+/**
+ * ServiceUnavailableError constructor
+ * @param {string} message - the error message
+ * @returns {Error}
+ */
+function ServiceUnavailableError (message) {
+  return new createError.ServiceUnavailable(message)
 }
 
 /**
@@ -51,7 +69,9 @@ function handleNotFound (req, res, next) {
 }
 
 module.exports = {
+  BadRequestError,
   NotFoundError,
+  ServiceUnavailableError,
   handleErrorResponse,
   handleNotFound
 }

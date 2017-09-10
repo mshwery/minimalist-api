@@ -2,39 +2,76 @@
  * @overview list route handlers
  */
 
-const express = require('express')
+const { NotFoundError } = require('../utils/errors')
+const { List } = require('../database')
 
-const lists = express.Router()
-
-function getLists (req, res) {
-
+function listNotFound (listId) {
+  return NotFoundError(`No list found with id: '${listId}'`)
 }
 
-function getList (req, res) {
-
+async function getLists (req, res) {
+  const lists = await List.all()
+  res.status(200).json(lists)
 }
 
-function createList (req, res) {
+async function getList (req, res) {
+  const id = req.params.listId
+  const list = await List.get(id)
 
+  if (list) {
+    res.status(200).json(list)
+  } else {
+    throw listNotFound(id)
+  }
 }
 
-function updateList (req, res) {
-
+async function createList (req, res) {
+  // @todo validate input params
+  const list = await List.create(req.body)
+  res.status(201).json(list)
 }
 
-function patchList (req, res) {
+async function updateList (req, res) {
+  // @todo validate input params
+  const id = req.params.listId
+  const list = await List.update(id, req.body)
 
+  if (list) {
+    res.status(200).json(list)
+  } else {
+    throw listNotFound(id)
+  }
 }
 
-function deleteList (req, res) {
+async function patchList (req, res) {
+  // @todo validate input params
+  // @todo implement patch
+  const id = req.params.listId
+  const list = await List.update(id, req.body)
 
+  if (list) {
+    res.status(200).json(list)
+  } else {
+    throw listNotFound(id)
+  }
 }
 
-lists.get('/', getLists)
-lists.get('/:id', getList)
-lists.post('/', createList)
-lists.put('/:id', updateList)
-lists.patch('/:id', patchList)
-lists.delete('/:id', deleteList)
+async function deleteList (req, res) {
+  const id = req.params.listId
+  const list = await List.destroy(id)
 
-module.exports = lists
+  if (list) {
+    res.status(204).send(list)
+  } else {
+    throw listNotFound(id)
+  }
+}
+
+module.exports = {
+  getLists,
+  getList,
+  createList,
+  updateList,
+  patchList,
+  deleteList
+}

@@ -2,39 +2,46 @@
  * @overview task route handlers
  */
 
-const express = require('express')
+const { NotFoundError } = require('../utils/errors')
+const { Task } = require('../database')
 
-const tasks = express.Router()
+async function getTasks (req, res) {
+  const lists = await Task.all()
+  res.status(200).json(lists)
+}
 
-function getTasks (req, res) {
+async function getTask (req, res) {
+  const id = req.params.taskId
+  const list = await Task.find({ id })
+
+  if (list) {
+    res.status(200).json(list)
+  } else {
+    throw NotFoundError(`No list found with id: '${id}'`)
+  }
+}
+
+async function createTask (req, res) {
 
 }
 
-function getTask (req, res) {
+async function updateTask (req, res) {
 
 }
 
-function createTask (req, res) {
+async function patchTask (req, res) {
 
 }
 
-function updateTask (req, res) {
+async function deleteTask (req, res) {
 
 }
 
-function patchTask (req, res) {
-
+module.exports = {
+  getTasks,
+  getTask,
+  createTask,
+  updateTask,
+  patchTask,
+  deleteTask
 }
-
-function deleteTask (req, res) {
-
-}
-
-tasks.get('/', getTasks)
-tasks.get('/:id', getTask)
-tasks.post('/', createTask)
-tasks.put('/:id', updateTask)
-tasks.patch('/:id', patchTask)
-tasks.delete('/:id', deleteTask)
-
-module.exports = tasks
