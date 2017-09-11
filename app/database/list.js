@@ -12,7 +12,10 @@ const defaultList = {
 async function all () {
   const query = SQL`
     select
-      *
+      list_id,
+      name,
+      created_at,
+      updated_at
     from
       list
     where
@@ -26,7 +29,10 @@ async function all () {
 async function get (listId) {
   const query = SQL`
     select
-      *
+      list_id,
+      name,
+      created_at,
+      updated_at
     from
       list
     where
@@ -46,7 +52,11 @@ async function create (list = defaultList) {
     values (
       ${list.name}
     )
-    returning *
+    returning
+      list_id,
+      name,
+      created_at,
+      updated_at
   `
 
   const { rows } = await db.query(query)
@@ -61,7 +71,11 @@ async function update (listId, list = {}) {
     where
       list_id = ${listId}
       and deleted_at is null
-    returning *
+    returning
+      list_id,
+      name,
+      created_at,
+      updated_at
   `
 
   const { rows } = await db.query(query)
@@ -76,7 +90,8 @@ async function destroy (listId) {
       deleted_at = ${new Date()}
     where
       list_id = ${listId}
-    returning list_id
+    returning
+      list_id
   `
 
   const { rows } = await db.query(query)

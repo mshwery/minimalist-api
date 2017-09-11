@@ -16,7 +16,8 @@ exports.up = function (db) {
         notNull: true,
         defaultValue: new String('now()')
       },
-      updated_at: 'timestamp'
+      updated_at: 'timestamp',
+      deleted_at: 'timestamp'
     }),
     db.createTable('task', {
       task_id: {
@@ -25,13 +26,14 @@ exports.up = function (db) {
         defaultValue: new String('gen_random_uuid()')
       },
       description: 'string',
+      completed_at: 'timestamp',
       created_at: {
         type: 'timestamp',
         notNull: true,
         defaultValue: new String('now()')
       },
       updated_at: 'timestamp',
-      completed_at: 'timestamp'
+      deleted_at: 'timestamp'
     })
   ])
 }

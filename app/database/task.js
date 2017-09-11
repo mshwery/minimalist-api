@@ -12,7 +12,11 @@ const defaultTask = {
 async function all (taskId) {
   const query = SQL`
     select
-      *
+      task_id,
+      description,
+      completed_at,
+      created_at,
+      updated_at
     from
       task
     where
@@ -26,7 +30,11 @@ async function all (taskId) {
 async function get (taskId) {
   const query = SQL`
     select
-      *
+      task_id,
+      description,
+      completed_at,
+      created_at,
+      updated_at
     from
       task
     where
@@ -46,7 +54,12 @@ async function create (task = defaultTask) {
     values (
       ${task.name}
     )
-    returning *
+    returning
+      task_id,
+      description,
+      completed_at,
+      created_at,
+      updated_at
   `
 
   const { rows } = await db.query(query)
@@ -70,7 +83,12 @@ async function update (taskId, newTask = {}) {
     where
       task_id = ${taskId}
       and deleted_at is null
-    returning *
+    returning
+      task_id,
+      description,
+      completed_at,
+      created_at,
+      updated_at
   `
 
   const { rows } = await db.query(query)
@@ -85,7 +103,8 @@ async function destroy (taskId) {
       deleted_at = ${new Date()}
     where
       task_id = ${taskId}
-    returning task_id
+    returning
+      task_id
   `
 
   const { rows } = await db.query(query)
