@@ -1,20 +1,20 @@
 /**
- * @overview list database interface
+ * @overview task database interface
  */
 
 const SQL = require('sql-template-strings')
 const db = require('./connection')
 
-const defaultList = {
-  name: 'Unnamed List'
+const defaultTask = {
+  description: ''
 }
 
-async function all () {
+async function all (taskId) {
   const query = SQL`
     select
       *
     from
-      list
+      task
     where
       deleted_at is null
   `
@@ -23,14 +23,14 @@ async function all () {
   return rows
 }
 
-async function get (listId) {
+async function get (taskId) {
   const query = SQL`
     select
       *
     from
-      list
+      task
     where
-      list_id = ${listId}
+      task_id = ${taskId}
       and deleted_at is null
   `
 
@@ -38,13 +38,13 @@ async function get (listId) {
   return rows[0]
 }
 
-async function create (list = defaultList) {
+async function create (task = defaultTask) {
   const query = SQL`
-    insert into list (
+    insert into task (
       name
     )
     values (
-      ${list.name}
+      ${task.name}
     )
     returning *
   `
@@ -53,13 +53,22 @@ async function create (list = defaultList) {
   return rows[0]
 }
 
-async function update (listId, list = {}) {
+async function update (taskId, newTask = {}) {
+  const oldTask = await get(taskId)
+
+  if (!oldTask) {
+    return null
+  }
+
+  // @todo only update the props that have been provided?
+  const task = Object.assign({}, oldTask, newTask)
+
   const query = SQL`
-    update list
+    update task
     set
-      name = ${list.name}
+      description = ${task.description}
     where
-      list_id = ${listId}
+      task_id = ${taskId}
       and deleted_at is null
     returning *
   `
@@ -68,15 +77,15 @@ async function update (listId, list = {}) {
   return rows[0]
 }
 
-async function destroy (listId) {
+async function destroy (taskId) {
   // @todo use `update` query once it handles partial column attrs
   const query = SQL`
-    update list
+    update task
     set
       deleted_at = ${new Date()}
     where
-      list_id = ${listId}
-    returning list_id
+      task_id = ${taskId}
+    returning task_id
   `
 
   const { rows } = await db.query(query)
