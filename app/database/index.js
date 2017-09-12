@@ -3,9 +3,9 @@
  */
 
 const List = require('./list')
+const Task = require('./Task')
 
 module.exports = {
   List,
-  // @todo unstub
-  Task: {}
+  Task
 }

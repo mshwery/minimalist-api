@@ -80,6 +80,7 @@ async function update (taskId, newTask = {}) {
     update task
     set
       description = ${task.description}
+      updated_at = ${new Date()}
     where
       task_id = ${taskId}
       and deleted_at is null

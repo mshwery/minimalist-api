@@ -68,6 +68,7 @@ async function update (listId, list = {}) {
     update list
     set
       name = ${list.name}
+      updated_at = ${new Date()}
     where
       list_id = ${listId}
       and deleted_at is null
@@ -83,7 +84,7 @@ async function update (listId, list = {}) {
 }
 
 async function destroy (listId) {
-  // @todo use `update` query once it handles partial column attrs
+  // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
     update list
     set
