@@ -5,6 +5,8 @@
 'use strict'
 
 const createError = require('http-errors')
+const flatten = require('lodash/flatten')
+const { ValidationError } = require('express-json-validator-middleware')
 
 /**
  * BadRequestError constructor
@@ -42,18 +44,32 @@ function ServiceUnavailableError (message) {
  */
 function handleErrorResponse (err, req, res, next) {
   const message = err.message || 'Server Error'
+  const errors = []
+
+  if (err instanceof ValidationError && err.validationErrors) {
+    const propErrors = flatten(Object.values(err.validationErrors)).map(prop => {
+      return {
+        path: prop.dataPath,
+        message: prop.message
+      }
+    })
+
+    errors.push(...propErrors)
+  }
+
+  const plainText = [message, ...errors].join('\n')
 
   res.status(err.status || 500).format({
     text () {
-      res.send(message)
+      res.send(plainText)
     },
 
     html () {
-      res.send(message)
+      res.send(plainText)
     },
 
     json () {
-      res.send({ error: message })
+      res.send({ errors })
     }
   })
 }

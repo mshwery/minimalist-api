@@ -3,6 +3,25 @@
  */
 
 const router = require('express').Router()
+const { Validator } = require('express-json-validator-middleware')
+const validator = new Validator({ allErrors: true })
+
+const listIdParam = {
+  type: 'object',
+  properties: {
+    listId: {
+      type: 'string',
+      format: 'uuid'
+    }
+  },
+  required: [
+    'listId'
+  ]
+}
+
+/** shim for handling async errors, so you can simply `throw` in async request handlers */
+require('express-async-errors')
+
 const lists = require('./lists')
 const tasks = require('./tasks')
 
@@ -11,7 +30,7 @@ router.get('/health', (req, res) => res.end())
 
 /** list handlers */
 router.get('/api/lists', lists.getLists)
-router.get('/api/lists/:listId', lists.getList)
+router.get('/api/lists/:listId', validator.validate({ params: listIdParam }), lists.getList)
 router.post('/api/lists', lists.createList)
 router.put('/api/lists/:listId', lists.updateList)
 router.patch('/api/lists/:listId', lists.patchList)
