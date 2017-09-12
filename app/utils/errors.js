@@ -69,7 +69,7 @@ function handleErrorResponse (err, req, res, next) {
     },
 
     json () {
-      res.send({ errors })
+      res.send({ message, errors })
     }
   })
 }
