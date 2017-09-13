@@ -67,11 +67,35 @@ async function deleteTask (req, res) {
   }
 }
 
+async function closeTask (req, res) {
+  const id = req.params.taskId
+  const task = await Task.close(id)
+
+  if (task) {
+    res.status(204).end()
+  } else {
+    throw taskNotFound(id)
+  }
+}
+
+async function reopenTask (req, res) {
+  const id = req.params.taskId
+  const task = await Task.reopen(id)
+
+  if (task) {
+    res.status(204).end()
+  } else {
+    throw taskNotFound(id)
+  }
+}
+
 module.exports = {
   getTasks,
   getTask,
   createTask,
   updateTask,
   patchTask,
-  deleteTask
+  deleteTask,
+  closeTask,
+  reopenTask
 }

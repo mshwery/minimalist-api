@@ -43,8 +43,7 @@ async function get (listId) {
     limit 1
   `
 
-  const { rows } = await db.query(query)
-  return rows[0]
+  return db.getOne(query)
 }
 
 async function create (list = defaultList) {
@@ -63,8 +62,7 @@ async function create (list = defaultList) {
       archived_at
   `
 
-  const { rows } = await db.query(query)
-  return rows[0]
+  return db.getOne(query)
 }
 
 async function update (listId, list = {}) {
@@ -72,7 +70,7 @@ async function update (listId, list = {}) {
   const query = SQL`
     update list
     set
-      name = ${list.name}
+      name = ${list.name},
       updated_at = ${new Date()}
     where
       list_id = ${listId}
@@ -85,8 +83,7 @@ async function update (listId, list = {}) {
       archived_at
   `
 
-  const { rows } = await db.query(query)
-  return rows[0]
+  return db.getOne(query)
 }
 
 async function destroy (listId) {
@@ -101,8 +98,7 @@ async function destroy (listId) {
       list_id
   `
 
-  const { rows } = await db.query(query)
-  return rows[0]
+  return db.getOne(query)
 }
 
 async function archive (listId) {
@@ -121,10 +117,9 @@ async function archive (listId) {
       created_at,
       updated_at,
       archived_at
-    `
+  `
 
-  const { rows } = await db.query(query)
-  return rows[0]
+  return db.getOne(query)
 }
 
 module.exports = {

@@ -49,5 +49,7 @@ router.all('/api/tasks/:taskId', validator.validate({ params: taskIdParam }))
   .put('/api/tasks/:taskId', tasks.updateTask)
   .patch('/api/tasks/:taskId', tasks.patchTask)
   .delete('/api/tasks/:taskId', tasks.deleteTask)
+  .post('/api/tasks/:taskId/close', tasks.closeTask)
+  .post('/api/tasks/:taskId/reopen', tasks.reopenTask)
 
 module.exports = router

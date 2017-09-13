@@ -64,7 +64,20 @@ async function transaction (callback) {
   return results
 }
 
+/**
+ * Convenience method to return only the first result of a query
+ * Typically useful when querying what's expected to only return a single record anyway
+ * @param {string} text - the sql query to execute
+ * @param {Object} params - object of properties for sql parameterization
+ * @returns {Promise}
+ */
+async function getOne (text, params) {
+  const { rows } = await query(text, params)
+  return rows[0]
+}
+
 module.exports = {
+  getOne,
   query,
   transaction
 }
