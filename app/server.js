@@ -5,6 +5,7 @@
 'use strict'
 
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const express = require('express')
 const helmet = require('helmet')
 const config = require('../config')
@@ -25,8 +26,11 @@ app.use(helmet())
 /** accept json */
 app.use(bodyParser.json())
 
-/** route handlers */
-app.use('/', routes)
+/** basic health endpoint */
+app.get('/health', (req, res) => res.end())
+
+/** api route handlers */
+app.use('/api', cors(), routes)
 
 /** 404 handler */
 app.use(handleNotFound)

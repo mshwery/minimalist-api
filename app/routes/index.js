@@ -28,28 +28,25 @@ function requireUuidParam (paramName) {
 const listIdParam = requireUuidParam('listId')
 const taskIdParam = requireUuidParam('taskId')
 
-/** basic health endpoint */
-router.get('/health', (req, res) => res.end())
-
 /** list handlers */
-router.get('/api/lists', lists.getLists)
-router.post('/api/lists', lists.createList)
-router.all('/api/lists/:listId', validator.validate({ params: listIdParam }))
-  .get('/api/lists/:listId', lists.getList)
-  .put('/api/lists/:listId', lists.updateList)
-  .patch('/api/lists/:listId', lists.patchList)
-  .delete('/api/lists/:listId', lists.deleteList)
-  .post('/api/lists/:listId/archive', lists.archiveList)
+router.get('/lists', lists.getLists)
+router.post('/lists', lists.createList)
+router.all('/lists/:listId', validator.validate({ params: listIdParam }))
+  .get('/lists/:listId', lists.getList)
+  .put('/lists/:listId', lists.updateList)
+  .patch('/lists/:listId', lists.patchList)
+  .delete('/lists/:listId', lists.deleteList)
+  .post('/lists/:listId/archive', lists.archiveList)
 
 /** task handlers */
-router.get('/api/tasks', tasks.getTasks)
-router.post('/api/tasks', tasks.createTask)
-router.all('/api/tasks/:taskId', validator.validate({ params: taskIdParam }))
-  .get('/api/tasks/:taskId', tasks.getTask)
-  .put('/api/tasks/:taskId', tasks.updateTask)
-  .patch('/api/tasks/:taskId', tasks.patchTask)
-  .delete('/api/tasks/:taskId', tasks.deleteTask)
-  .post('/api/tasks/:taskId/close', tasks.closeTask)
-  .post('/api/tasks/:taskId/reopen', tasks.reopenTask)
+router.get('/tasks', tasks.getTasks)
+router.post('/tasks', tasks.createTask)
+router.all('/tasks/:taskId', validator.validate({ params: taskIdParam }))
+  .get('/tasks/:taskId', tasks.getTask)
+  .put('/tasks/:taskId', tasks.updateTask)
+  .patch('/tasks/:taskId', tasks.patchTask)
+  .delete('/tasks/:taskId', tasks.deleteTask)
+  .post('/tasks/:taskId/close', tasks.closeTask)
+  .post('/tasks/:taskId/reopen', tasks.reopenTask)
 
 module.exports = router
