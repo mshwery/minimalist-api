@@ -5,36 +5,66 @@
 const { NotFoundError } = require('../utils/errors')
 const { Task } = require('../database')
 
+function taskNotFound (taskId) {
+  return NotFoundError(`No task found with id: '${taskId}'`)
+}
+
 async function getTasks (req, res) {
-  const lists = await Task.all()
-  res.status(200).json(lists)
+  const tasks = await Task.all()
+  res.status(200).json(tasks)
 }
 
 async function getTask (req, res) {
   const id = req.params.taskId
-  const list = await Task.find({ id })
+  const task = await Task.get(id)
 
-  if (list) {
-    res.status(200).json(list)
+  if (task) {
+    res.status(200).json(task)
   } else {
-    throw NotFoundError(`No list found with id: '${id}'`)
+    throw taskNotFound(id)
   }
 }
 
+// @todo validate input params
 async function createTask (req, res) {
-
+  const task = await Task.create(req.body)
+  res.status(201).json(task)
 }
 
+// @todo validate input params
 async function updateTask (req, res) {
+  const id = req.params.taskId
+  const task = await Task.update(id, req.body)
 
+  if (task) {
+    res.status(200).json(task)
+  } else {
+    throw taskNotFound(id)
+  }
 }
 
+// @todo validate input params
+// @todo implement patch
 async function patchTask (req, res) {
+  const id = req.params.taskId
+  const task = await Task.update(id, req.body)
 
+  if (task) {
+    res.status(200).json(task)
+  } else {
+    throw taskNotFound(id)
+  }
 }
 
 async function deleteTask (req, res) {
+  const id = req.params.taskId
+  const task = await Task.destroy(id)
 
+  if (task) {
+    res.status(204).end()
+  } else {
+    throw taskNotFound(id)
+  }
 }
 
 module.exports = {

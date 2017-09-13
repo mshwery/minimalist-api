@@ -3,7 +3,7 @@
  */
 
 const List = require('./list')
-const Task = require('./Task')
+const Task = require('./task')
 
 module.exports = {
   List,

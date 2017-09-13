@@ -39,6 +39,7 @@ router.all('/api/lists/:listId', validator.validate({ params: listIdParam }))
   .put('/api/lists/:listId', lists.updateList)
   .patch('/api/lists/:listId', lists.patchList)
   .delete('/api/lists/:listId', lists.deleteList)
+  .post('/api/lists/:listId/archive', lists.archiveList)
 
 /** task handlers */
 router.get('/api/tasks', tasks.getTasks)

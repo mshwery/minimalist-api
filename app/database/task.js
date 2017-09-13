@@ -40,6 +40,7 @@ async function get (taskId) {
     where
       task_id = ${taskId}
       and deleted_at is null
+    limit 1
   `
 
   const { rows } = await db.query(query)

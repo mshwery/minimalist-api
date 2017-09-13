@@ -15,7 +15,8 @@ async function all () {
       list_id,
       name,
       created_at,
-      updated_at
+      updated_at,
+      archived_at
     from
       list
     where
@@ -32,12 +33,14 @@ async function get (listId) {
       list_id,
       name,
       created_at,
-      updated_at
+      updated_at,
+      archived_at
     from
       list
     where
       list_id = ${listId}
       and deleted_at is null
+    limit 1
   `
 
   const { rows } = await db.query(query)
@@ -56,7 +59,8 @@ async function create (list = defaultList) {
       list_id,
       name,
       created_at,
-      updated_at
+      updated_at,
+      archived_at
   `
 
   const { rows } = await db.query(query)
@@ -64,6 +68,7 @@ async function create (list = defaultList) {
 }
 
 async function update (listId, list = {}) {
+  // @todo throw error when trying to update a deleted list?
   const query = SQL`
     update list
     set
@@ -76,7 +81,8 @@ async function update (listId, list = {}) {
       list_id,
       name,
       created_at,
-      updated_at
+      updated_at,
+      archived_at
   `
 
   const { rows } = await db.query(query)
@@ -99,10 +105,33 @@ async function destroy (listId) {
   return rows[0]
 }
 
+async function archive (listId) {
+  // @todo use `update` query once it handles partial column attrs?
+  // @todo throw error when trying to archive a deleted list?
+  const query = SQL`
+    update list
+    set
+      archived_at = ${new Date()}
+    where
+      list_id = ${listId}
+      and deleted_at is null
+    returning
+      list_id,
+      name,
+      created_at,
+      updated_at,
+      archived_at
+    `
+
+  const { rows } = await db.query(query)
+  return rows[0]
+}
+
 module.exports = {
   all,
   get,
   create,
   update,
-  destroy
+  destroy,
+  archive
 }

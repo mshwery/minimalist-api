@@ -25,14 +25,14 @@ async function getList (req, res) {
   }
 }
 
+// @todo validate input params
 async function createList (req, res) {
-  // @todo validate input params
   const list = await List.create(req.body)
   res.status(201).json(list)
 }
 
+// @todo validate input params
 async function updateList (req, res) {
-  // @todo validate input params
   const id = req.params.listId
   const list = await List.update(id, req.body)
 
@@ -43,9 +43,9 @@ async function updateList (req, res) {
   }
 }
 
+// @todo validate input params
+// @todo implement patch
 async function patchList (req, res) {
-  // @todo validate input params
-  // @todo implement patch
   const id = req.params.listId
   const list = await List.update(id, req.body)
 
@@ -61,7 +61,18 @@ async function deleteList (req, res) {
   const list = await List.destroy(id)
 
   if (list) {
-    res.status(204).send(list)
+    res.status(204).end()
+  } else {
+    throw listNotFound(id)
+  }
+}
+
+async function archiveList (req, res) {
+  const id = req.params.listId
+  const list = await List.archive(id)
+
+  if (list) {
+    res.status(200).json(list)
   } else {
     throw listNotFound(id)
   }
@@ -73,5 +84,6 @@ module.exports = {
   createList,
   updateList,
   patchList,
-  deleteList
+  deleteList,
+  archiveList
 }
