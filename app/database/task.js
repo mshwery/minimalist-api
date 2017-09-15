@@ -6,7 +6,7 @@ const SQL = require('sql-template-strings')
 const db = require('./connection')
 
 const defaultTask = {
-  description: ''
+  content: ''
 }
 
 /**
@@ -28,7 +28,8 @@ async function all (taskId) {
   const query = SQL`
     select
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
@@ -46,7 +47,8 @@ async function get (taskId) {
   const query = SQL`
     select
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
@@ -61,17 +63,28 @@ async function get (taskId) {
   return db.getOne(query).then(toTaskModel)
 }
 
-async function create (task = defaultTask) {
+async function create ({ content, list_id, completed_at }) {
+  // @todo support passing in the `task_id` and other properties
+  const task = {
+    ...defaultTask,
+    list_id,
+    content,
+    completed_at
+  }
+
   const query = SQL`
     insert into task (
-      description
+      list_id,
+      content
     )
     values (
-      ${task.description}
+      ${task.list_id || null},
+      ${task.content}
     )
     returning
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
@@ -93,14 +106,16 @@ async function update (taskId, newTask = {}) {
   const query = SQL`
     update task
     set
-      description = ${task.description},
+      list_id = ${task.list_id},
+      content = ${task.content},
       updated_at = ${new Date()}
     where
       task_id = ${taskId}
       and deleted_at is null
     returning
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
@@ -138,7 +153,8 @@ async function close (taskId) {
       and deleted_at is null
     returning
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
@@ -159,7 +175,8 @@ async function reopen (taskId) {
       and deleted_at is null
     returning
       task_id,
-      description,
+      list_id,
+      content,
       completed_at,
       created_at,
       updated_at
