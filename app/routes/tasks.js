@@ -2,11 +2,11 @@
  * @overview task route handlers
  */
 
-const { NotFoundError } = require('../utils/errors')
+const { NotFound } = require('http-errors')
 const { Task } = require('../database')
 
 function taskNotFound (taskId) {
-  return NotFoundError(`No task found with id: '${taskId}'`)
+  return new NotFound(`No task found with id: '${taskId}'`)
 }
 
 async function getTasks (req, res) {

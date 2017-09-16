@@ -4,36 +4,9 @@
 
 'use strict'
 
-const createError = require('http-errors')
+const { NotFound } = require('http-errors')
 const flatten = require('lodash/flatten')
 const { ValidationError } = require('express-json-validator-middleware')
-
-/**
- * BadRequestError constructor
- * @param {string} message - the error message
- * @returns {Error}
- */
-function BadRequestError (message) {
-  return new createError.BadRequest(message)
-}
-
-/**
- * NotFoundError constructor
- * @param {string} message - the error message
- * @returns {Error}
- */
-function NotFoundError (message) {
-  return new createError.NotFound(message)
-}
-
-/**
- * ServiceUnavailableError constructor
- * @param {string} message - the error message
- * @returns {Error}
- */
-function ServiceUnavailableError (message) {
-  return new createError.ServiceUnavailable(message)
-}
 
 /**
  * Middleware to handle response for errors
@@ -81,13 +54,10 @@ function handleErrorResponse (err, req, res, next) {
  * @param {Function} next - Express `next` callback
  */
 function handleNotFound (req, res, next) {
-  next(NotFoundError())
+  next(new NotFound())
 }
 
 module.exports = {
-  BadRequestError,
-  NotFoundError,
-  ServiceUnavailableError,
   handleErrorResponse,
   handleNotFound
 }

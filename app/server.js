@@ -10,7 +10,7 @@ const express = require('express')
 const helmet = require('helmet')
 const config = require('../config')
 const routes = require('./routes')
-const { handleNotFound, handleErrorResponse } = require('./utils/errors')
+const { handleNotFound, handleErrorResponse } = require('./middleware/errors')
 
 const app = express()
 const host = process.env.HOST || null

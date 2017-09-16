@@ -3,8 +3,8 @@
  */
 
 const { Pool } = require('pg')
+const { ServiceUnavailable } = require('http-errors')
 const config = require('../../config')
-const { ServiceUnavailableError } = require('../utils/errors')
 
 /**
  * Create a new connection pool to a postgres db
@@ -27,7 +27,7 @@ function query (text, params) {
   return pool.query(text, params)
     .catch(err => {
       if (err.code === 'ECONNREFUSED') {
-        throw ServiceUnavailableError('Unable to connect to database.')
+        throw new ServiceUnavailable('Unable to connect to database.')
       } else {
         throw err
       }

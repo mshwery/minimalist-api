@@ -2,11 +2,11 @@
  * @overview list route handlers
  */
 
-const { NotFoundError } = require('../utils/errors')
+const { NotFound } = require('http-errors')
 const { List } = require('../database')
 
 function listNotFound (listId) {
-  return NotFoundError(`No list found with id: '${listId}'`)
+  return new NotFound(`No list found with id: '${listId}'`)
 }
 
 async function getLists (req, res) {
