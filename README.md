@@ -43,3 +43,4 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 - [x] "Run in Postman" button in README
 - [ ] Consider authN and authZ implementations
 - [ ] Dockerize? Deal with Postgres persistence
+- [ ] Rate limiting
