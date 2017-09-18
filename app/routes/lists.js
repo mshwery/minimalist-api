@@ -82,3 +82,14 @@ exports.archiveList = async function archiveList (req, res) {
     throw listNotFound(id)
   }
 }
+
+exports.unarchiveList = async function unarchiveList (req, res) {
+  const id = req.params.id
+  const list = await List.unarchive(id)
+
+  if (list) {
+    res.status(200).json(list)
+  } else {
+    throw listNotFound(id)
+  }
+}

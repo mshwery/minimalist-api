@@ -17,11 +17,10 @@ const defaultTask = {
  * @returns {Object} the external representation of a task including derived data / convenience properties
  * @todo evaluate returning create/update dates on any models... are they useful? maybe not if we have "order" properties
  */
-function toTaskModel ({ completed_at, ...attrs }) {
-  return {
-    ...attrs,
-    completed: !!completed_at,
-    completed_at
+function toTaskModel (task) {
+  return task && {
+    ...task,
+    completed: !!task.completed_at
   }
 }
 

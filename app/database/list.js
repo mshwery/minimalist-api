@@ -17,11 +17,10 @@ const defaultList = {
  * @returns {Object} the external representation of a list including derived data / convenience properties
  * @todo evaluate returning create/update dates on any models... are they useful?
  */
-function toListModel ({ archived_at, ...attrs }) {
-  return {
-    ...attrs,
-    archived: !!archived_at,
-    archived_at
+function toListModel (list) {
+  return list && {
+    ...list,
+    archived: !!list.archived_at
   }
 }
 
@@ -144,11 +143,31 @@ async function archive (listId) {
   return db.getOne(query).then(toListModel)
 }
 
+async function unarchive (listId) {
+  const query = SQL`
+    update list
+    set
+      archived_at = null
+    where
+      list_id = ${listId}
+      and deleted_at is null
+    returning
+      list_id,
+      name,
+      created_at,
+      updated_at,
+      archived_at
+  `
+
+  return db.getOne(query).then(toListModel)
+}
+
 module.exports = {
   all,
   get,
   create,
   update,
   destroy,
-  archive
+  archive,
+  unarchive
 }

@@ -31,6 +31,7 @@ router.all('/lists/:id', withValidation({ params: id }))
   .patch('/lists/:id', lists.patchList)
   .delete('/lists/:id', lists.deleteList)
   .post('/lists/:id/archive', lists.archiveList)
+  .post('/lists/:id/unarchive', lists.unarchiveList)
 
 /** task handlers */
 router.get('/tasks', tasks.getTasks)
