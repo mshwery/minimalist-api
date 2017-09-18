@@ -100,7 +100,6 @@ async function update (taskId, newTask = {}) {
     return null
   }
 
-  // @todo only update the props that have been provided?
   const task = Object.assign({}, oldTask, newTask)
 
   const query = SQL`

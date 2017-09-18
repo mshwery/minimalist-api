@@ -23,7 +23,6 @@
     "db-migrate-pg": "^0.2.5",
     "express": "^4.15.4",
     "express-async-errors": "^2.0.0",
-    "express-json-validator-middleware": "^1.0.4",
     "helmet": "^3.8.1",
     "http-errors": "^1.6.2",
     "lodash": "^4.17.4",

@@ -6,7 +6,6 @@
 
 const { NotFound } = require('http-errors')
 const flatten = require('lodash/flatten')
-const { ValidationError } = require('express-json-validator-middleware')
 
 /**
  * Middleware to handle response for errors
@@ -19,7 +18,7 @@ function handleErrorResponse (err, req, res, next) {
   const message = err.message || 'Server Error'
   const errors = []
 
-  if (err instanceof ValidationError && err.validationErrors) {
+  if (err.validationErrors) {
     const propErrors = flatten(Object.values(err.validationErrors)).map(prop => {
       return {
         path: prop.dataPath,

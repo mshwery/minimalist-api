@@ -4,18 +4,20 @@
 
 const { NotFound } = require('http-errors')
 const { Task } = require('../database')
+const withValidation = require('../middleware/validation')
+const schema = require('../schema/task')
 
-function taskNotFound (taskId) {
-  return new NotFound(`No task found with id: '${taskId}'`)
+function taskNotFound (id) {
+  return new NotFound(`No task found with id: '${id}'`)
 }
 
-async function getTasks (req, res) {
+exports.getTasks = async function getTasks (req, res) {
   const tasks = await Task.all()
   res.status(200).json(tasks)
 }
 
-async function getTask (req, res) {
-  const id = req.params.taskId
+exports.getTask = async function getTask (req, res) {
+  const id = req.params.id
   const task = await Task.get(id)
 
   if (task) {
@@ -25,39 +27,42 @@ async function getTask (req, res) {
   }
 }
 
-// @todo validate input params
-async function createTask (req, res) {
-  const task = await Task.create(req.body)
-  res.status(201).json(task)
-}
-
-// @todo validate input params
-async function updateTask (req, res) {
-  const id = req.params.taskId
-  const task = await Task.update(id, req.body)
-
-  if (task) {
-    res.status(200).json(task)
-  } else {
-    throw taskNotFound(id)
+exports.createTask = withValidation({ body: schema },
+  async function createTask (req, res) {
+    const task = await Task.create(req.body)
+    res.status(201).json(task)
   }
-}
+)
 
-// @todo validate input params
+exports.updateTask = withValidation({ body: schema },
+  async function updateTask (req, res) {
+    const id = req.params.id
+    const task = await Task.update(id, req.body)
+
+    if (task) {
+      res.status(200).json(task)
+    } else {
+      throw taskNotFound(id)
+    }
+  }
+)
+
 // @todo implement patch
-async function patchTask (req, res) {
-  const id = req.params.taskId
-  const task = await Task.update(id, req.body)
+exports.patchTask = withValidation({ body: schema },
+  async function patchTask (req, res) {
+    const id = req.params.id
+    const task = await Task.update(id, req.body)
 
-  if (task) {
-    res.status(200).json(task)
-  } else {
-    throw taskNotFound(id)
+    if (task) {
+      res.status(200).json(task)
+    } else {
+      throw taskNotFound(id)
+    }
   }
-}
+)
 
-async function deleteTask (req, res) {
-  const id = req.params.taskId
+exports.deleteTask = async function deleteTask (req, res) {
+  const id = req.params.id
   const task = await Task.destroy(id)
 
   if (task) {
@@ -67,8 +72,8 @@ async function deleteTask (req, res) {
   }
 }
 
-async function closeTask (req, res) {
-  const id = req.params.taskId
+exports.closeTask = async function closeTask (req, res) {
+  const id = req.params.id
   const task = await Task.close(id)
 
   if (task) {
@@ -78,8 +83,8 @@ async function closeTask (req, res) {
   }
 }
 
-async function reopenTask (req, res) {
-  const id = req.params.taskId
+exports.reopenTask = async function reopenTask (req, res) {
+  const id = req.params.id
   const task = await Task.reopen(id)
 
   if (task) {
@@ -87,15 +92,4 @@ async function reopenTask (req, res) {
   } else {
     throw taskNotFound(id)
   }
-}
-
-module.exports = {
-  getTasks,
-  getTask,
-  createTask,
-  updateTask,
-  patchTask,
-  deleteTask,
-  closeTask,
-  reopenTask
 }
