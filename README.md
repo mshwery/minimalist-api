@@ -1,5 +1,9 @@
 # minimalist-api
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2395cb614da97594b9b6)
+
+A REST api for managing tasks and lists.
+
 ## Requirements
 
 - Node >= 8.x
@@ -36,6 +40,6 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 - [ ] Add versioning support
 - [ ] Add tests
 - [ ] Support `PATCH` partial updates for tasks and lists
-- [ ] Postman Runner button in README
+- [x] "Run in Postman" button in README
 - [ ] Consider authN and authZ implementations
 - [ ] Dockerize? Deal with Postgres persistence
