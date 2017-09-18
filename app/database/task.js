@@ -2,6 +2,8 @@
  * @overview task database interface
  */
 
+/* eslint-disable camelcase */
+
 const SQL = require('sql-template-strings')
 const db = require('./connection')
 
@@ -15,16 +17,15 @@ const defaultTask = {
  * @returns {Object} the external representation of a task including derived data / convenience properties
  * @todo evaluate returning create/update dates on any models... are they useful? maybe not if we have "order" properties
  */
-function toTaskModel ({ completed_at, archived_at, ...attrs }) {
+function toTaskModel ({ completed_at, ...attrs }) {
   return {
     ...attrs,
-    // eslint-disable-next-line camelcase
     completed: !!completed_at,
     completed_at
   }
 }
 
-async function all (taskId) {
+async function all ({ list_id, completed }) {
   const query = SQL`
     select
       task_id,
@@ -38,6 +39,16 @@ async function all (taskId) {
     where
       deleted_at is null
   `
+
+  if (list_id) {
+    query.append(SQL` and list_id = ${list_id} `)
+  }
+
+  if (completed === 'true') {
+    query.append(SQL` and completed_at is not null `)
+  } else if (completed === 'false') {
+    query.append(SQL` and completed_at is null `)
+  }
 
   const { rows } = await db.query(query)
   return rows.map(toTaskModel)

@@ -32,7 +32,9 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 - [x] Associate tasks for a list (`list_id` foreign key)
 - [x] Make readme
 - [x] Validate input params for route handlers
-- [ ] Simple search mechanics for the tasks all method
+- [x] Simple search mechanics for the tasks all method
+- [ ] Add versioning support
+- [ ] Add tests
 - [ ] Support `PATCH` partial updates for tasks and lists
 - [ ] Postman Runner button in README
 - [ ] Consider authN and authZ implementations

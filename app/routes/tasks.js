@@ -12,7 +12,7 @@ function taskNotFound (id) {
 }
 
 exports.getTasks = async function getTasks (req, res) {
-  const tasks = await Task.all()
+  const tasks = await Task.all(req.query)
   res.status(200).json(tasks)
 }
 

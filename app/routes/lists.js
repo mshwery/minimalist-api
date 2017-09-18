@@ -12,7 +12,7 @@ function listNotFound (id) {
 }
 
 exports.getLists = async function getLists (req, res) {
-  const lists = await List.all()
+  const lists = await List.all(req.query)
   res.status(200).json(lists)
 }
 

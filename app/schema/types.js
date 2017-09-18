@@ -19,3 +19,7 @@ exports.uuid = {
   type: 'string',
   format: 'uuid'
 }
+
+exports.null = {
+  type: 'null'
+}

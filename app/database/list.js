@@ -2,6 +2,8 @@
  * @overview list database interface
  */
 
+/* eslint-disable camelcase */
+
 const SQL = require('sql-template-strings')
 const db = require('./connection')
 
@@ -9,7 +11,21 @@ const defaultList = {
   name: 'Unnamed List'
 }
 
-async function all () {
+/**
+ * Homogenize the shape of a list with some derived values
+ * @param {Object} attrs - list attributes
+ * @returns {Object} the external representation of a list including derived data / convenience properties
+ * @todo evaluate returning create/update dates on any models... are they useful?
+ */
+function toListModel ({ archived_at, ...attrs }) {
+  return {
+    ...attrs,
+    archived: !!archived_at,
+    archived_at
+  }
+}
+
+async function all ({ archived }) {
   const query = SQL`
     select
       list_id,
@@ -23,8 +39,14 @@ async function all () {
       deleted_at is null
   `
 
+  if (archived === 'true') {
+    query.append(SQL` and archived_at is not null `)
+  } else if (archived === 'false') {
+    query.append(SQL` and archived_at is null `)
+  }
+
   const { rows } = await db.query(query)
-  return rows
+  return rows.map(toListModel)
 }
 
 async function get (listId) {
@@ -43,7 +65,7 @@ async function get (listId) {
     limit 1
   `
 
-  return db.getOne(query)
+  return db.getOne(query).then(toListModel)
 }
 
 async function create (list = defaultList) {
@@ -62,7 +84,7 @@ async function create (list = defaultList) {
       archived_at
   `
 
-  return db.getOne(query)
+  return db.getOne(query).then(toListModel)
 }
 
 async function update (listId, list = {}) {
@@ -83,7 +105,7 @@ async function update (listId, list = {}) {
       archived_at
   `
 
-  return db.getOne(query)
+  return db.getOne(query).then(toListModel)
 }
 
 async function destroy (listId) {
@@ -98,7 +120,7 @@ async function destroy (listId) {
       list_id
   `
 
-  return db.getOne(query)
+  return db.getOne(query).then(toListModel)
 }
 
 async function archive (listId) {
@@ -119,7 +141,7 @@ async function archive (listId) {
       archived_at
   `
 
-  return db.getOne(query)
+  return db.getOne(query).then(toListModel)
 }
 
 module.exports = {

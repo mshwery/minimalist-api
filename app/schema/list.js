@@ -9,7 +9,9 @@ module.exports = {
   properties: {
     list_id: schemaTypes.uuid,
     name: schemaTypes.string,
-    archived_at: schemaTypes.date
+    archived_at: {
+      anyOf: [schemaTypes.date, schemaTypes.null]
+    }
   },
   required: [
     'name'
