@@ -87,7 +87,6 @@ async function create (list = defaultList) {
 }
 
 async function update (listId, list = {}) {
-  // @todo throw error when trying to update a deleted list?
   const query = SQL`
     update list
     set
@@ -124,11 +123,11 @@ async function destroy (listId) {
 
 async function archive (listId) {
   // @todo use `update` query once it handles partial column attrs?
-  // @todo throw error when trying to archive a deleted list?
   const query = SQL`
     update list
     set
-      archived_at = ${new Date()}
+      archived_at = ${new Date()},
+      updated_at = ${new Date()}
     where
       list_id = ${listId}
       and deleted_at is null
@@ -144,10 +143,12 @@ async function archive (listId) {
 }
 
 async function unarchive (listId) {
+  // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
     update list
     set
-      archived_at = null
+      archived_at = null,
+      updated_at = ${new Date()}
     where
       list_id = ${listId}
       and deleted_at is null
