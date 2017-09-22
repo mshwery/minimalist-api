@@ -37,7 +37,7 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 - [x] Make readme
 - [x] Validate input params for route handlers
 - [x] Simple search mechanics for the tasks all method
-- [ ] Add versioning support
+- [x] Add (simple) versioning support
 - [ ] Add tests
 - [ ] Support `PATCH` partial updates for tasks and lists
 - [x] "Run in Postman" button in README

@@ -30,7 +30,7 @@ app.use(bodyParser.json())
 app.get('/health', (req, res) => res.end())
 
 /** api route handlers */
-app.use('/api', cors(), routes)
+app.use('/api/v1', cors(), routes)
 
 /** 404 handler */
 app.use(handleNotFound)
