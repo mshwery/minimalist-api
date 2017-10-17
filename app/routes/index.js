@@ -5,11 +5,9 @@
 const router = require('express').Router()
 const withValidation = require('../middleware/validation')
 
-/** shim for handling async errors, so you can simply `throw` in async request handlers */
-require('express-async-errors')
-
 const lists = require('./lists')
 const tasks = require('./tasks')
+const users = require('./users')
 
 const id = {
   type: 'object',
@@ -43,5 +41,15 @@ router.all('/tasks/:id', withValidation({ params: id }))
   .delete('/tasks/:id', tasks.deleteTask)
   .post('/tasks/:id/close', tasks.closeTask)
   .post('/tasks/:id/reopen', tasks.reopenTask)
+
+/** user handlers */
+router.post('/users', users.createUser)
+router.all('/users/:id', withValidation({ params: id }))
+  .get('/users/:id', users.getUser)
+  .delete('/users/:id', users.deleteUser)
+  // @todo support patch or update methods for a user
+  // require password confirmation for these changes?
+
+router.post('/authenticate', users.authenticate)
 
 module.exports = router

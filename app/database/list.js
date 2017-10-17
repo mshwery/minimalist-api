@@ -33,7 +33,7 @@ async function all ({ archived }) {
       updated_at,
       archived_at
     from
-      list
+      lists
     where
       deleted_at is null
   `
@@ -57,7 +57,7 @@ async function get (listId) {
       updated_at,
       archived_at
     from
-      list
+      lists
     where
       list_id = ${listId}
       and deleted_at is null
@@ -69,7 +69,7 @@ async function get (listId) {
 
 async function create (list = defaultList) {
   const query = SQL`
-    insert into list (
+    insert into lists (
       name
     )
     values (
@@ -88,7 +88,7 @@ async function create (list = defaultList) {
 
 async function update (listId, list = {}) {
   const query = SQL`
-    update list
+    update lists
     set
       name = ${list.name},
       updated_at = ${new Date()}
@@ -109,7 +109,7 @@ async function update (listId, list = {}) {
 async function destroy (listId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
-    update list
+    update lists
     set
       deleted_at = ${new Date()}
     where
@@ -124,7 +124,7 @@ async function destroy (listId) {
 async function archive (listId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
-    update list
+    update lists
     set
       archived_at = ${new Date()},
       updated_at = ${new Date()}
@@ -145,7 +145,7 @@ async function archive (listId) {
 async function unarchive (listId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
-    update list
+    update lists
     set
       archived_at = null,
       updated_at = ${new Date()}

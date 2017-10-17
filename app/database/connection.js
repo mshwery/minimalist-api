@@ -22,6 +22,7 @@ const pool = new Pool({
  * @param {string} text - the sql query to execute
  * @param {Object} params - object of properties for sql parameterization
  * @returns {Promise}
+ * @todo handle sql errors better
  */
 function query (text, params) {
   return pool.query(text, params)

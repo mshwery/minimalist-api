@@ -38,9 +38,10 @@ module.exports = function withValidation (schemas, fn) {
     }
 
     if (typeof fn === 'function') {
-      fn(req, res, next)
+      // support async functions
+      return Promise.resolve(fn(req, res, next)).catch(next)
     } else {
-      next()
+      return next()
     }
   }
 }

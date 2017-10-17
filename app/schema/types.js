@@ -11,6 +11,11 @@ exports.date = {
   format: 'date-time'
 }
 
+exports.email = {
+  type: 'string',
+  format: 'email'
+}
+
 exports.string = {
   type: 'string'
 }

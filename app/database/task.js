@@ -34,7 +34,7 @@ async function all ({ list_id, completed }) {
       created_at,
       updated_at
     from
-      task
+      tasks
     where
       deleted_at is null
   `
@@ -63,7 +63,7 @@ async function get (taskId) {
       created_at,
       updated_at
     from
-      task
+      tasks
     where
       task_id = ${taskId}
       and deleted_at is null
@@ -83,7 +83,7 @@ async function create ({ content, list_id, completed_at }) {
   }
 
   const query = SQL`
-    insert into task (
+    insert into tasks (
       list_id,
       content
     )
@@ -113,7 +113,7 @@ async function update (taskId, newTask = {}) {
   const task = Object.assign({}, oldTask, newTask)
 
   const query = SQL`
-    update task
+    update tasks
     set
       list_id = ${task.list_id},
       content = ${task.content},
@@ -136,7 +136,7 @@ async function update (taskId, newTask = {}) {
 async function destroy (taskId) {
   // @todo use `update` query once it handles partial column attrs
   const query = SQL`
-    update task
+    update tasks
     set
       deleted_at = ${new Date()}
     where
@@ -153,7 +153,7 @@ async function close (taskId) {
   // @todo use `update` query once it handles partial column attrs?
   // @todo throw error when trying to close/complete an already completed task?
   const query = SQL`
-    update task
+    update tasks
     set
       completed_at = ${new Date()},
       updated_at = ${new Date()}
@@ -175,7 +175,7 @@ async function close (taskId) {
 async function reopen (taskId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
-    update task
+    update tasks
     set
       completed_at = null,
       updated_at = ${new Date()}
