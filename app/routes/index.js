@@ -2,8 +2,12 @@
  * @overview route manifest
  */
 
+/** shim for handling async errors, so you can simply `throw` in async request handlers */
+require('../middleware/async-await')
+
 const router = require('express').Router()
 const withValidation = require('../middleware/validation')
+const { verifyJwt } = require('../lib/auth')
 
 const lists = require('./lists')
 const tasks = require('./tasks')
@@ -21,6 +25,7 @@ const id = {
 }
 
 /** list handlers */
+router.all('/lists', verifyJwt)
 router.get('/lists', lists.getLists)
 router.post('/lists', lists.createList)
 router.all('/lists/:id', withValidation({ params: id }))
@@ -32,6 +37,7 @@ router.all('/lists/:id', withValidation({ params: id }))
   .post('/lists/:id/unarchive', lists.unarchiveList)
 
 /** task handlers */
+router.all('/tasks', verifyJwt)
 router.get('/tasks', tasks.getTasks)
 router.post('/tasks', tasks.createTask)
 router.all('/tasks/:id', withValidation({ params: id }))
@@ -43,6 +49,7 @@ router.all('/tasks/:id', withValidation({ params: id }))
   .post('/tasks/:id/reopen', tasks.reopenTask)
 
 /** user handlers */
+router.all('/users', verifyJwt)
 router.post('/users', users.createUser)
 router.all('/users/:id', withValidation({ params: id }))
   .get('/users/:id', users.getUser)

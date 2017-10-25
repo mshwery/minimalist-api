@@ -4,7 +4,7 @@
 
 const { NotFound, Unauthorized } = require('http-errors')
 const { User } = require('../database')
-const { comparePassword } = require('../lib/auth')
+const { comparePassword, generateJwt } = require('../lib/auth')
 const withValidation = require('../middleware/validation')
 const schema = require('../schema/user')
 
@@ -14,7 +14,7 @@ function userNotFound (id) {
   return new NotFound(`No user found with id: '${id}'`)
 }
 
-exports.getUser = async function getUser (req, res) {
+exports.getUser = async function getUser (req, res, next) {
   const id = req.params.id
   const user = await User.get(id)
 
@@ -32,7 +32,7 @@ exports.createUser = withValidation({ body: schema },
   }
 )
 
-exports.deleteUser = async function deleteUser (req, res) {
+exports.deleteUser = async function deleteUser (req, res, next) {
   const id = req.params.id
   const user = await User.destroy(id)
 
@@ -43,7 +43,7 @@ exports.deleteUser = async function deleteUser (req, res) {
   res.status(204).end()
 }
 
-exports.authenticate = async function authenticate (req, res) {
+exports.authenticate = async function authenticate (req, res, next) {
   const { email, password } = req.body
   const user = await User.findByEmail(email)
 
@@ -57,6 +57,6 @@ exports.authenticate = async function authenticate (req, res) {
     throw new Unauthorized(INVALID_CREDS_MESSAGE)
   }
 
-  // @todo return an access (jwt) token instead
-  res.status(200).json({ message: 'Great job!' })
+  const token = generateJwt({ sub: user.user_id })
+  res.status(200).json({ token })
 }

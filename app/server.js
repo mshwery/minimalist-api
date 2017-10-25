@@ -12,9 +12,6 @@ const config = require('../config')
 const routes = require('./routes')
 const { handleNotFound, handleErrorResponse } = require('./middleware/errors')
 
-/** shim for handling async errors, so you can simply `throw` in async request handlers */
-require('./middleware/async-await')
-
 const app = express()
 const host = process.env.HOST || null
 const port = config.get('PORT') || 3000
