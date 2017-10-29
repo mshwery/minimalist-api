@@ -49,9 +49,8 @@ router.all('/tasks/:id', withValidation({ params: id }))
   .post('/tasks/:id/reopen', tasks.reopenTask)
 
 /** user handlers */
-router.all('/users', verifyJwt)
 router.post('/users', users.createUser)
-router.all('/users/:id', withValidation({ params: id }))
+router.all('/users/:id', withValidation({ params: id }), verifyJwt)
   .get('/users/:id', users.getUser)
   .delete('/users/:id', users.deleteUser)
   // @todo support patch or update methods for a user
