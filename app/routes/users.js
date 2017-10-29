@@ -2,7 +2,7 @@
  * @overview user route handlers
  */
 
-const { NotFound, Unauthorized } = require('http-errors')
+const { Conflict, Forbidden, NotFound, Unauthorized } = require('http-errors')
 const { User } = require('../database')
 const { comparePassword, generateJwt } = require('../lib/auth')
 const withValidation = require('../middleware/validation')
@@ -14,8 +14,25 @@ function userNotFound (id) {
   return new NotFound(`No user found with id: '${id}'`)
 }
 
+exports.me = async function getSelf (req, res, next) {
+  const id = req.user.sub
+  const user = await User.get(id)
+
+  if (!user) {
+    throw userNotFound(id)
+  }
+
+  res.status(200).json(user)
+}
+
 exports.getUser = async function getUser (req, res, next) {
   const id = req.params.id
+
+  // only allow users to get self
+  if (id !== req.user.sub) {
+    throw new Forbidden()
+  }
+
   const user = await User.get(id)
 
   if (!user) {
@@ -27,13 +44,27 @@ exports.getUser = async function getUser (req, res, next) {
 
 exports.createUser = withValidation({ body: schema },
   async function createUser (req, res, next) {
-    const user = await User.create(req.body)
-    res.status(201).json(user)
+    try {
+      const user = await User.create(req.body)
+      res.status(201).json(user)
+    } catch (error) {
+      if (error.message.includes('violates unique constraint')) {
+        throw new Conflict('User with that email address already exists.')
+      }
+
+      throw error
+    }
   }
 )
 
 exports.deleteUser = async function deleteUser (req, res, next) {
   const id = req.params.id
+
+  // only allow users to delete self
+  if (id !== req.user) {
+    throw new Forbidden()
+  }
+
   const user = await User.destroy(id)
 
   if (!user) {

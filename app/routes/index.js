@@ -56,6 +56,8 @@ router.all('/users/:id', withValidation({ params: id }), verifyJwt)
   // @todo support patch or update methods for a user
   // require password confirmation for these changes?
 
+router.get('/me', verifyJwt, users.me)
+
 router.post('/authenticate', users.authenticate)
 
 module.exports = router
