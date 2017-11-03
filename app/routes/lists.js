@@ -12,13 +12,13 @@ function listNotFound (id) {
 }
 
 exports.getLists = async function getLists (req, res) {
-  const lists = await List.all(req.query)
+  const lists = await List.all(req.user.sub, req.query)
   res.status(200).json(lists)
 }
 
 exports.getList = async function getList (req, res) {
   const id = req.params.id
-  const list = await List.get(id)
+  const list = await List.get(id, req.user.sub)
 
   if (list) {
     res.status(200).json(list)
@@ -29,7 +29,7 @@ exports.getList = async function getList (req, res) {
 
 exports.createList = withValidation({ body: schema },
   async function createList (req, res) {
-    const list = await List.create(req.body)
+    const list = await List.create(req.body, req.user.sub)
     res.status(201).json(list)
   }
 )
@@ -37,7 +37,7 @@ exports.createList = withValidation({ body: schema },
 exports.updateList = withValidation({ body: schema },
   async function updateList (req, res) {
     const id = req.params.id
-    const list = await List.update(id, req.body)
+    const list = await List.update(id, req.user.sub, req.body)
 
     if (list) {
       res.status(200).json(list)
@@ -51,7 +51,7 @@ exports.updateList = withValidation({ body: schema },
 exports.patchList = withValidation({ body: schema },
   async function patchList (req, res) {
     const id = req.params.id
-    const list = await List.update(id, req.body)
+    const list = await List.update(id, req.user.sub, req.body)
 
     if (list) {
       res.status(200).json(list)
@@ -63,7 +63,7 @@ exports.patchList = withValidation({ body: schema },
 
 exports.deleteList = async function deleteList (req, res) {
   const id = req.params.id
-  const list = await List.destroy(id)
+  const list = await List.destroy(id, req.user.sub)
 
   if (list) {
     res.status(204).end()
@@ -74,7 +74,7 @@ exports.deleteList = async function deleteList (req, res) {
 
 exports.archiveList = async function archiveList (req, res) {
   const id = req.params.id
-  const list = await List.archive(id)
+  const list = await List.archive(id, req.user.sub)
 
   if (list) {
     res.status(200).json(list)
@@ -85,7 +85,7 @@ exports.archiveList = async function archiveList (req, res) {
 
 exports.unarchiveList = async function unarchiveList (req, res) {
   const id = req.params.id
-  const list = await List.unarchive(id)
+  const list = await List.unarchive(id, req.user.sub)
 
   if (list) {
     res.status(200).json(list)

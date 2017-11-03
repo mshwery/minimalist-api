@@ -12,13 +12,13 @@ function taskNotFound (id) {
 }
 
 exports.getTasks = async function getTasks (req, res) {
-  const tasks = await Task.all(req.query)
+  const tasks = await Task.all(req.query, req.user.sub)
   res.status(200).json(tasks)
 }
 
 exports.getTask = async function getTask (req, res) {
   const id = req.params.id
-  const task = await Task.get(id)
+  const task = await Task.get(id, req.user.sub)
 
   if (task) {
     res.status(200).json(task)
@@ -29,7 +29,7 @@ exports.getTask = async function getTask (req, res) {
 
 exports.createTask = withValidation({ body: schema },
   async function createTask (req, res) {
-    const task = await Task.create(req.body)
+    const task = await Task.create(req.body, req.user.sub)
     res.status(201).json(task)
   }
 )
@@ -37,7 +37,7 @@ exports.createTask = withValidation({ body: schema },
 exports.updateTask = withValidation({ body: schema },
   async function updateTask (req, res) {
     const id = req.params.id
-    const task = await Task.update(id, req.body)
+    const task = await Task.update(id, req.body, req.user.sub)
 
     if (task) {
       res.status(200).json(task)
@@ -51,7 +51,7 @@ exports.updateTask = withValidation({ body: schema },
 exports.patchTask = withValidation({ body: schema },
   async function patchTask (req, res) {
     const id = req.params.id
-    const task = await Task.update(id, req.body)
+    const task = await Task.update(id, req.body, req.user.sub)
 
     if (task) {
       res.status(200).json(task)
@@ -63,7 +63,7 @@ exports.patchTask = withValidation({ body: schema },
 
 exports.deleteTask = async function deleteTask (req, res) {
   const id = req.params.id
-  const task = await Task.destroy(id)
+  const task = await Task.destroy(id, req.user.sub)
 
   if (task) {
     res.status(204).end()
@@ -74,7 +74,7 @@ exports.deleteTask = async function deleteTask (req, res) {
 
 exports.closeTask = async function closeTask (req, res) {
   const id = req.params.id
-  const task = await Task.close(id)
+  const task = await Task.close(id, req.user.sub)
 
   if (task) {
     res.status(204).end()
@@ -85,7 +85,7 @@ exports.closeTask = async function closeTask (req, res) {
 
 exports.reopenTask = async function reopenTask (req, res) {
   const id = req.params.id
-  const task = await Task.reopen(id)
+  const task = await Task.reopen(id, req.user.sub)
 
   if (task) {
     res.status(204).end()

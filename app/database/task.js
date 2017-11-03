@@ -6,6 +6,7 @@
 
 const SQL = require('sql-template-strings')
 const db = require('./connection')
+const List = require('./list')
 
 const defaultTask = {
   content: ''
@@ -24,56 +25,64 @@ function toTaskModel (task) {
   }
 }
 
-async function all ({ list_id, completed }) {
+async function all ({ list_id, completed }, userId) {
   const query = SQL`
     select
-      task_id,
-      list_id,
-      content,
-      completed_at,
-      created_at,
-      updated_at
+      tasks.task_id,
+      tasks.list_id,
+      tasks.content,
+      tasks.completed_at,
+      tasks.created_at,
+      tasks.updated_at
     from
       tasks
-    where
-      deleted_at is null
+    inner join lists
+      on lists.list_id = tasks.list_id
+      and lists.deleted_at is null
+      and lists.created_by = ${userId}
+      and tasks.deleted_at is null
   `
 
-  if (list_id) {
-    query.append(SQL` and list_id = ${list_id} `)
+  if (completed === 'true') {
+    query.append(SQL` and tasks.completed_at is not null `)
+  } else if (completed === 'false') {
+    query.append(SQL` and tasks.completed_at is null `)
   }
 
-  if (completed === 'true') {
-    query.append(SQL` and completed_at is not null `)
-  } else if (completed === 'false') {
-    query.append(SQL` and completed_at is null `)
+  if (list_id) {
+    await List.validateUserAccess(list_id, userId)
+    query.append(SQL` and tasks.list_id = ${list_id} `)
   }
 
   const { rows } = await db.query(query)
   return rows.map(toTaskModel)
 }
 
-async function get (taskId) {
+async function get (taskId, userId) {
+  // no need to validate access to the list because this query will simply not return an item
   const query = SQL`
     select
-      task_id,
-      list_id,
-      content,
-      completed_at,
-      created_at,
-      updated_at
+      tasks.task_id,
+      tasks.list_id,
+      tasks.content,
+      tasks.completed_at,
+      tasks.created_at,
+      tasks.updated_at
     from
       tasks
-    where
-      task_id = ${taskId}
-      and deleted_at is null
+    inner join lists
+      on lists.list_id = tasks.list_id
+      and lists.deleted_at is null
+      and lists.created_by = ${userId}
+      and tasks.task_id = ${taskId}
+      and tasks.deleted_at is null
     limit 1
   `
 
   return db.getOne(query).then(toTaskModel)
 }
 
-async function create ({ content, list_id, completed_at }) {
+async function create ({ content, list_id, completed_at }, userId) {
   // @todo support passing in the `task_id` and other properties
   const task = {
     ...defaultTask,
@@ -82,13 +91,15 @@ async function create ({ content, list_id, completed_at }) {
     completed_at
   }
 
+  await List.validateUserAccess(list_id, userId)
+
   const query = SQL`
     insert into tasks (
       list_id,
       content
     )
     values (
-      ${task.list_id || null},
+      ${task.list_id},
       ${task.content}
     )
     returning
@@ -103,20 +114,21 @@ async function create ({ content, list_id, completed_at }) {
   return db.getOne(query).then(toTaskModel)
 }
 
-async function update (taskId, newTask = {}) {
-  const oldTask = await get(taskId)
+async function update (taskId, newAttrs = {}, userId) {
+  // `get` handles access control to the task (based on list access)
+  const task = await get(taskId, userId)
 
-  if (!oldTask) {
+  if (!task) {
     return null
   }
 
-  const task = Object.assign({}, oldTask, newTask)
+  const attrs = Object.assign({}, task, newAttrs)
 
   const query = SQL`
     update tasks
     set
-      list_id = ${task.list_id},
-      content = ${task.content},
+      list_id = ${attrs.list_id},
+      content = ${attrs.content},
       updated_at = ${new Date()}
     where
       task_id = ${taskId}
@@ -133,7 +145,14 @@ async function update (taskId, newTask = {}) {
   return db.getOne(query).then(toTaskModel)
 }
 
-async function destroy (taskId) {
+async function destroy (taskId, userId) {
+  // `get` handles access control to the task (based on list access)
+  const task = await get(taskId, userId)
+
+  if (!task) {
+    return null
+  }
+
   // @todo use `update` query once it handles partial column attrs
   const query = SQL`
     update tasks
@@ -149,7 +168,14 @@ async function destroy (taskId) {
 }
 
 // @todo revisit name of method – it's synonymous with "completed"
-async function close (taskId) {
+async function close (taskId, userId) {
+  // `get` handles access control to the task (based on list access)
+  const task = await get(taskId, userId)
+
+  if (!task) {
+    return null
+  }
+
   // @todo use `update` query once it handles partial column attrs?
   // @todo throw error when trying to close/complete an already completed task?
   const query = SQL`
@@ -172,7 +198,14 @@ async function close (taskId) {
   return db.getOne(query).then(toTaskModel)
 }
 
-async function reopen (taskId) {
+async function reopen (taskId, userId) {
+  // `get` handles access control to the task (based on list access)
+  const task = await get(taskId, userId)
+
+  if (!task) {
+    return null
+  }
+
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
     update tasks

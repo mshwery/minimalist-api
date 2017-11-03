@@ -8,9 +8,7 @@ module.exports = {
   type: 'object',
   properties: {
     task_id: schemaTypes.uuid,
-    list_id: {
-      anyOf: [schemaTypes.uuid, schemaTypes.null]
-    },
+    list_id: schemaTypes.uuid,
     content: schemaTypes.string,
     completed: schemaTypes.boolean,
     completed_at: {
@@ -18,6 +16,7 @@ module.exports = {
     }
   },
   required: [
-    'content'
+    'content',
+    'list_id'
   ]
 }

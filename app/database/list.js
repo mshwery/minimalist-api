@@ -5,6 +5,7 @@
 /* eslint-disable camelcase */
 
 const SQL = require('sql-template-strings')
+const { NotFound } = require('http-errors')
 const db = require('./connection')
 
 const defaultList = {
@@ -24,7 +25,15 @@ function toListModel (list) {
   }
 }
 
-async function all ({ archived }) {
+async function validateUserAccess (listId, userId) {
+  const list = await get(listId, userId)
+
+  if (!list) {
+    throw new NotFound(`No list found with id = '${listId}'`)
+  }
+}
+
+async function all (userId, { archived }) {
   const query = SQL`
     select
       list_id,
@@ -35,7 +44,8 @@ async function all ({ archived }) {
     from
       lists
     where
-      deleted_at is null
+      created_by = ${userId}
+      and deleted_at is null
   `
 
   if (archived === 'true') {
@@ -48,7 +58,7 @@ async function all ({ archived }) {
   return rows.map(toListModel)
 }
 
-async function get (listId) {
+async function get (listId, userId) {
   const query = SQL`
     select
       list_id,
@@ -60,6 +70,7 @@ async function get (listId) {
       lists
     where
       list_id = ${listId}
+      and created_by = ${userId}
       and deleted_at is null
     limit 1
   `
@@ -67,13 +78,15 @@ async function get (listId) {
   return db.getOne(query).then(toListModel)
 }
 
-async function create (list = defaultList) {
+async function create (list = defaultList, userId) {
   const query = SQL`
     insert into lists (
-      name
+      name,
+      created_by
     )
     values (
-      ${list.name}
+      ${list.name},
+      ${userId}
     )
     returning
       list_id,
@@ -86,7 +99,7 @@ async function create (list = defaultList) {
   return db.getOne(query).then(toListModel)
 }
 
-async function update (listId, list = {}) {
+async function update (listId, userId, list = {}) {
   const query = SQL`
     update lists
     set
@@ -94,6 +107,7 @@ async function update (listId, list = {}) {
       updated_at = ${new Date()}
     where
       list_id = ${listId}
+      and created_by = ${userId}
       and deleted_at is null
     returning
       list_id,
@@ -106,22 +120,44 @@ async function update (listId, list = {}) {
   return db.getOne(query).then(toListModel)
 }
 
-async function destroy (listId) {
+async function destroy (listId, userId) {
+  await validateUserAccess(listId, userId)
+
+  const now = new Date()
+
   // @todo use `update` query once it handles partial column attrs?
-  const query = SQL`
-    update lists
+  const deleteTasksQuery = SQL`
+    update tasks
     set
-      deleted_at = ${new Date()}
+      deleted_at = ${now}
     where
       list_id = ${listId}
+      and deleted_at is null
+  `
+
+  const deleteListQuery = SQL`
+    update lists
+    set
+      deleted_at = ${now}
+    where
+      list_id = ${listId}
+      and created_by = ${userId}
     returning
       list_id
   `
 
-  return db.getOne(query).then(toListModel)
+  await db.transaction(async (client) => {
+    // delete the list(s)
+    await client.query(deleteListQuery)
+
+    // delete the tasks
+    await client.query(deleteTasksQuery)
+  })
+
+  return listId
 }
 
-async function archive (listId) {
+async function archive (listId, userId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
     update lists
@@ -130,6 +166,7 @@ async function archive (listId) {
       updated_at = ${new Date()}
     where
       list_id = ${listId}
+      and created_by = ${userId}
       and deleted_at is null
     returning
       list_id,
@@ -142,7 +179,7 @@ async function archive (listId) {
   return db.getOne(query).then(toListModel)
 }
 
-async function unarchive (listId) {
+async function unarchive (listId, userId) {
   // @todo use `update` query once it handles partial column attrs?
   const query = SQL`
     update lists
@@ -151,6 +188,7 @@ async function unarchive (listId) {
       updated_at = ${new Date()}
     where
       list_id = ${listId}
+      and created_by = ${userId}
       and deleted_at is null
     returning
       list_id,
@@ -170,5 +208,6 @@ module.exports = {
   update,
   destroy,
   archive,
-  unarchive
+  unarchive,
+  validateUserAccess
 }

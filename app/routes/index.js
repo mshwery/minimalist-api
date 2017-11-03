@@ -25,7 +25,7 @@ const id = {
 }
 
 /** list handlers */
-router.all('/lists', verifyJwt)
+router.all('/lists*', verifyJwt)
 router.get('/lists', lists.getLists)
 router.post('/lists', lists.createList)
 router.all('/lists/:id', withValidation({ params: id }))
@@ -37,7 +37,7 @@ router.all('/lists/:id', withValidation({ params: id }))
   .post('/lists/:id/unarchive', lists.unarchiveList)
 
 /** task handlers */
-router.all('/tasks', verifyJwt)
+router.all('/tasks*', verifyJwt)
 router.get('/tasks', tasks.getTasks)
 router.post('/tasks', tasks.createTask)
 router.all('/tasks/:id', withValidation({ params: id }))
