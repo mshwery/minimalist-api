@@ -6,8 +6,8 @@ A REST api for managing tasks and lists.
 
 ## Requirements
 
-- Node >= 8.x
-- npm >= 5.x
+- Node >= 8.8
+- npm >= 5.5
 - Postgresql 9.x
 
 It's recommended that you use [`nvm`](https://github.com/creationix/nvm) to manage Node versions
@@ -17,6 +17,22 @@ It's recommended that you use [`nvm`](https://github.com/creationix/nvm) to mana
 ### Dependencies
 
 Once you've got Node/npm installed you can run `npm install` to install app dependencies. It is recommended you do this prior to getting the database configured if you want to make use of the `npm run migrate` command.
+
+### Running locally via Docker
+
+This project uses Docker for local development, and the Dockerfile can also be used for production. `docker-compose` provides a clean interface for doing local development and overriding production defaults.
+
+#### Requirements to run via Docker
+- `Docker` should be installed, supporting `docker-compose` v3.1
+- Have postgres configured in `environment.json`. If you don't want to locally install postgres but would rather connect to a remote instance you will need to change the `PGHOST` environment variable specified in `docker-compose`
+
+#### Build and run the app
+
+Once you've got Docker installed and postgres installed (or a remote instance), you can build and run the app. You can use one simple command to do the whole thing:
+
+- `docker-compose up`
+
+Of course, you can also manually build the `Dockerfile` with your own flags, but `docker-compose` make running the app quite simple.
 
 ### Database and migrations
 
@@ -42,7 +58,7 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 - [ ] Add tests
 - [ ] Add task sort ordering
 - [ ] Support `PATCH` partial updates for tasks and lists
-- [ ] Dockerize? Deal with Postgres persistence
+- [x] Dockerize? Deal with Postgres persistence (decided against PG in a mounted volume – aka dont use containers for PG)
 - [ ] Consider authN and authZ implementations
 - [ ] Consider sharing
 - [ ] Rate limiting

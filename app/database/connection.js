@@ -14,7 +14,8 @@ const pool = new Pool({
   port: config.get('PGPORT') || 5432,
   user: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
-  database: config.get('PGDATABASE')
+  database: config.get('PGDATABASE'),
+  connectionString: config.get('DATABASE_URL')
 })
 
 /**
