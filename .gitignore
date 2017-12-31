@@ -9,6 +9,7 @@ node_modules
 
 # local environment vars
 config/environment.json
+.env
 
 # nvm bits
 .nvmrc
