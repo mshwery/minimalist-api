@@ -1,6 +1,6 @@
 # largely inspired by https://github.com/BretFisher/node-docker-good-defaults/blob/master/Dockerfile
 
-FROM node:8.10-slim
+FROM node:8.10-alpine
 
 RUN mkdir -p /opt/app
 
