@@ -2,15 +2,13 @@
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2395cb614da97594b9b6)
 
-A REST api for managing tasks and lists.
+An api for managing tasks and lists.
 
 ## Requirements
 
-- Node >= 8.8
+- Node >= 8.x
 - npm >= 5.5
 - Postgresql 9.x
-
-It's recommended that you use [`nvm`](https://github.com/creationix/nvm) to manage Node versions
 
 ## Getting Started
 
@@ -28,11 +26,10 @@ This project uses Docker for local development, and the Dockerfile can also be u
 
 #### Build and run the app
 
-Once you've got Docker installed and postgres installed (or a remote instance), you can build and run the app. You can use one simple command to do the whole thing:
-
-- `docker-compose up`
-
-Of course, you can also manually build the `Dockerfile` with your own flags, but `docker-compose` make running the app quite simple.
+```shell
+docker-compose up -d
+npm start
+```
 
 ### Database and migrations
 
@@ -49,16 +46,12 @@ Migrations are implemented via `db-migrate` – if you want to have full contro
 
 ## TODO
 
-- [x] Associate tasks for a list (`list_id` foreign key)
-- [x] Make readme
-- [x] Validate input params for route handlers
-- [x] Simple search mechanics for the tasks all method
-- [x] Add (simple) versioning support
-- [x] "Run in Postman" button in README
 - [ ] Add tests
 - [ ] Add task sort ordering
 - [ ] Support `PATCH` partial updates for tasks and lists
-- [x] Dockerize? Deal with Postgres persistence (decided against PG in a mounted volume – aka dont use containers for PG)
 - [ ] Consider authN and authZ implementations
+- [ ] GraphQL impl
+- [ ] TypeScript
+- [ ] Typeorm
 - [ ] Consider sharing
 - [ ] Rate limiting

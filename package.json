@@ -2,17 +2,18 @@
   "name": "minimalist-api",
   "version": "1.5.1",
   "description": "",
-  "main": "app/server.js",
   "private": true,
   "engines": {
     "node": ">=8.8",
     "npm": ">=5.5"
   },
   "scripts": {
-    "lint": "standard --fix config app",
+    "build": "tsc",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/server.ts",
+    "lint": "tslint --project tsconfig.json 'src/**/*.ts'",
     "migrate": "db-migrate up",
-    "start": "node app/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/src/server.js",
+    "test": "npm run lint && jest"
   },
   "author": "Matt Shwery",
   "dependencies": {
@@ -20,8 +21,6 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
-    "db-migrate": "^0.11.4",
-    "db-migrate-pg": "^0.4.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "helmet": "^3.15.0",
@@ -30,9 +29,45 @@
     "lodash": "^4.17.11",
     "nconf": "^0.10.0",
     "pg": "^7.6.1",
-    "sql-template-strings": "^2.2.2"
+    "reflect-metadata": "^0.1.12",
+    "typeorm": "^0.2.9"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 120
+  },
+  "lint-staged": {
+    "*.ts": [
+      "tslint --fix",
+      "prettier --write",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "devDependencies": {
-    "standard": "^11.0.1"
+    "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.9",
+    "@types/lodash": "^4.14.118",
+    "@types/node": "^10.12.10",
+    "eslint": "^5.9.0",
+    "husky": "^1.2.0",
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.0",
+    "nodemon": "^1.18.6",
+    "prettier": "^1.15.2",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "typescript": "^3.1.6"
   }
 }

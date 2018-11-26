@@ -2,8 +2,6 @@
  * @overview server entrypoint
  */
 
-'use strict'
-
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
@@ -27,7 +25,7 @@ app.use(helmet())
 app.use(bodyParser.json())
 
 /** basic health endpoint */
-app.get('/health', (req, res) => res.end())
+app.get('/health', (_, res) => res.end())
 
 /** api route handlers */
 app.use('/api/v1', cors(), routes)
@@ -39,7 +37,7 @@ app.use(handleNotFound)
 app.use(handleErrorResponse)
 
 /** start the server */
-app.listen(app.get('port'), host, (err) => {
+app.listen(app.get('port'), host, err => {
   if (err) {
     return console.error(err)
   }

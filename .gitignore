@@ -4,9 +4,6 @@ node_modules
 # MacOS shenanigans
 .DS_Store
 
-# VSCode config
-.vscode
-
 # local environment vars
 config/environment.json
 .env

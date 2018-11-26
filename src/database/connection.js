@@ -1,6 +1,7 @@
 /**
- * @overview postgres database interface
+ * @overview postgres database interface via typeorm
  */
+
 
 const { Pool } = require('pg')
 const { ServiceUnavailable } = require('http-errors')

@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // Launches a new server with ts-node in debug mode
+    // similar to `npm run dev`, but with debugger and editor support
+    {
+      "name": "Dev Server",
+      "type": "node",
+      "request": "launch",
+      "args": ["./src/server.ts"],
+      "env": {
+        "TS_NODE_FILES": "true" // make sure our type definitions are included
+      },
+      "skipFiles": [
+        // skip annoying `async_hooks` file for promises
+        "<node_internals>/**"
+      ],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    }
+  ]
+}
