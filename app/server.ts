@@ -48,3 +48,17 @@ initConnection().then(() => {
     logger.info(`Server is ready and listening on http://localhost:${port}`)
   })
 })
+
+process.on('uncaughtException', err => {
+  logger.crit('😱 The server crashed from an uncaught exception!', err)
+  // do a graceful shutdown,
+  // close the database connection etc.
+  process.exit(1)
+})
+
+process.on('unhandledRejection', (reason, _promise) => {
+  logger.crit('😱 The server crashed from an unhandled rejection!', reason)
+  // do a graceful shutdown,
+  // close the database connection etc.
+  process.exit(1)
+})

@@ -5,8 +5,8 @@ import { List } from './list.entity'
 export class ListRepository extends Repository<List> {
   /**
    * Get all lists by createdBy
-   * TODO: support other `where` filters
-   * TODO: support pagination
+   * TODO: pagination?
+   * TODO: filters?
    */
   public allByCreatedBy(createdBy: string): Promise<List[]> {
     return this.find({
@@ -18,12 +18,5 @@ export class ListRepository extends Repository<List> {
         createdAt: 'DESC'
       }
     })
-  }
-
-  /**
-   * Get a list by id and createdBy
-   */
-  public getByIdAndCreatedBy(id: string, createdBy: string): Promise<List | undefined> {
-    return this.findOne({ id, createdBy })
   }
 }

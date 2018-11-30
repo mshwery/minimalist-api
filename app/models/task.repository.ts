@@ -10,15 +10,17 @@ interface ITaskFilter {
 export class TaskRepository extends Repository<Task> {
   /**
    * Get all tasks without a list, by author
-   * TODO: support other `where` filters?
-   * TODO: support pagination?
+   * TODO: pagination?
+   * TODO: filters?
    */
   public allUngrouped(createdBy: string): Promise<Task[]> {
     return this.find({ createdBy, listId: IsNull() })
   }
 
   /**
-   * Get all completed tasks
+   * Get all completed tasks, by author
+   * TODO: pagination?
+   * TODO: filters?
    */
   public allByAuthor(conditions: ITaskFilter): Promise<Task[]> {
     return this.find({
