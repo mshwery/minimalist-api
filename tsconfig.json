@@ -18,6 +18,6 @@
     "baseUrl": "src"
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src/**/*.ts", "migrations/*.ts"],
-  "files": ["src/server.ts"]
+  "include": ["app/**/*.ts", "migrations/*.ts"],
+  "files": ["app/server.ts"]
 }

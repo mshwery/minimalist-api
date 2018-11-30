@@ -8,7 +8,7 @@ module.exports = {
   username: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
   // output dir after compilation
-  entities: ['dist/src/**/*.entity.js'],
+  entities: ['dist/app/**/*.entity.js'],
   // output dir after compilation
   migrations: ['dist/migrations/*.js'],
   cli: {

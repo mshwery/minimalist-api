@@ -9,10 +9,10 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/server.ts",
-    "lint": "tslint --project tsconfig.json 'src/**/*.ts'",
+    "dev": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' --files app/server.ts",
+    "lint": "tslint --project tsconfig.json 'app/**/*.ts'",
     "migrate": "db-migrate up",
-    "start": "node dist/src/server.js",
+    "start": "node dist/app/server.js",
     "test": "npm run lint && jest"
   },
   "author": "Matt Shwery",
