@@ -1,6 +1,7 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
+    "variable-name": [true, "allow-leading-underscore"],
     "class-name": true,
     "comment-format": [true, "check-space"],
     "indent": [true, "spaces"],
@@ -48,8 +49,8 @@
     "no-var-requires": false,
     "arrow-parens": false,
     "ordered-imports": false,
-    "no-floating-promises": [true, "Bluebird"],
-    "await-promise": [true, "Bluebird"],
+    "no-floating-promises": true,
+    "await-promise": true,
     "no-console": {
       "severity": "warning"
     }

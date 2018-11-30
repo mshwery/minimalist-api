@@ -10,3 +10,6 @@ config/environment.json
 
 # nvm bits
 .nvmrc
+
+# compiled output
+dist

@@ -2,11 +2,11 @@
  * @overview authentication / encryption utils
  */
 
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const expressJwt = require('express-jwt')
-const defaults = require('lodash/defaults')
-const config = require('../../config')
+import * as bcrypt from 'bcrypt'
+import * as expressJwt from 'express-jwt'
+import * as jwt from 'jsonwebtoken'
+import { defaults } from 'lodash'
+import * as config from '../../config'
 
 const secret = config.get('JWT_SECRET')
 const defaultOptions = {
@@ -14,7 +14,7 @@ const defaultOptions = {
   issuer: 'minimalist-api'
 }
 
-async function comparePassword (password, hash) {
+export async function comparePassword(password, hash): Promise<boolean> {
   try {
     return await bcrypt.compare(password, hash)
   } catch (error) {
@@ -23,29 +23,21 @@ async function comparePassword (password, hash) {
   }
 }
 
-async function hashPassword (password) {
-  const hash = await bcrypt.hash(password, 10)
-  return hash
+export function hashPassword(password): Promise<string> {
+  return bcrypt.hash(password, 10)
 }
 
 /**
  * Generates a JWT
  * @see {@link https://github.com/auth0/node-jsonwebtoken#usage}
  */
-function generateJwt (payload, options = defaultOptions) {
+export function generateJwt(payload: string | Buffer | object, options: jwt.SignOptions = defaultOptions): string {
   options = defaults(options, defaultOptions)
   const token = jwt.sign(payload, secret, options)
   return token
 }
 
-const verifyJwt = expressJwt({
+export const verifyJwt = expressJwt({
   secret,
   issuer: defaultOptions.issuer
 })
-
-module.exports = {
-  comparePassword,
-  hashPassword,
-  generateJwt,
-  verifyJwt
-}

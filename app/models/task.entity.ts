@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne
+} from 'typeorm'
 import { List } from './list.entity'
+import { User } from './user.entity'
 
 @Entity('task')
 export class Task {
@@ -9,14 +18,24 @@ export class Task {
   @Column('text')
   content: string
 
-  @ManyToOne(type => List, list => list.tasks, { nullable: true, primary: true, onDelete: 'CASCADE' })
-  list: List
+  @Column({ nullable: true })
+  listId?: string
+
+  @ManyToOne(_type => List, list => list.tasks, { nullable: true, primary: true, onDelete: 'CASCADE' })
+  list?: List
 
   @Column('timestamp with time zone', { nullable: true })
   completedAt?: Date | null
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt?: Date
+
+  @Column('uuid')
+  createdBy?: string
+
+  @ManyToOne(_type => User, { nullable: false })
+  @JoinColumn({ name: 'createdBy' })
+  creator?: User
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
   updatedAt?: Date

@@ -5,15 +5,17 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
-  ManyToMany,
-  JoinTable
+  AfterLoad,
+  BeforeUpdate,
+  BeforeInsert
 } from 'typeorm'
-import { List } from './list.entity'
+import { hashPassword } from 'lib/auth'
+// import { List } from './list.entity'
 
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id?: string
 
   @Column({ type: 'text', unique: true })
   @Index()
@@ -22,13 +24,33 @@ export class User {
   @Column({ type: 'text' })
   password: string
 
-  @ManyToMany(type => List, list => list.users, { onDelete: 'CASCADE' })
-  @JoinTable()
-  lists: List[]
+  // @ManyToMany(_type => List, list => list.users, { onDelete: 'CASCADE' })
+  // @JoinTable({ name: 'user_lists' })
+  // lists?: List[]
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
-  createdAt: Date
+  createdAt?: Date
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
-  updatedAt: Date
+  updatedAt?: Date
+
+  private tempPassword: string
+
+  @AfterLoad()
+  setTempPassword(): void {
+    this.tempPassword = this.password
+  }
+
+  @BeforeInsert()
+  async hashPasswordOnInsert(): Promise<void> {
+    this.password = await hashPassword(this.password)
+  }
+
+  @BeforeUpdate()
+  async hashPasswordChanges(): Promise<void> {
+    // if the password has changed, we need to hash it again
+    if (this.tempPassword !== this.password) {
+      this.password = await hashPassword(this.password)
+    }
+  }
 }

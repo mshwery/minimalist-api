@@ -2,16 +2,17 @@
  * @overview server entrypoint
  */
 
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const express = require('express')
-const helmet = require('helmet')
-const config = require('../config')
-const routes = require('./routes')
-const { handleNotFound, handleErrorResponse } = require('./middleware/errors')
+import * as bodyParser from 'body-parser'
+import * as cors from 'cors'
+import * as express from 'express'
+import helmet from 'helmet'
+import * as config from '../config'
+import routes from './routes'
+import { handleNotFound, handleErrorResponse } from './middleware/errors'
+import logger from './lib/logger'
+import initConnection from './lib/database'
 
 const app = express()
-const host = process.env.HOST || null
 const port = config.get('PORT') || 3000
 app.set('port', port)
 
@@ -37,10 +38,13 @@ app.use(handleNotFound)
 app.use(handleErrorResponse)
 
 /** start the server */
-app.listen(app.get('port'), host, err => {
-  if (err) {
-    return console.error(err)
-  }
+initConnection().then(() => {
+  app.listen(port, err => {
+    if (err) {
+      logger.error(err)
+      return
+    }
 
-  console.info(`Server is ready and listening on http://${host || 'localhost'}:${app.get('port')}`)
+    logger.info(`Server is ready and listening on http://localhost:${port}`)
+  })
 })
