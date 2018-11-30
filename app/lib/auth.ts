@@ -7,6 +7,7 @@ import * as expressJwt from 'express-jwt'
 import * as jwt from 'jsonwebtoken'
 import { defaults } from 'lodash'
 import * as config from '../../config'
+import logger from './logger'
 
 const secret = config.get('JWT_SECRET')
 const defaultOptions = {
@@ -18,7 +19,7 @@ export async function comparePassword(password, hash): Promise<boolean> {
   try {
     return await bcrypt.compare(password, hash)
   } catch (error) {
-    // @todo log
+    logger.error(error)
     return false
   }
 }

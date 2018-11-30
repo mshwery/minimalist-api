@@ -26,7 +26,7 @@ app.use(helmet())
 app.use(bodyParser.json())
 
 /** basic health endpoint */
-app.get('/health', (_, res) => res.end())
+app.get('/health', (_req, res) => res.end())
 
 /** api route handlers */
 app.use('/api/v1', cors(), routes)

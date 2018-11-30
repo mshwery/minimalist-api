@@ -4,6 +4,7 @@
 
 import { Request, Response, NextFunction } from 'express'
 import { NotFound } from 'http-errors'
+import logger from '../lib/logger'
 
 interface IError extends Error {
   status?: number
@@ -16,6 +17,8 @@ export function handleErrorResponse(error: IError, _req: Request, res: Response,
   const message = error.message || 'Server Error'
   const status = error.status || 500
   const plainText = [message, error].join('\n')
+
+  logger.error(error)
 
   res.status(status).format({
     text() {
