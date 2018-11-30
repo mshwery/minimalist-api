@@ -1,14 +1,12 @@
 # minimalist-api
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2395cb614da97594b9b6)
-
-An api for managing tasks and lists.
+An api for managing tasks and lists of tasks.
 
 ## Requirements
 
-- Node >= 8.x
+- Node >= 10.13
 - npm >= 5.5
-- Postgresql 9.x
+- Postgresql 9.6
 
 ## Getting Started
 

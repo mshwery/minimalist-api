@@ -27,8 +27,8 @@ router.post('/tasks', tasks.createTask)
 router.get('/tasks/:id', tasks.getTask)
 router.put('/tasks/:id', tasks.updateTask)
 router.delete('/tasks/:id', tasks.deleteTask)
-router.post('/tasks/:id/close', tasks.closeTask)
-router.post('/tasks/:id/reopen', tasks.reopenTask)
+router.post('/tasks/:id/complete', tasks.markComplete)
+router.post('/tasks/:id/reopen', tasks.markIncomplete)
 
 /** user handlers */
 router.post('/users', users.createUser)

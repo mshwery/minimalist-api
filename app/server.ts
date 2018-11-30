@@ -38,16 +38,23 @@ app.use(handleNotFound)
 app.use(handleErrorResponse)
 
 /** start the server */
-initConnection().then(() => {
-  app.listen(port, err => {
-    if (err) {
-      logger.error(err)
-      return
-    }
+initConnection()
+  .then(() => {
+    app.listen(port, err => {
+      if (err) {
+        logger.error(err)
+        return
+      }
 
-    logger.info(`Server is ready and listening on http://localhost:${port}`)
+      logger.info(`Server is ready and listening on http://localhost:${port}`)
+    })
   })
-})
+  .catch(err => {
+    logger.crit('😱 The server failed to initialize the db connection!', err)
+    // do a graceful shutdown,
+    // close the database connection etc.
+    process.exit(1)
+  })
 
 process.on('uncaughtException', err => {
   logger.crit('😱 The server crashed from an uncaught exception!', err)
