@@ -3,12 +3,13 @@
  */
 
 import { NotFound, Forbidden } from 'http-errors'
-import { getCustomRepository, getRepository } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import { List } from '../models/list.entity'
 import { ListRepository } from '../models/list.repository'
 
 async function getAuthorizedList(id: string, viewerId: string): Promise<List> {
-  const list = await getRepository(List).findOne({ id })
+  const repo = getCustomRepository(ListRepository)
+  const list = await repo.findOne({ id })
 
   if (!list) {
     throw new NotFound(`No list found with id: '${id}'`)
@@ -24,7 +25,8 @@ async function getAuthorizedList(id: string, viewerId: string): Promise<List> {
 export async function getLists(req, res, next) {
   try {
     const viewerId = req.user.sub
-    const lists = await getCustomRepository(ListRepository).allByCreatedBy(viewerId)
+    const repo = getCustomRepository(ListRepository)
+    const lists = await repo.allByAuthor(viewerId)
     res.status(200).json(lists)
   } catch (error) {
     next(error)
@@ -44,7 +46,7 @@ export async function getList(req, res, next) {
 
 export async function createList(req, res, next) {
   try {
-    const repo = getRepository(List)
+    const repo = getCustomRepository(ListRepository)
 
     let list = repo.create({
       name: req.body.name,
@@ -62,12 +64,11 @@ export async function updateList(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
-    let list = await getAuthorizedList(id, viewerId)
+    const repo = getCustomRepository(ListRepository)
+    const list = await getAuthorizedList(id, viewerId)
 
     // TODO support updating more props?
-    list.name = req.body.name
-
-    list = await getRepository(List).save(list)
+    await repo.changeName(list, req.body.name)
     res.status(200).json(list)
   } catch (error) {
     next(error)
@@ -78,9 +79,10 @@ export async function deleteList(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(ListRepository)
     const list = await getAuthorizedList(id, viewerId)
 
-    await getRepository(List).delete(list)
+    await repo.delete(list)
     res.status(204).end()
   } catch (error) {
     next(error)
@@ -91,11 +93,10 @@ export async function archiveList(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(ListRepository)
     const list = await getAuthorizedList(id, viewerId)
 
-    list.isArchived = true
-
-    await getRepository(List).save(list)
+    await repo.archive(list)
     res.status(200).json(list)
   } catch (error) {
     next(error)
@@ -106,11 +107,10 @@ export async function unarchiveList(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(ListRepository)
     const list = await getAuthorizedList(id, viewerId)
 
-    list.isArchived = false
-
-    await getRepository(List).save(list)
+    await repo.unarchive(list)
     res.status(200).json(list)
   } catch (error) {
     next(error)

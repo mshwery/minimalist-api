@@ -22,7 +22,7 @@ function isTaskAuthor(task: Task, viewerId): boolean {
 }
 
 async function getAuthorizedTask(id, viewerId): Promise<Task> {
-  const task = await getRepository(Task).findOne(id, { relations: ['list'] })
+  const task = await getCustomRepository(TaskRepository).findOne(id, { relations: ['list'] })
 
   if (!task) {
     throw new NotFound(`No task found with id: '${id}'`)
@@ -67,7 +67,7 @@ export async function getTask(req, res, next) {
 export async function createTask(req, res, next) {
   try {
     const viewerId = req.user.sub
-    const repo = getRepository(Task)
+    const repo = getCustomRepository(TaskRepository)
     const attrs: Partial<Task> = pick(req.body, ['content', 'completedAt', 'isComplete', 'listId'])
 
     // validate listId if provided
@@ -96,17 +96,12 @@ export async function updateTask(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(TaskRepository)
     const task = await getAuthorizedTask(id, viewerId)
-    const repo = getRepository(Task)
 
     // TODO strong types for `req.body` and validate/sanitize inputs
-    const attrs = pick(req.body, ['content', 'completedAt', 'isComplete'])
-
-    // update the model
-    repo.merge(task, attrs)
-
-    // save the changes
-    await repo.save(task)
+    const attrs: Partial<Task> = pick(req.body, ['content', 'completedAt', 'isComplete'])
+    await repo.apply(task, attrs)
 
     res.status(200).json(task)
   } catch (error) {
@@ -118,8 +113,8 @@ export async function deleteTask(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(TaskRepository)
     const task = await getAuthorizedTask(id, viewerId)
-    const repo = getRepository(Task)
 
     // delete it!
     await repo.delete(task)
@@ -134,15 +129,10 @@ export async function markComplete(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(TaskRepository)
     const task = await getAuthorizedTask(id, viewerId)
-    const repo = getRepository(Task)
 
-    // update the model
-    task.isCompleted = true
-
-    // save the changes
-    await repo.save(task)
-
+    await repo.markComplete(task)
     res.status(204).end()
   } catch (error) {
     next(error)
@@ -153,15 +143,10 @@ export async function markIncomplete(req, res, next) {
   try {
     const id = req.params.id
     const viewerId = req.user.sub
+    const repo = getCustomRepository(TaskRepository)
     const task = await getAuthorizedTask(id, viewerId)
-    const repo = getRepository(Task)
 
-    // update the model
-    task.isCompleted = false
-
-    // save the changes
-    await repo.save(task)
-
+    await repo.markIncomplete(task)
     res.status(204).end()
   } catch (error) {
     next(error)

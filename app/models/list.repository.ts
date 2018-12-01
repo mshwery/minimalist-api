@@ -4,19 +4,33 @@ import { List } from './list.entity'
 @EntityRepository(List)
 export class ListRepository extends Repository<List> {
   /**
-   * Get all lists by createdBy
+   * Get all lists created by the given user id
    * TODO: pagination?
    * TODO: filters?
    */
-  public allByCreatedBy(createdBy: string): Promise<List[]> {
+  public allByAuthor(createdBy: string): Promise<List[]> {
     return this.find({
       where: {
-        // TODO: support joining on user_list
         createdBy
       },
       order: {
         createdAt: 'DESC'
       }
     })
+  }
+
+  public changeName(list: List, newName: string): Promise<List> {
+    list.name = newName
+    return this.save(list)
+  }
+
+  public archive(list: List): Promise<List> {
+    list.isArchived = true
+    return this.save(list)
+  }
+
+  public unarchive(list: List): Promise<List> {
+    list.isArchived = false
+    return this.save(list)
   }
 }
