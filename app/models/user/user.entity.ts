@@ -9,7 +9,7 @@ import {
   BeforeUpdate,
   BeforeInsert
 } from 'typeorm'
-import { hashPassword } from 'lib/auth'
+import { hashPassword } from '../../lib/auth'
 // import { List } from './list.entity'
 
 @Entity('user')
