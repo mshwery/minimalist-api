@@ -11,15 +11,13 @@ const config = nconf
   .file(path.resolve(__dirname, 'environment.json'))
 
 /** required environment variables */
-const requiredEnvVars = [
+config.required([
   'JWT_SECRET',
   'PGHOST',
   'PGPORT',
   'PGUSER',
   'PGPASSWORD',
   'PGDATABASE'
-]
-
-config.required(requiredEnvVars)
+])
 
 module.exports = config
