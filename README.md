@@ -37,7 +37,7 @@ Migrations can be generated using Typeorm `npx typeorm migration:generate -n Nam
 
 To run migrations: `npm run migrate` or `npm run migrate:dev` (also runs the build, which is where typeorm's cli is looking for new migrations).
 
-Migrations are automatically run during test setup in order to drop the schema and start with a fresh database for every test run. You may need to take special consideration for cleaning up any data you create in a test suite, directly so not to impact other tests that may break due to cross contamination. (`TODO: consider safely resetting the entire db with every test`)
+Because the tests rely on actually interacting with a database, we have a separate test db where we run migrations automatically run during test setup in order to drop the schema and start with a fresh database for every test run. You may need to take special consideration for cleaning up any data you create in a test suite, directly so not to impact other tests that may break due to cross contamination. (`TODO: consider safely resetting the entire db with every test`)
 
 ### NPM commands
 
@@ -53,7 +53,7 @@ Migrations are automatically run during test setup in order to drop the schema a
 
 - [x] Add tests
 - [ ] Add task sort ordering
-- [ ] Support `PATCH` partial updates for tasks and lists
+- [ ] support `PATCH` partial updates for tasks and lists?
 - [x] authN
 - [ ] authZ
 - [ ] GraphQL impl
@@ -61,4 +61,6 @@ Migrations are automatically run during test setup in order to drop the schema a
 - [x] Typeorm
 - [ ] email confirmation flow
 - [ ] list sharing/inviting
-- [ ] Rate limiting
+- [ ] rate limiting?
+- [ ] reset db for every test?
+- [ ] scaffold test db in the same postgres instance as the dev db
