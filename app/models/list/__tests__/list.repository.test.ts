@@ -6,7 +6,7 @@ const authorId = 'abc76c7c-a2d7-4ad7-928e-2404b026c4ba'
 const otherPersonId = '253b681a-e479-4018-9fb9-4976159d2d46'
 
 describe('ListRepository', () => {
-  beforeAll(async done => {
+  beforeAll(async () => {
     // create two users for these tests
     const repo = getRepository(User)
 
@@ -22,14 +22,11 @@ describe('ListRepository', () => {
     })
 
     await repo.save([author, other])
-
-    done()
   })
 
-  afterAll(async done => {
+  afterAll(async () => {
     // cant use `clear` because it calls TRUNCATE which doesn't work on tables w/ foreign keys!
     await getCustomRepository(ListRepository).delete({ id: Not(IsNull()) })
-    done()
   })
 
   describe('allByAuthor', () => {
