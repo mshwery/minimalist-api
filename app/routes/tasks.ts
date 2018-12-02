@@ -5,9 +5,8 @@
 import { NotFound, Forbidden } from 'http-errors'
 import { pick } from 'lodash'
 import { getCustomRepository, getRepository } from 'typeorm'
-import { Task } from '../models/task.entity'
-import { List } from '../models/list.entity'
-import { TaskRepository } from '../models/task.repository'
+import { Task, TaskRepository } from '../models/task'
+import { List } from '../models/list'
 
 function isListAuthor(list: List | undefined, viewerId: string): boolean {
   if (!list) {

@@ -5,7 +5,7 @@
 import { Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { comparePassword, generateJwt } from '../lib/auth'
 import { getRepository } from 'typeorm'
-import { User } from '../models/user.entity'
+import { User } from '../models/user'
 
 const INVALID_CREDS_MESSAGE = "We didn't recognize that combination of email and password."
 
@@ -16,27 +16,6 @@ function userNotFound(id) {
 export async function me(req, res, next) {
   try {
     const id = req.user.sub
-    const user = await getRepository(User).findOne(id)
-
-    if (!user) {
-      throw userNotFound(id)
-    }
-
-    res.status(200).json(user)
-  } catch (error) {
-    next(error)
-  }
-}
-
-export async function getUser(req, res, next) {
-  try {
-    const id = req.params.id
-
-    // only allow users to get self
-    if (id !== req.user.sub) {
-      throw new Forbidden()
-    }
-
     const user = await getRepository(User).findOne(id)
 
     if (!user) {

@@ -9,8 +9,8 @@ import {
   ManyToOne
   // ManyToMany
 } from 'typeorm'
-import { Task } from './task.entity'
-import { User } from './user.entity'
+import { Task } from '../task/task.entity'
+import { User } from '../user/user.entity'
 
 @Entity('list')
 export class List {

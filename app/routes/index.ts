@@ -33,7 +33,6 @@ router.post('/tasks/:id/reopen', tasks.markIncomplete)
 /** user handlers */
 router.post('/users', users.createUser)
 router.all('/users/:id', verifyJwt)
-router.get('/users/:id', users.getUser)
 router.delete('/users/:id', users.deleteUser)
 router.get('/me', verifyJwt, users.me)
 router.post('/authenticate', users.authenticate)

@@ -4,8 +4,7 @@
 
 import { NotFound, Forbidden } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import { List } from '../models/list.entity'
-import { ListRepository } from '../models/list.repository'
+import { List, ListRepository } from '../models/list'
 
 async function getAuthorizedList(id: string, viewerId: string): Promise<List> {
   const repo = getCustomRepository(ListRepository)

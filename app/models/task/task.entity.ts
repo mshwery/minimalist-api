@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
   ManyToOne
 } from 'typeorm'
-import { List } from './list.entity'
-import { User } from './user.entity'
+import { List } from '../list/list.entity'
+import { User } from '../user/user.entity'
 
 @Entity('task')
 export class Task {

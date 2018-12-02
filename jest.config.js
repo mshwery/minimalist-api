@@ -5,7 +5,7 @@ module.exports = {
   bail: true,
   clearMocks: true,
   restoreMocks: true,
-  notify: true,
+  notify: false,
   setupFiles: ['<rootDir>/test/test-helper.ts'],
   moduleNameMapper: {
     '@/(.+)': '<rootdir>/../../app/$1'
