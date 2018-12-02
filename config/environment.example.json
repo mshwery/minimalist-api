@@ -1,6 +1,7 @@
 {
   "ENV": "local",
   "JWT_SECRET": "sekret",
+  "NODE_ENV": "development",
   "PGUSER": "username",
   "PGPASSWORD": "password",
   "PGDATABASE": "minimalist",

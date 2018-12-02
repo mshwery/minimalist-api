@@ -5,7 +5,7 @@
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import * as express from 'express'
-import helmet from 'helmet'
+import * as helmet from 'helmet'
 import * as config from '../config'
 import routes from './routes'
 import { handleNotFound, handleErrorResponse } from './middleware/errors'

@@ -7,7 +7,11 @@ const logger = winston.createLogger({
 
 // Output human readable logs in development
 if (config.get('NODE_ENV') === 'development') {
-  logger.add(new winston.transports.Console())
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  )
 }
 
 export default logger
