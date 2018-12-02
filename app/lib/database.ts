@@ -4,11 +4,14 @@ import { List } from '../models/list'
 import { Task } from '../models/task'
 import { User } from '../models/user'
 
-const connectionOptions: ConnectionOptions = {
+const defaultOptions: ConnectionOptions = {
   ...(ormConfig as ConnectionOptions),
   entities: [List, Task, User]
 }
 
-export default function initConnection(): Promise<Connection> {
-  return createConnection(connectionOptions as ConnectionOptions)
+export default function initConnection(options: Partial<ConnectionOptions> = {}): Promise<Connection> {
+  return createConnection({
+    ...defaultOptions,
+    ...options
+  } as ConnectionOptions)
 }

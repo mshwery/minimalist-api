@@ -6,7 +6,8 @@ module.exports = {
   clearMocks: true,
   restoreMocks: true,
   notify: false,
-  setupFiles: ['<rootDir>/test/test-helper.ts'],
+  globalSetup: '<rootDir>/test/global-setup.js',
+  setupTestFrameworkScriptFile: '<rootDir>/test/setup.ts',
   moduleNameMapper: {
     '@/(.+)': '<rootdir>/../../app/$1'
   }
