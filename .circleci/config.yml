@@ -14,16 +14,10 @@ jobs:
         environment:
           ENV=ci
           NODE_ENV=test
-          PGUSER=minimalist
           PGDATABASE=minimalist_test
-          PGHOST=127.0.0.1
-          PGPORT=5432
           TZ=utc
       - image: circleci/postgres:9.6
         environment:
-          POSTGRES_USER=minimalist
-          POSTGRES_HOST=127.0.0.1
-          POSTGRES_PORT=5432
           POSTGRES_DB=minimalist_test
     steps:
       - checkout
