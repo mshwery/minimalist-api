@@ -11,9 +11,8 @@
     "build": "tsc",
     "dev": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' --files app/server.ts",
     "lint": "tslint --project tsconfig.json 'app/**/*.ts' --fix",
+    "premigrate": "npm run build",
     "migrate": "npx typeorm migration:run",
-    "migrate:test": "PGDATABASE=minimalist_test PGPORT=5436 npx typeorm migration:run",
-    "migrate:dev": "npm run build && npm run migrate && npm run migrate:test",
     "start": "node dist/app/server.js",
     "test": "npm run lint && jest --runInBand"
   },

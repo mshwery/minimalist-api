@@ -6,5 +6,6 @@
   "PGPASSWORD": "password",
   "PGDATABASE": "minimalist",
   "PGHOST": "localhost",
-  "PGPORT": 5432
+  "PGPORT": 5432,
+  "TEST_PGPORT": 5436
 }

@@ -11,27 +11,17 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/node:10.13
-        environment:
-          ENV=ci
-          NODE_ENV=test
-          JWT_SECRET=whatever
-          PGUSER=postgres
-          PGPASSWORD=""
-          PGDATABASE=minimalist_test
-          PGHOST=127.0.0.1
-          PGPORT=5432
-          TZ=utc
       - image: circleci/postgres:9.6
         environment:
           POSTGRES_DB=minimalist_test
     steps:
       - checkout
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      # - restore_cache:
+      #     keys:
+      #     - v1-dependencies-{{ checksum "package.json" }}
+      #     # fallback to using the latest cache if no exact match is found
+      #     - v1-dependencies-
       - run: npm ci
       - run:
           name: Wait for DB
@@ -43,7 +33,7 @@ jobs:
       - run:
           name: Run tests
           command: npm run test
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: v1-dependencies-{{ checksum "package.json" }}

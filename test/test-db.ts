@@ -1,10 +1,11 @@
 import * as path from 'path'
 import { ConnectionOptions, Connection } from 'typeorm'
 import initConnection from '../app/lib/database'
+import * as config from '../config'
 
 const options: Partial<ConnectionOptions> = {
   migrations: [path.resolve(__dirname, `../migrations/*.ts`)],
-  port: 5436,
+  port: Number(config.get('TEST_PGPORT') || 5436),
   database: 'minimalist_test'
 }
 
