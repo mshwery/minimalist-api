@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "allowJs": true,
+    "checkJs": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedParameters": true,
+    "lib": ["esnext"],
+    "baseUrl": "app"
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["app/**/*.ts", "migrations/*.ts", "config/environment.json"],
+  "files": ["app/server.ts"]
+}

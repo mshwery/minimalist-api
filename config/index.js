@@ -11,14 +11,13 @@ const config = nconf
   .file(path.resolve(__dirname, 'environment.json'))
 
 /** required environment variables */
-const requiredEnvVars = []
-
-/** required environment variables for production */
-if (config.get('NODE_ENV') === 'production') {
-  // @todo configure
-  // requiredEnvVars.push()
-}
-
-config.required(requiredEnvVars)
+config.required([
+  'JWT_SECRET',
+  'PGHOST',
+  'PGPORT',
+  'PGUSER',
+  'PGPASSWORD',
+  'PGDATABASE'
+])
 
 module.exports = config
