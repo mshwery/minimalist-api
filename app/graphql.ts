@@ -13,8 +13,13 @@ const resolvers = {
   }
 }
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  // enable introspection in production mode
+  introspection: true
+})
 
-export default async function graphql(app: Express): Promise<void> {
+export default async function applyGraphQLMiddleware(app: Express): Promise<void> {
   await server.applyMiddleware({ app, path: '/graphql' })
 }
