@@ -11,6 +11,6 @@ beforeAll(async () => {
 // And then close it
 afterAll(async () => {
   if (connection) {
-    connection.close()
+    await connection.close()
   }
 })
