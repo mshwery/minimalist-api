@@ -2,11 +2,14 @@
  * @overview server entrypoint
  */
 
+import * as bodyParser from 'body-parser'
+import * as cors from 'cors'
 import * as express from 'express'
 import * as helmet from 'helmet'
 import * as config from '../config'
-import { handleNotFound, handleErrorResponse } from './middleware/errors'
+import routes from './routes'
 import applyGraphQLMiddleware from './graphql'
+import { handleNotFound, handleErrorResponse } from './middleware/errors'
 import logger from './lib/logger'
 import initConnection from './lib/database'
 
@@ -20,8 +23,14 @@ app.enable('trust proxy')
 /** node security modules */
 app.use(helmet())
 
+/** accept json */
+app.use(bodyParser.json())
+
 /** basic health endpoint */
 app.get('/health', (_req, res) => res.end())
+
+/** api route handlers */
+app.use('/api/v1', cors(), routes)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
