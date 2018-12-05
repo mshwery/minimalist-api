@@ -2,7 +2,7 @@
  * @overview route manifest
  */
 
-import * as express from 'express'
+import express from 'express'
 import { verifyJwt } from '../lib/auth'
 import * as lists from './lists'
 import * as tasks from './tasks'

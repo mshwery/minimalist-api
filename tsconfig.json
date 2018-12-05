@@ -14,10 +14,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
-    "lib": ["esnext"],
-    "baseUrl": "app"
+    "esModuleInterop": true,
+    "lib": ["esnext"]
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["app/**/*.ts", "migrations/*.ts", "config/environment.json"],
-  "files": ["app/server.ts"]
+  "exclude": ["node_modules", "./dist"],
+  "include": ["./app/**/*.ts", "./migrations/*.ts", "./config/environment.json"],
+  "files": ["./app/server.ts"]
 }

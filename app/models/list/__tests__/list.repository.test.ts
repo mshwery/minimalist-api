@@ -1,4 +1,4 @@
-import * as Chance from 'chance'
+import Chance from 'chance'
 import { getRepository, getCustomRepository } from 'typeorm'
 import { List, ListRepository } from '../'
 import { User } from '../../user'

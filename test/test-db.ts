@@ -1,7 +1,7 @@
-import * as path from 'path'
+import path from 'path'
 import { ConnectionOptions, Connection } from 'typeorm'
 import initConnection from '../app/lib/database'
-import * as config from '../config'
+import config from '../config'
 
 const options: Partial<ConnectionOptions> = {
   migrations: [path.resolve(__dirname, `../migrations/*.ts`)],
