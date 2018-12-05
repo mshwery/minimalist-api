@@ -1,9 +1,4 @@
-/**
- * @overview Error helpers
- */
-
 import { Request, Response, NextFunction } from 'express'
-import { NotFound } from 'http-errors'
 import logger from '../lib/logger'
 
 interface IError extends Error {
@@ -14,7 +9,7 @@ interface IError extends Error {
 /**
  * Middleware to handle response for errors
  */
-export function handleErrorResponse(error: IError, _req: Request, res: Response, _next: NextFunction) {
+export default function handleErrorResponse(error: IError, _req: Request, res: Response, _next: NextFunction) {
   const status = error.status || 500
   let message = 'Server Error'
 
@@ -37,11 +32,4 @@ export function handleErrorResponse(error: IError, _req: Request, res: Response,
       res.send({ error: message })
     }
   })
-}
-
-/**
- * Handler for missing routes
- */
-export function handleNotFound(_req: Request, _res: Response, next: NextFunction) {
-  next(new NotFound())
 }

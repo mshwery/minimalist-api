@@ -40,5 +40,7 @@ export function generateJwt(payload: string | Buffer | object, options: jwt.Sign
 
 export const verifyJwt = expressJwt({
   secret,
-  issuer: defaultOptions.issuer
+  issuer: defaultOptions.issuer,
+  /** this option allows us to handle 401s manually, so we can more granularly handle public vs private queries in graphql */
+  credentialsRequired: false
 })

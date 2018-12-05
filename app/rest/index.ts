@@ -3,7 +3,7 @@
  */
 
 import express from 'express'
-import { verifyJwt } from '../lib/auth'
+import requireAuthentication from '../middleware/require-authentication'
 import * as lists from './lists'
 import * as tasks from './tasks'
 import * as users from './users'
@@ -11,7 +11,7 @@ import * as users from './users'
 const router = express.Router()
 
 /** list handlers */
-router.all('/lists*', verifyJwt)
+router.all('/lists*', requireAuthentication)
 router.get('/lists', lists.getLists)
 router.post('/lists', lists.createList)
 router.get('/lists/:id', lists.getList)
@@ -21,7 +21,7 @@ router.post('/lists/:id/archive', lists.archiveList)
 router.post('/lists/:id/unarchive', lists.unarchiveList)
 
 /** task handlers */
-router.all('/tasks*', verifyJwt)
+router.all('/tasks*', requireAuthentication)
 router.get('/tasks', tasks.getTasks)
 router.post('/tasks', tasks.createTask)
 router.get('/tasks/:id', tasks.getTask)
@@ -31,10 +31,9 @@ router.post('/tasks/:id/complete', tasks.markComplete)
 router.post('/tasks/:id/reopen', tasks.markIncomplete)
 
 /** user handlers */
-router.post('/users', users.createUser)
-router.all('/users/:id', verifyJwt)
-router.delete('/users/:id', users.deleteUser)
-router.get('/me', verifyJwt, users.me)
 router.post('/authenticate', users.authenticate)
+router.post('/users', users.createUser)
+router.delete('/users/:id', requireAuthentication, users.deleteUser)
+router.get('/me', requireAuthentication, users.me)
 
 export default router

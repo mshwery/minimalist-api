@@ -7,11 +7,13 @@ import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
 import config from '../config'
-import routes from './routes'
+import restApi from './rest'
 import applyGraphQLMiddleware from './graphql'
-import { handleNotFound, handleErrorResponse } from './middleware/errors'
+import handleErrorResponse from './middleware/errors'
+import handleNotFound from './middleware/not-found'
 import logger from './lib/logger'
 import initConnection from './lib/database'
+import { verifyJwt } from './lib/auth'
 
 const app = express()
 const port = config.get('PORT') || 3000
@@ -30,7 +32,7 @@ app.use(bodyParser.json())
 app.get('/health', (_req, res) => res.end())
 
 /** api route handlers */
-app.use('/api/v1', cors(), routes)
+app.use('/api/v1', cors(), verifyJwt, restApi)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
