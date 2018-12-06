@@ -20,6 +20,5 @@ const server = new ApolloServer({
 export default function applyGraphQLMiddleware(app: Express): void {
   // check jwt token beforehand
   app.use(path, verifyJwt)
-
   server.applyMiddleware({ app, path })
 }

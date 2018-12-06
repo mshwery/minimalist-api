@@ -2,11 +2,9 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
   type Query {
-    me: PrivateUser
+    me: PrivateUser @public
     list(id: String!): List
     lists(ids: [String]): [List]
-    task(id: String!): Task
-    tasks(ids: [String]): [Task]
   }
 
   type List {
