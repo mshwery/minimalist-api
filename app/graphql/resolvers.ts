@@ -1,10 +1,11 @@
 import { Unauthorized } from 'http-errors'
-import { getCustomRepository, getRepository } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import { List, ListRepository } from '../models/list'
-import { User } from '../models/user'
+import { User, UserRepository } from '../models/user'
+import { Viewer } from '../types'
 
 interface IContext {
-  viewer?: string | undefined
+  viewer: Viewer
 }
 
 function requireAuth(ctx: IContext): void {
@@ -13,35 +14,20 @@ function requireAuth(ctx: IContext): void {
   }
 }
 
-async function getAuthorizedList(id: string, viewerId: string): Promise<List | null> {
-  const repo = getCustomRepository(ListRepository)
-  const list = await repo.findOne({ id })
-
-  if (!list || list.createdBy !== viewerId) {
-    return null
-  }
-
-  return list
-}
-
 const resolvers = {
   Query: {
-    async me(_root, _args, { viewer }): Promise<User | undefined | null> {
-      if (!viewer) {
-        return null
-      }
-
-      return getRepository(User).findOne({ id: viewer })
+    async me(_root, _args, ctx: IContext): Promise<User | null> {
+      return getCustomRepository(UserRepository).fetchViewer(ctx.viewer)
     },
 
-    async list(_root, args, ctx): Promise<List | null> {
+    async list(_root, args: { id: string }, ctx: IContext): Promise<List | null> {
       requireAuth(ctx)
-      return getAuthorizedList(args.id, ctx.viewer)
+      return getCustomRepository(ListRepository).fetch(ctx.viewer, args.id)
     },
 
-    async lists(_root, _args, ctx): Promise<List[]> {
+    async lists(_root, args: { ids: string[] }, ctx: IContext): Promise<List[]> {
       requireAuth(ctx)
-      return getCustomRepository(ListRepository).allByAuthor(ctx.viewer)
+      return getCustomRepository(ListRepository).allByAuthor(ctx.viewer, args.ids)
     }
   }
 }

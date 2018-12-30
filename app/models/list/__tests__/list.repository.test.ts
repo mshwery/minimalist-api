@@ -20,8 +20,9 @@ async function createList(attrs: Partial<List>): Promise<List> {
 }
 
 async function deleteLists(): Promise<void> {
-  const repo = getRepository(List)
-  await repo.delete(createdLists)
+  if (createdLists.length > 0) {
+    await getRepository(List).delete(createdLists)
+  }
 }
 
 describe('ListRepository', () => {
@@ -43,8 +44,28 @@ describe('ListRepository', () => {
     await repo.save([author, other])
   })
 
-  afterAll(async () => {
+  beforeEach(async () => {
     await deleteLists()
+  })
+
+  describe('fetch', () => {
+    it('should return the list if the viewer created it', async () => {
+      const listCreatedByViewer = await createList({ name: 'author list', createdBy: authorId })
+      const list = await getCustomRepository(ListRepository).fetch(authorId, listCreatedByViewer.id!)
+      expect(list).toEqual(listCreatedByViewer)
+    })
+
+    it('should return null if the viewer did not create it', async () => {
+      const listCreatedBySomeoneElse = await createList({ name: 'author list', createdBy: otherPersonId })
+      const list = await getCustomRepository(ListRepository).fetch(authorId, listCreatedBySomeoneElse.id!)
+      expect(list).toEqual(null)
+    })
+
+    it('should return null if no viewer is provided', async () => {
+      const listCreatedByViewer = await createList({ name: 'author list', createdBy: authorId })
+      const list = await getCustomRepository(ListRepository).fetch(undefined, listCreatedByViewer.id!)
+      expect(list).toEqual(null)
+    })
   })
 
   describe('allByAuthor', () => {
