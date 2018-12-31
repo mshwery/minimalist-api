@@ -1,7 +1,8 @@
 import { Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import { List, ListRepository } from '../models/list'
-import { User, UserRepository } from '../models/user'
+import List from '../models/list/list.entity'
+import ListRepository from '../models/list/list.repository'
+import { User, UserModel } from '../models/user'
 import { Viewer } from '../types'
 
 interface IContext {
@@ -17,7 +18,7 @@ function requireAuth(ctx: IContext): void {
 const resolvers = {
   Query: {
     async me(_root, _args, ctx: IContext): Promise<User | null> {
-      return getCustomRepository(UserRepository).fetchViewer(ctx.viewer)
+      return UserModel.fetchByViewer(ctx.viewer)
     },
 
     async list(_root, args: { id: string }, ctx: IContext): Promise<List | null> {

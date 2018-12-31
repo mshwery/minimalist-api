@@ -1,2 +1,2 @@
-export { List } from './list.entity'
-export { ListRepository } from './list.repository'
+export { default as List } from './list.entity'
+export { default as ListRepository } from './list.repository'

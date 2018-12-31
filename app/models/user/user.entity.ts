@@ -10,10 +10,10 @@ import {
   BeforeInsert
 } from 'typeorm'
 import { hashPassword } from '../../lib/auth'
-// import { List } from './list.entity'
+// import List from '../list/list.entity'
 
 @Entity('user')
-export class User {
+export default class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string
 

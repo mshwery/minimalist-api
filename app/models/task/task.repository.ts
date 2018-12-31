@@ -1,6 +1,6 @@
 import { pick } from 'lodash'
 import { EntityRepository, Repository, IsNull, Not, FindConditions } from 'typeorm'
-import { Task } from './task.entity'
+import Task from './task.entity'
 
 interface ITaskFilter {
   createdBy: string
@@ -18,7 +18,7 @@ function getConditions(attrs: any): FindConditions<Task> {
 }
 
 @EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
+export default class TaskRepository extends Repository<Task> {
   /**
    * Get all tasks without a list, by author
    * TODO: pagination?

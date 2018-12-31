@@ -7,11 +7,11 @@ import {
   UpdateDateColumn,
   ManyToOne
 } from 'typeorm'
-import { List } from '../list/list.entity'
-import { User } from '../user/user.entity'
+import List from '../list/list.entity'
+import User from '../user/user.entity'
 
 @Entity('task')
-export class Task {
+export default class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string
 

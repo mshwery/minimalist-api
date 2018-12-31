@@ -2,24 +2,17 @@
  * @overview user route handlers
  */
 
-import { Forbidden, NotFound, Unauthorized } from 'http-errors'
+import { NotFound, Unauthorized } from 'http-errors'
 import { comparePassword, generateJwt } from '../lib/auth'
-import { getRepository } from 'typeorm'
-import { User } from '../models/user'
-
-const INVALID_CREDS_MESSAGE = "We didn't recognize that combination of email and password."
-
-function userNotFound(id) {
-  return new NotFound(`No user found with id: '${id}'`)
-}
+import { UserModel } from '../models/user'
 
 export async function me(req, res, next) {
   try {
-    const id = req.user.sub
-    const user = await getRepository(User).findOne(id)
+    const viewer = req.user.sub
+    const user = await UserModel.fetchByViewer(viewer)
 
     if (!user) {
-      throw userNotFound(id)
+      throw new NotFound(`No user found with id: "${viewer}"`)
     }
 
     res.status(200).json(user)
@@ -31,32 +24,16 @@ export async function me(req, res, next) {
 export async function createUser(req, res, next) {
   try {
     const { email, password } = req.body
-    const repo = getRepository(User)
-
-    const user = repo.create({ email, password })
-    await repo.save(user)
-
+    const user = await UserModel.create(req.user.sub, { email, password })
     res.status(201).json(user)
   } catch (error) {
-    // TODO handle dupe email
     next(error)
   }
 }
 
 export async function deleteUser(req, res, next) {
   try {
-    const id = req.params.id
-
-    // only allow users to delete self
-    if (id !== req.user) {
-      throw new Forbidden()
-    }
-
-    const { affected } = await getRepository(User).delete(id)
-    if (!affected) {
-      throw userNotFound(id)
-    }
-
+    await UserModel.delete(req.user.sub, req.params.id)
     res.status(204).end()
   } catch (error) {
     next(error)
@@ -66,16 +43,16 @@ export async function deleteUser(req, res, next) {
 export async function authenticate(req, res, next) {
   try {
     const { email, password } = req.body
-    const user = await getRepository(User).findOne({ email })
+    const user = await UserModel.fetchByEmail(req.user.sub, email)
 
     if (!user) {
-      throw new Unauthorized(INVALID_CREDS_MESSAGE)
+      throw new NotFound(`No user found with email address: "${email}"`)
     }
 
     const isMatch = await comparePassword(password, user.password)
 
     if (!isMatch) {
-      throw new Unauthorized(INVALID_CREDS_MESSAGE)
+      throw new Unauthorized(`We didn't recognize that combination of email and password.`)
     }
 
     const token = generateJwt({ sub: user.id })

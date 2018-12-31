@@ -1,9 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { List } from './list.entity'
+import List from './list.entity'
 import { Viewer } from '../../types'
 
 @EntityRepository(List)
-export class ListRepository extends Repository<List> {
+export default class ListRepository extends Repository<List> {
   /**
    * Gets a single list if the viewer created it
    * TODO: separate authz from query building (biz logic vs entity/repository)

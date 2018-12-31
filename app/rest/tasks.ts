@@ -5,8 +5,9 @@
 import { NotFound, Forbidden } from 'http-errors'
 import { pick } from 'lodash'
 import { getCustomRepository, getRepository } from 'typeorm'
-import { Task, TaskRepository } from '../models/task'
+import { Task, TaskModel, TaskRepository } from '../models/task'
 import { List } from '../models/list'
+import { Viewer } from '../types'
 
 function isListAuthor(list: List | undefined, viewerId: string): boolean {
   if (!list) {
@@ -16,25 +17,11 @@ function isListAuthor(list: List | undefined, viewerId: string): boolean {
   return list.createdBy === viewerId
 }
 
-function isTaskAuthor(task: Task, viewerId): boolean {
-  return task.createdBy === viewerId
-}
-
-async function getAuthorizedTask(id, viewerId): Promise<Task> {
-  const task = await getCustomRepository(TaskRepository).findOne(id, { relations: ['list'] })
+async function getAuthorizedTask(id, viewer: Viewer): Promise<Task> {
+  const task = await TaskModel.fetch(viewer, id)
 
   if (!task) {
     throw new NotFound(`No task found with id: '${id}'`)
-  }
-
-  // If the task *is* associated with a list we have to see if this user has access to the list (created it)
-  if (task.list && !isListAuthor(task.list, viewerId)) {
-    throw new Forbidden(`You don't have access to this task.`)
-  }
-
-  // If the task isn't associated with a list we have to see if this user has access to the task (created it)
-  if (!task.list && !isTaskAuthor(task, viewerId)) {
-    throw new Forbidden(`You don't have access to this task.`)
   }
 
   return task

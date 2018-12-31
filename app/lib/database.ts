@@ -1,8 +1,8 @@
 import { createConnection, Connection, ConnectionOptions } from 'typeorm'
 import ormConfig from '../../ormconfig'
-import { List } from '../models/list'
-import { Task } from '../models/task'
-import { User } from '../models/user'
+import List from '../models/list/list.entity'
+import Task from '../models/task/task.entity'
+import User from '../models/user/user.entity'
 
 const defaultOptions: ConnectionOptions = {
   ...(ormConfig as ConnectionOptions),
