@@ -4,7 +4,25 @@ import { Viewer } from '../../types'
 import User from './user.entity'
 import UserRepository from './user.repository'
 
-class UserModel {
+export { User, UserRepository }
+
+export function canEditUser(viewer: Viewer, user: { id: string }): boolean {
+  if (!viewer) {
+    return false
+  }
+
+  // for now, only allow users to edit their own account
+  if (user.id === viewer) {
+    return true
+  }
+
+  return false
+}
+
+export class UserModel {
+  /**
+   * Gets the user associated with the current viewer
+   */
   static async fetchByViewer(viewer: Viewer): Promise<User | null> {
     if (!viewer) {
       return null
@@ -14,11 +32,17 @@ class UserModel {
     return user || null
   }
 
+  /**
+   * Gets a user by email address
+   */
   static async fetchByEmail(_viewer: Viewer, email: string): Promise<User | null> {
     const user = await getCustomRepository(UserRepository).findByEmail(email)
     return user || null
   }
 
+  /**
+   * Creates a user given some attributes
+   */
   static async create(_viewer: Viewer, attrs: { id?: string; email: string; password: string }): Promise<User> {
     const repo = getCustomRepository(UserRepository)
 
@@ -30,14 +54,15 @@ class UserModel {
     return repo.save(user)
   }
 
+  /**
+   * Deletes a user if the viewer has access
+   */
   static async delete(viewer: Viewer, id: string): Promise<void> {
     // current viewer can only delete their own user
-    if (id !== viewer) {
+    if (!canEditUser(viewer, { id })) {
       throw new Forbidden(`Cannot delete user accounts other than your own.`)
     }
 
     await getCustomRepository(UserRepository).delete(id)
   }
 }
-
-export { User, UserModel, UserRepository }

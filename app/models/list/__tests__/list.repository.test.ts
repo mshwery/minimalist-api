@@ -4,10 +4,8 @@ import { List, ListRepository } from '../'
 import { User } from '../../user'
 
 const chance = new Chance()
-
 const authorId = chance.guid({ version: 4 })
 const otherPersonId = chance.guid({ version: 4 })
-
 const createdLists: string[] = []
 
 async function createList(attrs: Partial<List>): Promise<List> {
@@ -46,26 +44,6 @@ describe('ListRepository', () => {
 
   beforeEach(async () => {
     await deleteLists()
-  })
-
-  describe('fetch', () => {
-    it('should return the list if the viewer created it', async () => {
-      const listCreatedByViewer = await createList({ name: 'author list', createdBy: authorId })
-      const list = await getCustomRepository(ListRepository).fetch(authorId, listCreatedByViewer.id!)
-      expect(list).toEqual(listCreatedByViewer)
-    })
-
-    it('should return null if the viewer did not create it', async () => {
-      const listCreatedBySomeoneElse = await createList({ name: 'author list', createdBy: otherPersonId })
-      const list = await getCustomRepository(ListRepository).fetch(authorId, listCreatedBySomeoneElse.id!)
-      expect(list).toEqual(null)
-    })
-
-    it('should return null if no viewer is provided', async () => {
-      const listCreatedByViewer = await createList({ name: 'author list', createdBy: authorId })
-      const list = await getCustomRepository(ListRepository).fetch(undefined, listCreatedByViewer.id!)
-      expect(list).toEqual(null)
-    })
   })
 
   describe('allByAuthor', () => {

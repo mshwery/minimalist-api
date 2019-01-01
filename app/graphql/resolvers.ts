@@ -1,8 +1,8 @@
 import { Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import List from '../models/list/list.entity'
 import ListRepository from '../models/list/list.repository'
 import { User, UserModel } from '../models/user'
+import { List, ListModel } from '../models/list'
 import { Viewer } from '../types'
 
 interface IContext {
@@ -23,7 +23,7 @@ const resolvers = {
 
     async list(_root, args: { id: string }, ctx: IContext): Promise<List | null> {
       requireAuth(ctx)
-      return getCustomRepository(ListRepository).fetch(ctx.viewer, args.id)
+      return ListModel.fetch(ctx.viewer, args.id)
     },
 
     async lists(_root, args: { ids: string[] }, ctx: IContext): Promise<List[]> {
