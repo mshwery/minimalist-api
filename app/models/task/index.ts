@@ -1,4 +1,4 @@
-import { Forbidden, NotFound, Unauthorized } from 'http-errors'
+import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
 import { Viewer } from '../../types'
 import { canViewList, canEditList, ListModel } from '../list'
@@ -85,10 +85,15 @@ export class TaskModel {
    */
   static async create(
     viewer: Viewer,
-    attrs: { content: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: string }
+    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: string }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
+    }
+
+    // @todo real validation
+    if (!attrs.content) {
+      throw new BadRequest(`Must provide a value for "content".`)
     }
 
     // validate that the viewer can edit the list they are trying to add a task to
