@@ -36,7 +36,7 @@ export class ListModel {
 
     const findOptions: FindOneOptions = {}
     if (get(options, 'withTasks')) {
-      findOptions.relations = ['task']
+      findOptions.relations = ['tasks']
     }
 
     const list = await getCustomRepository(ListRepository).findOne(id, findOptions)
@@ -60,6 +60,7 @@ export class ListModel {
 
   /**
    * Creates a list for the viewer given some attributes
+   * @todo validate `attrs.name`
    */
   static async create(viewer: Viewer, attrs: { name: string }): Promise<List> {
     if (!viewer) {
@@ -77,6 +78,7 @@ export class ListModel {
 
   /**
    * Updates a list for the viewer given some attributes
+   * @todo validate `attrs`
    */
   static async update(viewer: Viewer, id: string, attrs: Partial<List>): Promise<List> {
     const list = await ListModel.fetch(viewer, id)

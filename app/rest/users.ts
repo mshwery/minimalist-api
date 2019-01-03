@@ -3,6 +3,7 @@
  */
 
 import { NotFound, Unauthorized } from 'http-errors'
+import { get } from 'lodash'
 import { comparePassword, generateJwt } from '../lib/auth'
 import { UserModel } from '../models/user'
 
@@ -23,8 +24,9 @@ export async function me(req, res, next) {
 
 export async function createUser(req, res, next) {
   try {
+    const viewer = get(req, 'user.sub')
     const { email, password } = req.body
-    const user = await UserModel.create(req.user.sub, { email, password })
+    const user = await UserModel.create(viewer, { email, password })
     res.status(201).json(user)
   } catch (error) {
     next(error)
@@ -42,8 +44,9 @@ export async function deleteUser(req, res, next) {
 
 export async function authenticate(req, res, next) {
   try {
+    const viewer = get(req, 'user.sub')
     const { email, password } = req.body
-    const user = await UserModel.fetchByEmail(req.user.sub, email)
+    const user = await UserModel.fetchByEmail(viewer, email)
 
     if (!user) {
       throw new NotFound(`No user found with email address: "${email}"`)

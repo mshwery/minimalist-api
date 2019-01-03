@@ -71,20 +71,21 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllByViewer(viewer: Viewer): Promise<Task[]> {
+  static async fetchAllByViewer(viewer: Viewer, ids?: string[]): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
-    return getCustomRepository(TaskRepository).allByAuthor(viewer)
+    return getCustomRepository(TaskRepository).allByAuthor(viewer, ids)
   }
 
   /**
    * Creates a task for the viewer given some attributes
+   * @todo validate `attrs`
    */
   static async create(
     viewer: Viewer,
-    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: string }
+    attrs: { content: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: string }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
@@ -106,6 +107,7 @@ export class TaskModel {
 
   /**
    * Updates a task for the viewer given some attributes
+   * @todo validate `attrs`
    */
   static async update(viewer: Viewer, id: string, attrs: Partial<Task>): Promise<Task> {
     const task = await TaskModel.fetch(viewer, id)

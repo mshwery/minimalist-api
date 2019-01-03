@@ -4,12 +4,19 @@ import Task from './task.entity'
 @EntityRepository(Task)
 export default class TaskRepository extends Repository<Task> {
   /**
-   * Get all tasks, by author
+   * Get all tasks created by the given user id
    * TODO: pagination?
    * TODO: filters?
    */
-  public allByAuthor(author: string): Promise<Task[]> {
-    return this.find({ createdBy: author })
+  public allByAuthor(author: string, ids?: string[]): Promise<Task[]> {
+    let query = this.createQueryBuilder('task').where({ createdBy: author })
+
+    if (ids && ids.length > 0) {
+      const dedupedIds = Array.from(new Set(ids))
+      query = query.andWhereInIds(dedupedIds)
+    }
+
+    return query.orderBy({ 'task."createdAt"': 'DESC' }).getMany()
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {
