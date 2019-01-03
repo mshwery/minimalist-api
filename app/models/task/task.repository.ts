@@ -1,46 +1,15 @@
-import { pick } from 'lodash'
-import { EntityRepository, Repository, IsNull, Not, FindConditions } from 'typeorm'
+import { EntityRepository, Repository } from 'typeorm'
 import Task from './task.entity'
-
-interface ITaskFilter {
-  createdBy: string
-  isCompleted?: boolean
-}
-
-function getConditions(attrs: any): FindConditions<Task> {
-  const conditions: FindConditions<Task> = pick(attrs, ['id', 'completedAt', 'createdBy', 'listId'])
-
-  if (typeof attrs.isCompleted === 'boolean') {
-    conditions.completedAt = attrs.isCompleted ? Not(IsNull()) : IsNull()
-  }
-
-  return conditions
-}
 
 @EntityRepository(Task)
 export default class TaskRepository extends Repository<Task> {
   /**
-   * Get all tasks without a list, by author
+   * Get all tasks, by author
    * TODO: pagination?
    * TODO: filters?
    */
-  public allUngrouped(conditions: ITaskFilter): Promise<Task[]> {
-    const where = getConditions({
-      ...conditions,
-      listId: IsNull()
-    })
-
-    return this.find(where)
-  }
-
-  /**
-   * Get all tasks, by author (and other filters)
-   * TODO: pagination?
-   * TODO: filters?
-   */
-  public allByAuthor(conditions: ITaskFilter): Promise<Task[]> {
-    const where = getConditions(conditions)
-    return this.find(where)
+  public allByAuthor(author: string): Promise<Task[]> {
+    return this.find({ createdBy: author })
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {

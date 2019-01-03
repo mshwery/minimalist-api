@@ -65,7 +65,7 @@ describe('UserModel', () => {
   })
 
   describe('delete', () => {
-    it('should allow the current viewer to delete their own user', async () => {
+    it('should allow the viewer to delete their own user', async () => {
       const user = await UserModel.create(undefined, {
         email: chance.email({ domain: 'example.com' }),
         password: 'foo'
@@ -73,7 +73,7 @@ describe('UserModel', () => {
       await expect(UserModel.delete(user.id, user.id!)).resolves.not.toThrow()
     })
 
-    it('should throw if the current viewer attempts to delete a different user', async () => {
+    it('should throw if the viewer attempts to delete a different user', async () => {
       const user = await UserModel.create(viewer, { email: chance.email({ domain: 'example.com' }), password: 'foo' })
       await expect(UserModel.delete(viewer, user.id!)).rejects.toThrow(
         /Cannot delete user accounts other than your own./

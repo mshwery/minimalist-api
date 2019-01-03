@@ -36,45 +36,6 @@ describe('TaskRepository', () => {
     await taskRepo.delete({ createdBy: In([authorId, otherPersonId]) })
   })
 
-  describe('allUngrouped', () => {
-    it('should return tasks not associated with any lists', async () => {
-      const taskRepo = getCustomRepository(TaskRepository)
-
-      const task1 = taskRepo.create({
-        content: 'foo',
-        createdBy: authorId
-      })
-      const task2 = taskRepo.create({
-        content: 'bar',
-        createdBy: authorId
-      })
-
-      await taskRepo.save([task1, task2])
-
-      const tasks = await taskRepo.allUngrouped({ createdBy: authorId })
-      expect(tasks.length).toBe(2)
-    })
-
-    it('should only return tasks created by the given user', async () => {
-      const taskRepo = getCustomRepository(TaskRepository)
-
-      const task1 = taskRepo.create({
-        content: 'foo',
-        createdBy: authorId
-      })
-      const task2 = taskRepo.create({
-        content: 'bar',
-        createdBy: otherPersonId
-      })
-
-      await taskRepo.save([task1, task2])
-
-      const tasks = await taskRepo.allUngrouped({ createdBy: authorId })
-      expect(tasks.length).toBe(1)
-      expect(tasks[0]).toMatchObject(task1)
-    })
-  })
-
   describe('allByAuthor', () => {
     it('should return tasks created by the given user', async () => {
       const listRepo = getRepository(List)
@@ -99,7 +60,7 @@ describe('TaskRepository', () => {
 
       await taskRepo.save([task1, task2])
 
-      const tasks = await taskRepo.allByAuthor({ createdBy: authorId })
+      const tasks = await taskRepo.allByAuthor(authorId)
       expect(tasks.length).toBe(2)
     })
   })

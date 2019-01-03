@@ -21,7 +21,7 @@ export function canEditUser(viewer: Viewer, user: { id: string }): boolean {
 
 export class UserModel {
   /**
-   * Gets the user associated with the current viewer
+   * Gets the user associated with the viewer
    */
   static async fetchByViewer(viewer: Viewer): Promise<User | null> {
     if (!viewer) {
@@ -58,7 +58,7 @@ export class UserModel {
    * Deletes a user if the viewer has access
    */
   static async delete(viewer: Viewer, id: string): Promise<void> {
-    // current viewer can only delete their own user
+    // viewer can only delete their own user
     if (!canEditUser(viewer, { id })) {
       throw new Forbidden(`Cannot delete user accounts other than your own.`)
     }

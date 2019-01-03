@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 import List from '../list/list.entity'
 import User from '../user/user.entity'
+import { DateLike } from '../../types'
 
 @Entity('task')
 export default class Task {
@@ -25,7 +26,7 @@ export default class Task {
   list?: List
 
   @Column('timestamp with time zone', { nullable: true })
-  completedAt?: Date | null
+  completedAt?: DateLike | null
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt?: Date

@@ -60,21 +60,19 @@ describe('ListRepository', () => {
       expect(lists.length).toBe(1)
       expect(lists[0].name).toBe('author list')
     })
-  })
 
-  describe('changeName', () => {
-    it('should update the name of a list', async () => {
+    it('should return lists by ids', async () => {
       const repo = getCustomRepository(ListRepository)
 
-      let list = await createList({ name: 'list', createdBy: authorId })
-      const updatedAt = list.updatedAt
+      const [, list2] = await Promise.all([
+        createList({ name: 'author list', createdBy: authorId }),
+        createList({ name: 'another author list', createdBy: authorId })
+      ])
 
-      await repo.changeName(list, 'new name!')
+      const lists = await repo.allByAuthor(authorId, [list2.id!])
 
-      list = await repo.findOneOrFail(list.id)
-      expect(list.name).toBe('new name!')
-      expect(list.updatedAt).not.toBe(updatedAt)
-      expect(Number(list.updatedAt)).toBeGreaterThan(Number(updatedAt))
+      expect(lists.length).toBe(1)
+      expect(lists[0]).toEqual(list2)
     })
   })
 

@@ -1,18 +1,10 @@
-import { Unauthorized } from 'http-errors'
-import { getCustomRepository } from 'typeorm'
-import ListRepository from '../models/list/list.repository'
 import { User, UserModel } from '../models/user'
-import { List, ListModel } from '../models/list'
 import { Viewer } from '../types'
+import { List, ListModel } from '../models/list'
+import { Task, TaskModel } from '../models/task'
 
 interface IContext {
   viewer: Viewer
-}
-
-function requireAuth(ctx: IContext): void {
-  if (!ctx.viewer) {
-    throw new Unauthorized()
-  }
 }
 
 const resolvers = {
@@ -22,13 +14,17 @@ const resolvers = {
     },
 
     async list(_root, args: { id: string }, ctx: IContext): Promise<List | null> {
-      requireAuth(ctx)
       return ListModel.fetch(ctx.viewer, args.id)
     },
 
     async lists(_root, args: { ids: string[] }, ctx: IContext): Promise<List[]> {
-      requireAuth(ctx)
-      return getCustomRepository(ListRepository).allByAuthor(ctx.viewer, args.ids)
+      return ListModel.fetchAllByViewer(ctx.viewer, args.ids)
+    }
+  },
+
+  List: {
+    async tasks(list: List, _args, ctx: IContext): Promise<Task[]> {
+      return list.tasks || TaskModel.fetchAllByList(ctx.viewer, list.id!)
     }
   }
 }

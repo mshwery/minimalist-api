@@ -75,4 +75,57 @@ describe('ListModel', () => {
       expect(list).toEqual(ogList)
     })
   })
+
+  describe('create', () => {
+    it('should create a list', async () => {
+      const ogList = await ListModel.create(viewer, { name: 'test list' })
+      expect(ogList.id).toBeDefined()
+
+      const list = await ListModel.fetch(viewer, ogList.id!)
+      expect(list).toEqual(ogList)
+    })
+  })
+
+  describe('update', () => {
+    it('should update the name of a list', async () => {
+      const ogList = await createList({
+        name: 'Test list',
+        createdBy: viewer
+      })
+
+      await ListModel.update(viewer, ogList.id!, { name: 'Renamed list' })
+
+      const list = await ListModel.fetch(viewer, ogList.id!)
+      expect(list!.name).toBe('Renamed list')
+      expect(list!.updatedAt).not.toEqual(ogList.updatedAt)
+    })
+  })
+
+  describe('delete', () => {
+    it('should delete a list if the viewer has access', async () => {
+      const ogList = await createList({
+        name: 'Delete Test List',
+        createdBy: viewer
+      })
+
+      const list = await ListModel.fetch(viewer, ogList.id!)
+      expect(list).toEqual(ogList)
+
+      await ListModel.delete(viewer, ogList.id!)
+
+      // list is no more
+      await expect(ListModel.fetch(viewer, ogList.id!)).resolves.toEqual(null)
+    })
+
+    it('should throw if the viewer does not have access', async () => {
+      const list = await createList({
+        name: 'Delete Test List',
+        createdBy: nonViewer
+      })
+
+      await expect(ListModel.delete(viewer, list.id!)).rejects.toThrow(
+        /Cannot delete lists that you don't have access to./
+      )
+    })
+  })
 })

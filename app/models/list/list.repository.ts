@@ -19,11 +19,6 @@ export default class ListRepository extends Repository<List> {
     return query.orderBy({ 'list."createdAt"': 'DESC' }).getMany()
   }
 
-  public async changeName(list: List, newName: string): Promise<List> {
-    list.name = newName
-    return this.save(list)
-  }
-
   public async archive(list: List): Promise<List> {
     list.isArchived = true
     return this.save(list)
