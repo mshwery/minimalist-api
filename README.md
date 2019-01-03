@@ -52,13 +52,18 @@ Because the tests rely on actually interacting with a database, we have a separa
 ## TODO
 
 - [x] Add tests
-- [ ] Add task sort ordering
-- [ ] support `PATCH` partial updates for tasks and lists?
 - [x] authN
-- [ ] authZ
-- [ ] GraphQL impl
+- [~] authZ
+- [x] GraphQL impl
 - [x] TypeScript
 - [x] Typeorm
+- [ ] move tasks from one list to another (w/ authz)
+- [ ] proper input validation
+- [ ] error types / gql error handling
+- [ ] task sorting
+- [ ] authenticate via graphql too?
+- [ ] custom graphql types (UUID, Node, DateTime, etc)
+- [ ] graphql pagination (connections, nodes, cursor, etc)
 - [ ] email confirmation flow
 - [ ] list sharing/inviting
 - [ ] rate limiting?

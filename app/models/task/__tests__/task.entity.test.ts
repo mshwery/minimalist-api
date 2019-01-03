@@ -1,4 +1,4 @@
-import { Task } from '../task.entity'
+import Task from '../task.entity'
 
 describe('Task', () => {
   describe('isCompleted', () => {

@@ -2,15 +2,18 @@
  * @overview server entrypoint
  */
 
-import * as bodyParser from 'body-parser'
-import * as cors from 'cors'
-import * as express from 'express'
-import * as helmet from 'helmet'
-import * as config from '../config'
-import routes from './routes'
-import { handleNotFound, handleErrorResponse } from './middleware/errors'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import express from 'express'
+import helmet from 'helmet'
+import config from '../config'
+import restApi from './rest'
+import applyGraphQLMiddleware from './graphql'
+import handleErrorResponse from './middleware/errors'
+import handleNotFound from './middleware/not-found'
 import logger from './lib/logger'
 import initConnection from './lib/database'
+import { verifyJwt } from './lib/auth'
 
 const app = express()
 const port = config.get('PORT') || 3000
@@ -29,7 +32,10 @@ app.use(bodyParser.json())
 app.get('/health', (_req, res) => res.end())
 
 /** api route handlers */
-app.use('/api/v1', cors(), routes)
+app.use('/api/v1', cors(), verifyJwt, restApi)
+
+/** graphql server (applies middleware) */
+applyGraphQLMiddleware(app)
 
 /** 404 handler */
 app.use(handleNotFound)
@@ -46,7 +52,7 @@ initConnection()
         return
       }
 
-      logger.info(`Server is ready and listening on http://localhost:${port}`)
+      logger.info(`🚀 Server ready at http://localhost:${port}`)
     })
   })
   .catch(err => {

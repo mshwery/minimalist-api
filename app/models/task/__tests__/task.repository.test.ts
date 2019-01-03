@@ -1,10 +1,12 @@
 import { getRepository, getCustomRepository, In } from 'typeorm'
-import { TaskRepository } from '../task.repository'
+import Chance from 'chance'
+import TaskRepository from '../task.repository'
 import { List } from '../../list'
 import { User } from '../../user'
 
-const authorId = 'abc76c7c-a2d7-4ad7-928e-2404b026c4ba'
-const otherPersonId = '253b681a-e479-4018-9fb9-4976159d2d46'
+const chance = new Chance()
+const authorId = chance.guid({ version: 4 })
+const otherPersonId = chance.guid({ version: 4 })
 
 describe('TaskRepository', () => {
   beforeAll(async () => {
@@ -13,60 +15,25 @@ describe('TaskRepository', () => {
     // create two users for these tests
     const author = userRepo.create({
       id: authorId,
-      email: 'a@example.com',
+      email: chance.email({ domain: 'example.com' }),
       password: 'foobar'
     })
     const other = userRepo.create({
       id: otherPersonId,
-      email: 'b@example.com',
+      email: chance.email({ domain: 'example.com' }),
       password: 'foobar'
     })
 
     await userRepo.save([author, other])
   })
 
+  afterAll(async () => {
+    await getRepository(User).clear()
+  })
+
   afterEach(async () => {
     const taskRepo = getCustomRepository(TaskRepository)
     await taskRepo.delete({ createdBy: In([authorId, otherPersonId]) })
-  })
-
-  describe('allUngrouped', () => {
-    it('should return tasks not associated with any lists', async () => {
-      const taskRepo = getCustomRepository(TaskRepository)
-
-      const task1 = taskRepo.create({
-        content: 'foo',
-        createdBy: authorId
-      })
-      const task2 = taskRepo.create({
-        content: 'bar',
-        createdBy: authorId
-      })
-
-      await taskRepo.save([task1, task2])
-
-      const tasks = await taskRepo.allUngrouped({ createdBy: authorId })
-      expect(tasks.length).toBe(2)
-    })
-
-    it('should only return tasks created by the given user', async () => {
-      const taskRepo = getCustomRepository(TaskRepository)
-
-      const task1 = taskRepo.create({
-        content: 'foo',
-        createdBy: authorId
-      })
-      const task2 = taskRepo.create({
-        content: 'bar',
-        createdBy: otherPersonId
-      })
-
-      await taskRepo.save([task1, task2])
-
-      const tasks = await taskRepo.allUngrouped({ createdBy: authorId })
-      expect(tasks.length).toBe(1)
-      expect(tasks[0]).toMatchObject(task1)
-    })
   })
 
   describe('allByAuthor', () => {
@@ -93,7 +60,7 @@ describe('TaskRepository', () => {
 
       await taskRepo.save([task1, task2])
 
-      const tasks = await taskRepo.allByAuthor({ createdBy: authorId })
+      const tasks = await taskRepo.allByAuthor(authorId)
       expect(tasks.length).toBe(2)
     })
   })

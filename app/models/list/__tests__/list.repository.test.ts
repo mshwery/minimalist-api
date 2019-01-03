@@ -1,13 +1,11 @@
-import * as Chance from 'chance'
+import Chance from 'chance'
 import { getRepository, getCustomRepository } from 'typeorm'
 import { List, ListRepository } from '../'
 import { User } from '../../user'
 
 const chance = new Chance()
-
 const authorId = chance.guid({ version: 4 })
 const otherPersonId = chance.guid({ version: 4 })
-
 const createdLists: string[] = []
 
 async function createList(attrs: Partial<List>): Promise<List> {
@@ -20,8 +18,9 @@ async function createList(attrs: Partial<List>): Promise<List> {
 }
 
 async function deleteLists(): Promise<void> {
-  const repo = getRepository(List)
-  await repo.delete(createdLists)
+  if (createdLists.length > 0) {
+    await getRepository(List).delete(createdLists)
+  }
 }
 
 describe('ListRepository', () => {
@@ -43,7 +42,7 @@ describe('ListRepository', () => {
     await repo.save([author, other])
   })
 
-  afterAll(async () => {
+  beforeEach(async () => {
     await deleteLists()
   })
 
@@ -61,21 +60,19 @@ describe('ListRepository', () => {
       expect(lists.length).toBe(1)
       expect(lists[0].name).toBe('author list')
     })
-  })
 
-  describe('changeName', () => {
-    it('should update the name of a list', async () => {
+    it('should return lists by ids', async () => {
       const repo = getCustomRepository(ListRepository)
 
-      let list = await createList({ name: 'list', createdBy: authorId })
-      const updatedAt = list.updatedAt
+      const [, list2] = await Promise.all([
+        createList({ name: 'author list', createdBy: authorId }),
+        createList({ name: 'another author list', createdBy: authorId })
+      ])
 
-      await repo.changeName(list, 'new name!')
+      const lists = await repo.allByAuthor(authorId, [list2.id!])
 
-      list = await repo.findOneOrFail(list.id)
-      expect(list.name).toBe('new name!')
-      expect(list.updatedAt).not.toBe(updatedAt)
-      expect(Number(list.updatedAt)).toBeGreaterThan(Number(updatedAt))
+      expect(lists.length).toBe(1)
+      expect(lists[0]).toEqual(list2)
     })
   })
 

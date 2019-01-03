@@ -7,11 +7,12 @@ import {
   UpdateDateColumn,
   ManyToOne
 } from 'typeorm'
-import { List } from '../list/list.entity'
-import { User } from '../user/user.entity'
+import List from '../list/list.entity'
+import User from '../user/user.entity'
+import { DateLike } from '../../types'
 
 @Entity('task')
-export class Task {
+export default class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string
 
@@ -25,7 +26,7 @@ export class Task {
   list?: List
 
   @Column('timestamp with time zone', { nullable: true })
-  completedAt?: Date | null
+  completedAt?: DateLike | null
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt?: Date
@@ -33,6 +34,7 @@ export class Task {
   @Column('uuid')
   createdBy?: string
 
+  // @todo test what happens when we delete a user after they've created a list...
   @ManyToOne(_type => User, { nullable: false })
   @JoinColumn({ name: 'createdBy' })
   creator?: User
@@ -48,7 +50,8 @@ export class Task {
   // Sets the `completedAt` timestamp when set to `true`
   set isCompleted(value: boolean) {
     if (value === true) {
-      this.completedAt = new Date()
+      // only update the timestamp if it previously was not complete
+      this.completedAt = this.completedAt || new Date()
     } else {
       this.completedAt = null
     }

@@ -9,11 +9,11 @@ import {
   ManyToOne
   // ManyToMany
 } from 'typeorm'
-import { Task } from '../task/task.entity'
-import { User } from '../user/user.entity'
+import Task from '../task/task.entity'
+import User from '../user/user.entity'
 
 @Entity('list')
-export class List {
+export default class List {
   @PrimaryGeneratedColumn('uuid')
   id?: string
 

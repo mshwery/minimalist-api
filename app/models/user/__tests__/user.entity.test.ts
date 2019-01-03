@@ -1,7 +1,9 @@
+import Chance from 'chance'
 import { getRepository } from 'typeorm'
-import { User } from '../user.entity'
+import User from '../user.entity'
 import { comparePassword } from '../../../lib/auth'
 
+const chance = new Chance()
 const createdUsers: string[] = []
 
 async function createUser(attrs: Partial<User>): Promise<User> {
@@ -27,7 +29,7 @@ describe('User', () => {
   describe('password', () => {
     it('should be hashed', async () => {
       const user = await createUser({
-        email: 'test@example.com',
+        email: chance.email({ domain: 'example.com' }),
         password: 'ya boring'
       })
 
@@ -40,7 +42,7 @@ describe('User', () => {
     it('should update the hash if the password changes', async () => {
       const repo = getRepository(User)
       let user = await createUser({
-        email: 'updated@example.com',
+        email: chance.email({ domain: 'example.com' }),
         password: 'ya boring'
       })
 
@@ -61,13 +63,14 @@ describe('User', () => {
 
   describe('email', () => {
     it('should fail if the email already is being used by another user', async () => {
+      const email = chance.email({ domain: 'example.com' })
       await createUser({
-        email: 'taken@example.com',
+        email,
         password: 'passwerd'
       })
 
       await createUser({
-        email: 'taken@example.com',
+        email,
         password: 'passwerd'
       }).catch(error => {
         expect(error.detail).toBeDefined()

@@ -1,46 +1,22 @@
-import { pick } from 'lodash'
-import { EntityRepository, Repository, IsNull, Not, FindConditions } from 'typeorm'
-import { Task } from './task.entity'
-
-interface ITaskFilter {
-  createdBy: string
-  isCompleted?: boolean
-}
-
-function getConditions(attrs: any): FindConditions<Task> {
-  const conditions: FindConditions<Task> = pick(attrs, ['id', 'completedAt', 'createdBy', 'listId'])
-
-  if (typeof attrs.isCompleted === 'boolean') {
-    conditions.completedAt = attrs.isCompleted ? Not(IsNull()) : IsNull()
-  }
-
-  return conditions
-}
+import { EntityRepository, Repository } from 'typeorm'
+import Task from './task.entity'
 
 @EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
+export default class TaskRepository extends Repository<Task> {
   /**
-   * Get all tasks without a list, by author
+   * Get all tasks created by the given user id
    * TODO: pagination?
    * TODO: filters?
    */
-  public allUngrouped(conditions: ITaskFilter): Promise<Task[]> {
-    const where = getConditions({
-      ...conditions,
-      listId: IsNull()
-    })
+  public allByAuthor(author: string, ids?: string[]): Promise<Task[]> {
+    let query = this.createQueryBuilder('task').where({ createdBy: author })
 
-    return this.find(where)
-  }
+    if (ids && ids.length > 0) {
+      const dedupedIds = Array.from(new Set(ids))
+      query = query.andWhereInIds(dedupedIds)
+    }
 
-  /**
-   * Get all tasks, by author (and other filters)
-   * TODO: pagination?
-   * TODO: filters?
-   */
-  public allByAuthor(conditions: ITaskFilter): Promise<Task[]> {
-    const where = getConditions(conditions)
-    return this.find(where)
+    return query.orderBy({ 'task."createdAt"': 'DESC' }).getMany()
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {
