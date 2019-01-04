@@ -1,0 +1,116 @@
+extend type Query {
+  tasks(ids: [String]): [Task]
+}
+
+extend type Mutation {
+  # Creates a new task
+  createTask(input: CreateTaskInput!): CreateTaskPayload!
+  # Update an existing task
+  updateTask(input: UpdateTaskInput!): UpdateTaskPayload!
+  # Mark a task complete
+  completeTask(input: CompleteTaskInput!): CompleteTaskPayload!
+  # Mark a task incomplete
+  reopenTask(input: ReopenTaskInput!): ReopenTaskPayload!
+  # Delets a task
+  deleteTask(input: DeleteTaskInput!): DeleteTaskPayload!
+}
+
+type Task {
+  # TODO: use UUID type
+  id: String!
+  # The content of the task
+  content: String!
+  # Whether or not the task is marked as complete
+  isCompleted: Boolean!
+  # The associated list this task belongs to
+  listId: String
+  # The user id who created the task
+  # TODO: connect to type PublicUser
+  createdBy: String
+  # When the task was created
+  # TODO: ISO 8601 DateTime
+  createdAt: String
+  # When the task was last updated
+  # TODO: ISO 8601 DateTime
+  updatedAt: String
+  # When the task was completed, null if not completed
+  # TODO: ISO 8601 DateTime
+  completedAt: String
+
+  # TODO: evaluate exposing 'list' field to find associated parent list
+  # (which could result in circular references: task.list.tasks[0].list.tasks etc)
+}
+
+# The input variables for creating a new task
+input CreateTaskInput {
+  # The content of the task
+  content: String!
+  # The id of a list that this task should belong to (optionally)
+  # TODO: use UUID type?
+  listId: String
+}
+
+# The response payload for creating a task
+type CreateTaskPayload {
+  # The newly created task
+  task: Task
+  # TODO: error types?
+}
+
+# The input variables for updating a task
+input UpdateTaskInput {
+  # The id of the task to update
+  id: String!
+  # The (optional) new content for the task
+  # When omitted, the content will not change
+  content: String
+  # The (optional) state of the task
+  isCompleted: Boolean
+  # The (optional) timestamp of completion
+  completedAt: String
+}
+
+# The response payload from updating a task
+type UpdateTaskPayload {
+  task: Task
+  # TODO: error types?
+}
+
+# The input variables to close/complete a task
+input CompleteTaskInput {
+  # The id of the task to complete
+  id: String!
+}
+
+# The response payload from completing a task
+type CompleteTaskPayload {
+  # The completed task
+  task: Task
+  # TODO: error types?
+}
+
+# The input variables to reopen a task
+input ReopenTaskInput {
+  # The id of the task to reopen
+  id: String!
+}
+
+# The response payload from reopening (marking incomplete) a task
+type ReopenTaskPayload {
+  # The reopened task
+  task: Task
+  # TODO: error types?
+}
+
+# The input variables to delete a task
+input DeleteTaskInput {
+  # The id of the task you wish to delete
+  id: String!
+}
+
+# The response payload from deleting a task
+type DeleteTaskPayload {
+  # The id of the task that was deleted
+  id: String
+  # TODO: error types?
+}
