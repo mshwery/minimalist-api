@@ -1,0 +1,104 @@
+extend type Query {
+  list(id: String!): List
+  lists(ids: [String]): [List]
+}
+
+extend type Mutation {
+  # Creates a new list
+  createList(input: CreateListInput!): CreateListPayload!
+  # Renames an existing list
+  renameList(input: RenameListInput!): RenameListPayload!
+  # Archives an existing list
+  archiveList(input: ArchiveListInput!): ArchiveListPayload!
+  # Unarchives an archived list
+  unarchiveList(input: UnarchiveListInput!): UnarchiveListPayload!
+  # Deletes a list
+  deleteList(input: DeleteListInput!): DeleteListPayload!
+}
+
+type List {
+  # TODO: use UUID type
+  id: String!
+  # The name of the list
+  name: String!
+  # Whether or not the list is archived
+  isArchived: Boolean!
+  # The user id who created the list
+  createdBy: String
+  # When the list was created
+  # TODO: ISO 8601 DateTime
+  createdAt: String
+  # When the list was last updated
+  # TODO: ISO 8601 DateTime
+  updatedAt: String
+  # When the list was archived, null if not archived
+  # TODO: ISO 8601 DateTime
+  archivedAt: String
+
+  # The associated tasks
+  tasks: [Task!]
+}
+
+# The input variables for creating a new list
+input CreateListInput {
+  # The name of the list
+  name: String!
+  # TODO: allow task creation at the same time?
+}
+
+# The response payload from creating a list
+type CreateListPayload {
+  # The newly created list
+  list: List
+  # TODO: error types?
+}
+
+# The input variables for renaming a list
+input RenameListInput {
+  # The id of the list to rename
+  id: String!
+  # The new name of the list
+  name: String!
+}
+
+# The response payload from renaming a list
+type RenameListPayload {
+  # The renamed list
+  list: List
+  # TODO: error types?
+}
+
+# The input variables for archiving a list
+input ArchiveListInput {
+  # The id of the list you want to archive
+  id: String!
+}
+
+# The response payload for archiving a list
+type ArchiveListPayload {
+  list: List
+}
+
+# The input variables for unarchiving a list
+input UnarchiveListInput {
+  # The id of the list you want to unarchive
+  id: String!
+}
+
+# The response payload for unarchiving a list
+type UnarchiveListPayload {
+  list: List
+}
+
+# The input variables to delete a list
+input DeleteListInput {
+  # The id of the list you wish to delete
+  id: String!
+}
+
+# The response payload from deleting a list
+type DeleteListPayload {
+  # The id of the list that was deleted
+  id: String
+  # TODO: error types?
+}

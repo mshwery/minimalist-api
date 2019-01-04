@@ -1,14 +1,12 @@
 import { ApolloServer } from 'apollo-server-express'
 import { Express } from 'express'
-import resolvers from './resolvers'
-import typeDefs from './schema'
+import schema from './schema'
 import { verifyJwt } from '../lib/auth'
 
 const path = '/graphql'
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   // enable introspection in production mode
   introspection: true,
   context: ({ req }) => ({
