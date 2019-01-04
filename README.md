@@ -2,6 +2,8 @@
 
 An api for managing tasks and lists of tasks.
 
+[![CircleCI](https://circleci.com/gh/mshwery/minimalist-api/tree/master.svg?style=svg)](https://circleci.com/gh/mshwery/minimalist-api/tree/master)
+
 ## Requirements
 
 - Node >= 10.13
