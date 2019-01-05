@@ -85,7 +85,7 @@ export class TaskModel {
    */
   static async create(
     viewer: Viewer,
-    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID }
+    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID | null }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
