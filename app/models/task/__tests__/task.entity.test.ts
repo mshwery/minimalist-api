@@ -1,4 +1,7 @@
+import Chance from 'chance'
 import Task from '../task.entity'
+
+const chance = new Chance()
 
 describe('Task', () => {
   describe('isCompleted', () => {
@@ -35,6 +38,21 @@ describe('Task', () => {
 
       task.isCompleted = false
       expect(task.completedAt).toBe(null)
+    })
+  })
+
+  describe('validate', () => {
+    it('should throw when a list has invalid values', async () => {
+      const task = new Task()
+      await expect(task.validate()).rejects.toThrowError(/Invalid data. Check "errors" for more details./)
+    })
+
+    it('should not throw when a list has valid values', async () => {
+      const task = new Task()
+      task.content = ''
+      task.createdBy = chance.guid({ version: 4 })
+
+      await expect(task.validate()).resolves.not.toThrow()
     })
   })
 })

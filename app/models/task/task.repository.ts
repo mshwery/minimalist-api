@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm'
 import Task from './task.entity'
+import { UUID } from '../../types'
 
 @EntityRepository(Task)
 export default class TaskRepository extends Repository<Task> {
@@ -8,7 +9,7 @@ export default class TaskRepository extends Repository<Task> {
    * TODO: pagination?
    * TODO: filters?
    */
-  public allByAuthor(author: string, ids?: string[]): Promise<Task[]> {
+  public allByAuthor(author: UUID, ids?: UUID[]): Promise<Task[]> {
     let query = this.createQueryBuilder('task').where({ createdBy: author })
 
     if (ids && ids.length > 0) {

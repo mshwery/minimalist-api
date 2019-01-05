@@ -9,19 +9,23 @@ import {
   BeforeUpdate,
   BeforeInsert
 } from 'typeorm'
+import { validate as validateEntity, Length, IsEmail, IsDate } from 'class-validator'
 import { hashPassword } from '../../lib/auth'
+import { IValidationErrors, UUID } from '../../types'
 // import List from '../list/list.entity'
 
 @Entity('user')
 export default class User {
   @PrimaryGeneratedColumn('uuid')
-  id?: string
+  id?: UUID
 
   @Column({ type: 'text', unique: true })
   @Index()
+  @IsEmail()
   email: string
 
   @Column({ type: 'text' })
+  @Length(8, 20)
   password: string
 
   // @ManyToMany(_type => List, list => list.users, { onDelete: 'CASCADE' })
@@ -29,9 +33,11 @@ export default class User {
   // lists?: List[]
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
+  @IsDate()
   createdAt?: Date
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @IsDate()
   updatedAt?: Date
 
   private tempPassword: string
@@ -51,6 +57,18 @@ export default class User {
     // if the password has changed, we need to hash it again
     if (this.tempPassword !== this.password) {
       this.password = await hashPassword(this.password)
+    }
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate(): Promise<void> {
+    const errors = await validateEntity(this, { skipMissingProperties: true })
+    if (errors.length > 0) {
+      const error: IValidationErrors = new Error(`Invalid data. Check "errors" for more details.`)
+      error.expose = true
+      error.errors = errors
+      throw error
     }
   }
 }
