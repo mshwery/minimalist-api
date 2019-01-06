@@ -19,6 +19,12 @@ const schema = gql`
 
   # An ISO-8601 date (without time).
   scalar Date
+
+  # An object with an ID.
+  interface Node {
+    # ID of the object.
+    id: ID!
+  }
 `
 
 export default [schema, Auth, List, Task, User]

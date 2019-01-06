@@ -1,5 +1,5 @@
 extend type Query {
-  tasks(ids: [String]): [Task]
+  tasks(ids: [ID]): [Task]
 }
 
 extend type Mutation {
@@ -15,7 +15,7 @@ extend type Mutation {
   deleteTask(input: DeleteTaskInput!): DeleteTaskResponse!
 }
 
-type Task {
+type Task implements Node {
   # The unique identifier for a Task (that can be used as a cache key or to refetch this object)
   id: ID!
   # The content of the task
@@ -55,13 +55,13 @@ type CreateTaskResponse {
 # The input variables for updating a task
 input UpdateTaskInput {
   # The id of the task to update
-  id: String!
+  id: ID!
   # The (optional) new content for the task
   # When omitted, the content will not change
   content: String
   # The (optional) state of the task
   isCompleted: Boolean
-  # The (optional) timestamp of completion
+  # The (optional) datetime of completion
   completedAt: DateTime
 }
 
@@ -74,7 +74,7 @@ type UpdateTaskResponse {
 # The input variables to close/complete a task
 input CompleteTaskInput {
   # The id of the task to complete
-  id: String!
+  id: ID!
 }
 
 # The response payload from completing a task
@@ -87,7 +87,7 @@ type CompleteTaskResponse {
 # The input variables to reopen a task
 input ReopenTaskInput {
   # The id of the task to reopen
-  id: String!
+  id: ID!
 }
 
 # The response payload from reopening (marking incomplete) a task
@@ -100,12 +100,12 @@ type ReopenTaskResponse {
 # The input variables to delete a task
 input DeleteTaskInput {
   # The id of the task you wish to delete
-  id: String!
+  id: ID!
 }
 
 # The response payload from deleting a task
 type DeleteTaskResponse {
   # The id of the task that was deleted
-  id: String
+  id: ID
   # TODO: error types?
 }

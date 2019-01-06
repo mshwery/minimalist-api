@@ -1,8 +1,8 @@
 extend type Query {
   # Lookup a list by id.
-  list(id: String!): List
+  list(id: ID!): List
   # Get the lists the user owns.
-  lists(ids: [String]): [List]
+  lists(ids: [ID]): [List]
 }
 
 extend type Mutation {
@@ -18,7 +18,7 @@ extend type Mutation {
   deleteList(input: DeleteListInput!): DeleteListResponse!
 }
 
-type List {
+type List implements Node {
   # The unique identifier for a List (that can be used as a cache key or to refetch this object)
   id: ID!
   # The name of the list
@@ -26,7 +26,7 @@ type List {
   # Whether or not the list is archived
   isArchived: Boolean!
   # The user id who created the list
-  createdBy: String!
+  createdBy: ID!
   # When the list was created
   createdAt: DateTime!
   # When the list was last updated
@@ -55,7 +55,7 @@ type CreateListResponse {
 # The input variables for renaming a list
 input RenameListInput {
   # The id of the list to rename
-  id: String!
+  id: ID!
   # The new name of the list
   name: String!
 }
@@ -70,7 +70,7 @@ type RenameListResponse {
 # The input variables for archiving a list
 input ArchiveListInput {
   # The id of the list you want to archive
-  id: String!
+  id: ID!
 }
 
 # The response payload for archiving a list
@@ -81,7 +81,7 @@ type ArchiveListResponse {
 # The input variables for unarchiving a list
 input UnarchiveListInput {
   # The id of the list you want to unarchive
-  id: String!
+  id: ID!
 }
 
 # The response payload for unarchiving a list
@@ -92,12 +92,12 @@ type UnarchiveListResponse {
 # The input variables to delete a list
 input DeleteListInput {
   # The id of the list you wish to delete
-  id: String!
+  id: ID!
 }
 
 # The response payload from deleting a list
 type DeleteListResponse {
   # The id of the list that was deleted
-  id: String
+  id: ID
   # TODO: error types?
 }
