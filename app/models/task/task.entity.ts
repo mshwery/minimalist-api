@@ -12,7 +12,8 @@ import {
 import { validate as validateEntity, IsDate, ValidateNested, IsUUID, IsDefined } from 'class-validator'
 import List from '../list/list.entity'
 import User from '../user/user.entity'
-import { DateLike, UUID, IValidationErrors } from '../../types'
+import { DateLike, UUID } from '../../types'
+import ValidationError from '../ValidationError'
 
 @Entity('task')
 export default class Task {
@@ -73,10 +74,7 @@ export default class Task {
   async validate(): Promise<void> {
     const errors = await validateEntity(this, { skipMissingProperties: true })
     if (errors.length > 0) {
-      const error: IValidationErrors = new Error(`Invalid data. Check "errors" for more details.`)
-      error.expose = true
-      error.errors = errors
-      throw error
+      throw new ValidationError(`Invalid data. Check "errors" for more details.`, errors)
     }
   }
 }

@@ -11,7 +11,8 @@ import {
 } from 'typeorm'
 import { validate as validateEntity, Length, IsEmail, IsDate } from 'class-validator'
 import { hashPassword } from '../../lib/auth'
-import { IValidationErrors, UUID } from '../../types'
+import { UUID } from '../../types'
+import ValidationError from '../ValidationError'
 // import List from '../list/list.entity'
 
 @Entity('user')
@@ -65,10 +66,7 @@ export default class User {
   async validate(): Promise<void> {
     const errors = await validateEntity(this, { skipMissingProperties: true })
     if (errors.length > 0) {
-      const error: IValidationErrors = new Error(`Invalid data. Check "errors" for more details.`)
-      error.expose = true
-      error.errors = errors
-      throw error
+      throw new ValidationError(`Invalid data. Check "errors" for more details.`, errors)
     }
   }
 }

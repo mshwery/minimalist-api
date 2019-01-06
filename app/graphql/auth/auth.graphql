@@ -1,0 +1,17 @@
+extend type Mutation {
+  # Authenticate a user
+  authenticate(input: AuthenticationInput!): AuthenticationPayload!
+}
+
+input AuthenticationInput {
+  # The email address to authenticate
+  email: String!
+  # The password associated with the email address
+  password: String!
+}
+
+type AuthenticationPayload {
+  # The jwt token to be used in private/authenticated requests
+  token: String
+  # TODO: error types?
+}

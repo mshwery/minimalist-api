@@ -13,7 +13,7 @@ export default function handleErrorResponse(error: IError, _req: Request, res: R
   const status = error.status || 500
   let message = 'Server Error'
 
-  if (typeof error.expose !== 'boolean' || error.expose) {
+  if (error.expose) {
     message = message
   }
 

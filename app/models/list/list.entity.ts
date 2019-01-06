@@ -14,7 +14,8 @@ import {
 import { validate as validateEntity, IsDate, Length, ValidateNested, IsUUID } from 'class-validator'
 import Task from '../task/task.entity'
 import User from '../user/user.entity'
-import { UUID, IValidationErrors } from '../../types'
+import { UUID } from '../../types'
+import ValidationError from '../ValidationError'
 
 @Entity('list')
 export default class List {
@@ -72,10 +73,7 @@ export default class List {
   async validate(): Promise<void> {
     const errors = await validateEntity(this, { skipMissingProperties: true })
     if (errors.length > 0) {
-      const error: IValidationErrors = new Error(`Invalid data. Check "errors" for more details.`)
-      error.expose = true
-      error.errors = errors
-      throw error
+      throw new ValidationError(`Invalid data. Check "errors" for more details.`, errors)
     }
   }
 }
