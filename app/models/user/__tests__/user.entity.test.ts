@@ -78,4 +78,22 @@ describe('User', () => {
       })
     })
   })
+
+  describe('validate', () => {
+    it('should throw when a user has invalid values', async () => {
+      const user = new User()
+      user.email = 'not a valid email'
+      user.password = '2short'
+
+      await expect(user.validate()).rejects.toThrowError(/Invalid data. Check "errors" for more details./)
+    })
+
+    it('should not throw when a user has valid values', async () => {
+      const user = new User()
+      user.email = chance.email({ domain: 'example.com' })
+      user.password = chance.string({ length: 10 })
+
+      await expect(user.validate()).resolves.not.toThrow()
+    })
+  })
 })

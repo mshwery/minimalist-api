@@ -1,7 +1,7 @@
 import { Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { get } from 'lodash'
 import { getCustomRepository, FindOneOptions } from 'typeorm'
-import { Viewer } from '../../types'
+import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
 
@@ -29,7 +29,7 @@ export class ListModel {
   /**
    * Gets a list if the viewer has access to it
    */
-  static async fetch(viewer: Viewer, id: string, options?: { withTasks?: boolean }): Promise<List | null> {
+  static async fetch(viewer: Viewer, id: UUID, options?: { withTasks?: boolean }): Promise<List | null> {
     if (!viewer) {
       return null
     }
@@ -50,7 +50,7 @@ export class ListModel {
   /**
    * Get all lists created by the viewer
    */
-  static async fetchAllByViewer(viewer: Viewer, ids?: string[]): Promise<List[]> {
+  static async fetchAllByViewer(viewer: Viewer, ids?: UUID[]): Promise<List[]> {
     if (!viewer) {
       return []
     }
@@ -80,7 +80,7 @@ export class ListModel {
    * Updates a list for the viewer given some attributes
    * @todo validate `attrs`
    */
-  static async update(viewer: Viewer, id: string, attrs: Partial<List>): Promise<List> {
+  static async update(viewer: Viewer, id: UUID, attrs: Partial<List>): Promise<List> {
     const list = await ListModel.fetch(viewer, id)
     if (!list) {
       throw new NotFound(`No list found with id "${id}"`)
@@ -95,7 +95,7 @@ export class ListModel {
   /**
    * Archives a list for the viewer
    */
-  static async archive(viewer: Viewer, id: string): Promise<List> {
+  static async archive(viewer: Viewer, id: UUID): Promise<List> {
     const list = await ListModel.fetch(viewer, id)
     if (!list) {
       throw new NotFound(`No list found with id "${id}"`)
@@ -107,7 +107,7 @@ export class ListModel {
   /**
    * Unarchives a list for the viewer
    */
-  static async unarchive(viewer: Viewer, id: string): Promise<List> {
+  static async unarchive(viewer: Viewer, id: UUID): Promise<List> {
     const list = await ListModel.fetch(viewer, id)
     if (!list) {
       throw new NotFound(`No list found with id "${id}"`)
@@ -119,7 +119,7 @@ export class ListModel {
   /**
    * Deletes a list if the viewer has access
    */
-  static async delete(viewer: Viewer, id: string): Promise<void> {
+  static async delete(viewer: Viewer, id: UUID): Promise<void> {
     const list = await ListModel.fetch(viewer, id)
 
     // viewer can only delete their own lists

@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm'
 import List from './list.entity'
+import { UUID } from '../../types'
 
 @EntityRepository(List)
 export default class ListRepository extends Repository<List> {
@@ -8,7 +9,7 @@ export default class ListRepository extends Repository<List> {
    * TODO: pagination?
    * TODO: filters?
    */
-  public async allByAuthor(authorId: string, ids?: string[]): Promise<List[]> {
+  public async allByAuthor(authorId: UUID, ids?: UUID[]): Promise<List[]> {
     let query = this.createQueryBuilder('list').where({ createdBy: authorId })
 
     if (ids && ids.length > 0) {

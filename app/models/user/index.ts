@@ -1,6 +1,6 @@
 import { Conflict, Forbidden } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import { Viewer } from '../../types'
+import { Viewer, UUID } from '../../types'
 import User from './user.entity'
 import UserRepository from './user.repository'
 
@@ -43,7 +43,7 @@ export class UserModel {
   /**
    * Creates a user given some attributes
    */
-  static async create(_viewer: Viewer, attrs: { id?: string; email: string; password: string }): Promise<User> {
+  static async create(_viewer: Viewer, attrs: { id?: UUID; email: string; password: string }): Promise<User> {
     const repo = getCustomRepository(UserRepository)
 
     if (await repo.findByEmail(attrs.email)) {
@@ -57,7 +57,7 @@ export class UserModel {
   /**
    * Deletes a user if the viewer has access
    */
-  static async delete(viewer: Viewer, id: string): Promise<void> {
+  static async delete(viewer: Viewer, id: UUID): Promise<void> {
     // viewer can only delete their own user
     if (!canEditUser(viewer, { id })) {
       throw new Forbidden(`Cannot delete user accounts other than your own.`)

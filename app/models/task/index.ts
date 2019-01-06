@@ -1,6 +1,6 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import { Viewer } from '../../types'
+import { Viewer, UUID } from '../../types'
 import { canViewList, canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
@@ -36,7 +36,7 @@ export class TaskModel {
   /**
    * Gets a task if the viewer has access to it
    */
-  static async fetch(viewer: Viewer, id: string): Promise<Task | null> {
+  static async fetch(viewer: Viewer, id: UUID): Promise<Task | null> {
     if (!viewer) {
       return null
     }
@@ -53,7 +53,7 @@ export class TaskModel {
   /**
    * Gets all tasks associated with a list
    */
-  static async fetchAllByList(viewer: Viewer, listId: string): Promise<Task[]> {
+  static async fetchAllByList(viewer: Viewer, listId: UUID): Promise<Task[]> {
     if (!viewer) {
       return []
     }
@@ -71,7 +71,7 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllByViewer(viewer: Viewer, ids?: string[]): Promise<Task[]> {
+  static async fetchAllByViewer(viewer: Viewer, ids?: UUID[]): Promise<Task[]> {
     if (!viewer) {
       return []
     }
@@ -85,7 +85,7 @@ export class TaskModel {
    */
   static async create(
     viewer: Viewer,
-    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: string }
+    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID | null }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
@@ -114,7 +114,7 @@ export class TaskModel {
    * Updates a task for the viewer given some attributes
    * @todo validate `attrs`
    */
-  static async update(viewer: Viewer, id: string, attrs: Partial<Task>): Promise<Task> {
+  static async update(viewer: Viewer, id: UUID, attrs: Partial<Task>): Promise<Task> {
     const task = await TaskModel.fetch(viewer, id)
     if (!task) {
       throw new NotFound(`No task found with id "${id}"`)
@@ -126,7 +126,7 @@ export class TaskModel {
   /**
    * Marks a task complete for the viewer
    */
-  static async markComplete(viewer: Viewer, id: string): Promise<Task> {
+  static async markComplete(viewer: Viewer, id: UUID): Promise<Task> {
     const task = await TaskModel.fetch(viewer, id)
     if (!task) {
       throw new NotFound(`No task found with id "${id}"`)
@@ -138,7 +138,7 @@ export class TaskModel {
   /**
    * Marks a task incomplete for the viewer
    */
-  static async markIncomplete(viewer: Viewer, id: string): Promise<Task> {
+  static async markIncomplete(viewer: Viewer, id: UUID): Promise<Task> {
     const task = await TaskModel.fetch(viewer, id)
     if (!task) {
       throw new NotFound(`No task found with id "${id}"`)
@@ -150,7 +150,7 @@ export class TaskModel {
   /**
    * Deletes a task if the viewer has access
    */
-  static async delete(viewer: Viewer, id: string): Promise<void> {
+  static async delete(viewer: Viewer, id: UUID): Promise<void> {
     const task = await TaskModel.fetch(viewer, id)
 
     if (!task || !(await canEditTask(viewer, task))) {

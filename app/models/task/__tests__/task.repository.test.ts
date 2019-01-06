@@ -16,12 +16,12 @@ describe('TaskRepository', () => {
     const author = userRepo.create({
       id: authorId,
       email: chance.email({ domain: 'example.com' }),
-      password: 'foobar'
+      password: chance.string({ length: 8 })
     })
     const other = userRepo.create({
       id: otherPersonId,
       email: chance.email({ domain: 'example.com' }),
-      password: 'foobar'
+      password: chance.string({ length: 8 })
     })
 
     await userRepo.save([author, other])

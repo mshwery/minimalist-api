@@ -33,12 +33,12 @@ describe('TaskModel', () => {
       UserModel.create(viewer, {
         id: viewer,
         email: chance.email({ domain: 'example.com' }),
-        password: 'foo'
+        password: chance.string({ length: 8 })
       }),
       UserModel.create(viewer, {
         id: nonViewer,
         email: chance.email({ domain: 'example.com' }),
-        password: 'foo'
+        password: chance.string({ length: 8 })
       })
     ])
   })

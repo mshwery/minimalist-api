@@ -6,40 +6,51 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToMany,
-  ManyToOne
+  ManyToOne,
+  BeforeInsert,
+  BeforeUpdate
   // ManyToMany
 } from 'typeorm'
+import { validate as validateEntity, IsDate, Length, ValidateNested, IsUUID } from 'class-validator'
 import Task from '../task/task.entity'
 import User from '../user/user.entity'
+import { UUID, IValidationErrors } from '../../types'
 
 @Entity('list')
 export default class List {
   @PrimaryGeneratedColumn('uuid')
-  id?: string
+  id?: UUID
 
   @Column('text')
+  @Length(1, 21)
   name: string
 
   @OneToMany(_type => Task, task => task.list)
+  @ValidateNested()
   tasks?: Task[]
 
   // @ManyToMany(_type => User, user => user.lists, { onDelete: 'CASCADE' })
   // users?: User[]
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
+  @IsDate()
   createdAt?: Date
 
   @Column('uuid')
-  createdBy?: string
+  @IsUUID()
+  createdBy: UUID
 
   @ManyToOne(_type => User, { nullable: false })
   @JoinColumn({ name: 'createdBy' })
+  @ValidateNested()
   creator?: User
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @IsDate()
   updatedAt?: Date
 
   @Column({ type: 'timestamp with time zone', nullable: true })
+  @IsDate()
   archivedAt?: Date | null
 
   // Convenient getter to alias `archivedAt` as a boolean
@@ -53,6 +64,18 @@ export default class List {
       this.archivedAt = new Date()
     } else {
       this.archivedAt = null
+    }
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate(): Promise<void> {
+    const errors = await validateEntity(this, { skipMissingProperties: true })
+    if (errors.length > 0) {
+      const error: IValidationErrors = new Error(`Invalid data. Check "errors" for more details.`)
+      error.expose = true
+      error.errors = errors
+      throw error
     }
   }
 }
