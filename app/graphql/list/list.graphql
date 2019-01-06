@@ -5,15 +5,15 @@ extend type Query {
 
 extend type Mutation {
   # Creates a new list
-  createList(input: CreateListInput!): CreateListPayload!
+  createList(input: CreateListInput!): CreateListResponse!
   # Renames an existing list
-  renameList(input: RenameListInput!): RenameListPayload!
+  renameList(input: RenameListInput!): RenameListResponse!
   # Archives an existing list
-  archiveList(input: ArchiveListInput!): ArchiveListPayload!
+  archiveList(input: ArchiveListInput!): ArchiveListResponse!
   # Unarchives an archived list
-  unarchiveList(input: UnarchiveListInput!): UnarchiveListPayload!
+  unarchiveList(input: UnarchiveListInput!): UnarchiveListResponse!
   # Deletes a list
-  deleteList(input: DeleteListInput!): DeleteListPayload!
+  deleteList(input: DeleteListInput!): DeleteListResponse!
 }
 
 type List {
@@ -47,7 +47,7 @@ input CreateListInput {
 }
 
 # The response payload from creating a list
-type CreateListPayload {
+type CreateListResponse {
   # The newly created list
   list: List
   # TODO: error types?
@@ -62,7 +62,7 @@ input RenameListInput {
 }
 
 # The response payload from renaming a list
-type RenameListPayload {
+type RenameListResponse {
   # The renamed list
   list: List
   # TODO: error types?
@@ -75,7 +75,7 @@ input ArchiveListInput {
 }
 
 # The response payload for archiving a list
-type ArchiveListPayload {
+type ArchiveListResponse {
   list: List
 }
 
@@ -86,7 +86,7 @@ input UnarchiveListInput {
 }
 
 # The response payload for unarchiving a list
-type UnarchiveListPayload {
+type UnarchiveListResponse {
   list: List
 }
 
@@ -97,7 +97,7 @@ input DeleteListInput {
 }
 
 # The response payload from deleting a list
-type DeleteListPayload {
+type DeleteListResponse {
   # The id of the list that was deleted
   id: String
   # TODO: error types?

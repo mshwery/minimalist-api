@@ -1,6 +1,6 @@
 extend type Mutation {
   # Authenticate a user
-  authenticate(input: AuthenticationInput!): AuthenticationPayload!
+  authenticate(input: AuthenticationInput!): AuthenticationResponse!
 }
 
 input AuthenticationInput {
@@ -10,7 +10,7 @@ input AuthenticationInput {
   password: String!
 }
 
-type AuthenticationPayload {
+type AuthenticationResponse {
   # The jwt token to be used in private/authenticated requests
   token: String
   # TODO: error types?
