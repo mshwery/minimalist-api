@@ -25,7 +25,7 @@ type Task implements Node {
   # The associated list this task belongs to
   listId: ID
   # The user id who created the task
-  createdBy: String
+  createdBy: ID!
   # When the task was created
   createdAt: DateTime!
   # When the task was last updated
