@@ -5,13 +5,14 @@ import { UserModel, User } from '../'
 const chance = new Chance()
 const viewer = chance.guid({ version: 4 })
 const email = chance.email({ domain: 'example.com' })
+const password = chance.string({ length: 8 })
 
 describe('UserModel', () => {
   beforeAll(async () => {
     await UserModel.create(viewer, {
       id: viewer,
       email,
-      password: 'foobar'
+      password
     })
   })
 
@@ -46,7 +47,7 @@ describe('UserModel', () => {
     it('should create a user', async () => {
       const attrs = {
         email: chance.email({ domain: 'example.com' }),
-        password: 'foo'
+        password
       }
 
       await expect(UserModel.create(viewer, attrs)).resolves.not.toThrow()
@@ -55,7 +56,7 @@ describe('UserModel', () => {
     it('should throw if a user with the same email address already exists', async () => {
       const existingAttrs = {
         email,
-        password: 'foo'
+        password
       }
 
       await expect(UserModel.create(viewer, existingAttrs)).rejects.toThrow(
@@ -68,13 +69,13 @@ describe('UserModel', () => {
     it('should allow the viewer to delete their own user', async () => {
       const user = await UserModel.create(undefined, {
         email: chance.email({ domain: 'example.com' }),
-        password: 'foo'
+        password
       })
       await expect(UserModel.delete(user.id, user.id!)).resolves.not.toThrow()
     })
 
     it('should throw if the viewer attempts to delete a different user', async () => {
-      const user = await UserModel.create(viewer, { email: chance.email({ domain: 'example.com' }), password: 'foo' })
+      const user = await UserModel.create(viewer, { email: chance.email({ domain: 'example.com' }), password })
       await expect(UserModel.delete(viewer, user.id!)).rejects.toThrow(
         /Cannot delete user accounts other than your own./
       )

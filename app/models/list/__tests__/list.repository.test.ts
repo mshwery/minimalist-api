@@ -31,12 +31,12 @@ describe('ListRepository', () => {
     const author = repo.create({
       id: authorId,
       email: chance.email({ domain: 'example.com' }),
-      password: 'foobar'
+      password: chance.string({ length: 8 })
     })
     const other = repo.create({
       id: otherPersonId,
       email: chance.email({ domain: 'example.com' }),
-      password: 'foobar'
+      password: chance.string({ length: 8 })
     })
 
     await repo.save([author, other])
