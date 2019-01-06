@@ -16,26 +16,22 @@ extend type Mutation {
 }
 
 type Task {
-  # TODO: use UUID type
-  id: String!
+  # The unique identifier for a Task (that can be used as a cache key or to refetch this object)
+  id: ID!
   # The content of the task
   content: String!
   # Whether or not the task is marked as complete
   isCompleted: Boolean!
   # The associated list this task belongs to
-  listId: String
+  listId: ID
   # The user id who created the task
-  # TODO: connect to type PublicUser
   createdBy: String
   # When the task was created
-  # TODO: ISO 8601 DateTime
-  createdAt: String
+  createdAt: DateTime!
   # When the task was last updated
-  # TODO: ISO 8601 DateTime
-  updatedAt: String
+  updatedAt: DateTime!
   # When the task was completed, null if not completed
-  # TODO: ISO 8601 DateTime
-  completedAt: String
+  completedAt: DateTime!
 
   # TODO: evaluate exposing 'list' field to find associated parent list
   # (which could result in circular references: task.list.tasks[0].list.tasks etc)
@@ -46,8 +42,7 @@ input CreateTaskInput {
   # The content of the task
   content: String!
   # The id of a list that this task should belong to (optionally)
-  # TODO: use UUID type?
-  listId: String
+  listId: ID
 }
 
 # The response payload for creating a task
@@ -67,7 +62,7 @@ input UpdateTaskInput {
   # The (optional) state of the task
   isCompleted: Boolean
   # The (optional) timestamp of completion
-  completedAt: String
+  completedAt: DateTime
 }
 
 # The response payload from updating a task

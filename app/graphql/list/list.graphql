@@ -1,5 +1,7 @@
 extend type Query {
+  # Lookup a list by id.
   list(id: String!): List
+  # Get the lists the user owns.
   lists(ids: [String]): [List]
 }
 
@@ -17,23 +19,20 @@ extend type Mutation {
 }
 
 type List {
-  # TODO: use UUID type
-  id: String!
+  # The unique identifier for a List (that can be used as a cache key or to refetch this object)
+  id: ID!
   # The name of the list
   name: String!
   # Whether or not the list is archived
   isArchived: Boolean!
   # The user id who created the list
-  createdBy: String
+  createdBy: String!
   # When the list was created
-  # TODO: ISO 8601 DateTime
-  createdAt: String
+  createdAt: DateTime!
   # When the list was last updated
-  # TODO: ISO 8601 DateTime
-  updatedAt: String
+  updatedAt: DateTime!
   # When the list was archived, null if not archived
-  # TODO: ISO 8601 DateTime
-  archivedAt: String
+  archivedAt: DateTime!
 
   # The associated tasks
   tasks: [Task!]

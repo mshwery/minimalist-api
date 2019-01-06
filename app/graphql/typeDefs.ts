@@ -10,9 +10,15 @@ const schema = gql`
     mutation: Mutation
   }
 
-  # These will get extended later
+  # Root Query and Mutation defined so they can be extended in other schema parts.
   type Query
   type Mutation
+
+  # An ISO-8601 UTC datetime.
+  scalar DateTime
+
+  # An ISO-8601 date (without time).
+  scalar Date
 `
 
 export default [schema, Auth, List, Task, User]
