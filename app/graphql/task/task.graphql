@@ -4,15 +4,15 @@ extend type Query {
 
 extend type Mutation {
   # Creates a new task
-  createTask(input: CreateTaskInput!): CreateTaskPayload!
+  createTask(input: CreateTaskInput!): CreateTaskResponse!
   # Update an existing task
-  updateTask(input: UpdateTaskInput!): UpdateTaskPayload!
+  updateTask(input: UpdateTaskInput!): UpdateTaskResponse!
   # Mark a task complete
-  completeTask(input: CompleteTaskInput!): CompleteTaskPayload!
+  completeTask(input: CompleteTaskInput!): CompleteTaskResponse!
   # Mark a task incomplete
-  reopenTask(input: ReopenTaskInput!): ReopenTaskPayload!
+  reopenTask(input: ReopenTaskInput!): ReopenTaskResponse!
   # Delets a task
-  deleteTask(input: DeleteTaskInput!): DeleteTaskPayload!
+  deleteTask(input: DeleteTaskInput!): DeleteTaskResponse!
 }
 
 type Task {
@@ -51,7 +51,7 @@ input CreateTaskInput {
 }
 
 # The response payload for creating a task
-type CreateTaskPayload {
+type CreateTaskResponse {
   # The newly created task
   task: Task
   # TODO: error types?
@@ -71,7 +71,7 @@ input UpdateTaskInput {
 }
 
 # The response payload from updating a task
-type UpdateTaskPayload {
+type UpdateTaskResponse {
   task: Task
   # TODO: error types?
 }
@@ -83,7 +83,7 @@ input CompleteTaskInput {
 }
 
 # The response payload from completing a task
-type CompleteTaskPayload {
+type CompleteTaskResponse {
   # The completed task
   task: Task
   # TODO: error types?
@@ -96,7 +96,7 @@ input ReopenTaskInput {
 }
 
 # The response payload from reopening (marking incomplete) a task
-type ReopenTaskPayload {
+type ReopenTaskResponse {
   # The reopened task
   task: Task
   # TODO: error types?
@@ -109,7 +109,7 @@ input DeleteTaskInput {
 }
 
 # The response payload from deleting a task
-type DeleteTaskPayload {
+type DeleteTaskResponse {
   # The id of the task that was deleted
   id: String
   # TODO: error types?
