@@ -1,5 +1,6 @@
-import { Conflict, Forbidden } from 'http-errors'
+import { Conflict, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
+import { comparePassword, generateJwt } from '../../lib/auth'
 import { Viewer, UUID } from '../../types'
 import User from './user.entity'
 import UserRepository from './user.repository'
@@ -33,14 +34,6 @@ export class UserModel {
   }
 
   /**
-   * Gets a user by email address
-   */
-  static async fetchByEmail(_viewer: Viewer, email: string): Promise<User | null> {
-    const user = await getCustomRepository(UserRepository).findByEmail(email)
-    return user || null
-  }
-
-  /**
    * Creates a user given some attributes
    */
   static async create(_viewer: Viewer, attrs: { id?: UUID; email: string; password: string }): Promise<User> {
@@ -64,5 +57,23 @@ export class UserModel {
     }
 
     await getCustomRepository(UserRepository).delete(id)
+  }
+
+  /**
+   * Authenticates an email and password and returns a token
+   */
+  static async authenticate(_viewer: Viewer, attrs: { email: string; password: string }): Promise<{ token: string }> {
+    const user = await getCustomRepository(UserRepository).findByEmail(attrs.email)
+    if (!user) {
+      throw new NotFound(`No user found with email address: "${attrs.email}"`)
+    }
+
+    const isMatch = await comparePassword(attrs.password, user.password)
+    if (!isMatch) {
+      throw new Unauthorized(`We didn't recognize that combination of email and password.`)
+    }
+
+    const token = generateJwt({ sub: user.id })
+    return { token }
   }
 }
