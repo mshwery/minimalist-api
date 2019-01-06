@@ -1,17 +1,15 @@
 extend type Query {
-  # Get the current user
-  me: PrivateUser
+  # The currently authenticated user.
+  me: User
 }
 
-type PrivateUser {
-  # TODO: use UUID type
-  id: String!
+type User {
+  # The unique identifier for a User (that can be used as a cache key or to refetch this object)
+  id: ID!
   # The user's email address
   email: String!
-  # When the task was created
-  # TODO: ISO 8601 DateTime
-  createdAt: String
-  # When the task was last updated
-  # TODO: ISO 8601 DateTime
-  updatedAt: String
+  # When the user was created
+  createdAt: DateTime!
+  # When the user was last updated
+  updatedAt: DateTime!
 }
