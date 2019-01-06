@@ -16,7 +16,7 @@ extend type Mutation {
 }
 
 type Task {
-  # The unique identifier for a ___ (can be used as a cache key or to refetch this object)
+  # The unique identifier for a Task (that can be used as a cache key or to refetch this object)
   id: ID!
   # The content of the task
   content: String!
