@@ -1,0 +1,20 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+# Root Query and Mutation defined so they can be extended in other schema parts.
+type Query
+type Mutation
+
+# An ISO-8601 UTC datetime.
+scalar DateTime
+
+# An ISO-8601 date (without time).
+scalar Date
+
+# An object with an ID.
+interface Node {
+  # ID of the object.
+  id: ID!
+}

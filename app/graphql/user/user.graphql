@@ -3,7 +3,7 @@ extend type Query {
   me: User
 }
 
-type User {
+type User implements Node {
   # The unique identifier for a User (that can be used as a cache key or to refetch this object)
   id: ID!
   # The user's email address
