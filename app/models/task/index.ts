@@ -1,4 +1,5 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
+import { sortBy } from 'lodash'
 import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
 import { canViewList, canEditList, ListModel } from '../list'
@@ -159,4 +160,39 @@ export class TaskModel {
 
     await getCustomRepository(TaskRepository).delete(id)
   }
+
+  /**
+   * Move a single task by id
+   */
+  static async moveTask(viewer: Viewer, args: { id: UUID; listId: UUID; insertBefore: number }): Promise<Task> {
+    // Get all the tasks so we know which ones we have to reorder
+    const tasks = await TaskModel.fetchAllByList(viewer, args.listId)
+
+    // Find the task we need to move
+    const task = tasks.find(t => t.id === args.id)
+
+    if (!task) {
+      throw new NotFound(`No task found with id "${args.id}"`)
+    }
+
+    const sortedTasks = sortBy(tasks, 'itemOrder')
+    const fromIndex = sortedTasks.indexOf(task)
+
+    // Reorder the tasks and update their `itemOrder`
+    const newSortedTasks = move(sortedTasks, fromIndex, args.insertBefore).map((t, index) => {
+      t.itemOrder = index + 1
+      return t
+    })
+
+    // TODO: persist tasks that changed
+
+    return task
+  }
+}
+
+function move<T>(items: T[], fromIndex: number, toIndex: number): T[] {
+  const arr = Array.from(items)
+  const item = arr.splice(fromIndex, 1)[0]
+  arr.splice(toIndex, 0, item)
+  return arr
 }
