@@ -2,6 +2,7 @@ import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { sortBy } from 'lodash'
 import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
+import { move } from '../../lib/array-move'
 import { canViewList, canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
@@ -175,24 +176,25 @@ export class TaskModel {
       throw new NotFound(`No task found with id "${args.id}"`)
     }
 
-    const sortedTasks = sortBy(tasks, 'itemOrder')
+    const sortedTasks = sortBy(tasks, 'sortOrder')
     const fromIndex = sortedTasks.indexOf(task)
 
-    // Reorder the tasks and update their `itemOrder`
-    const newSortedTasks = move(sortedTasks, fromIndex, args.insertBefore).map((t, index) => {
-      t.itemOrder = index + 1
-      return t
-    })
+    // Reorder the tasks and update their `sortOrder`
+    let newSortedTasks = move(sortedTasks, fromIndex, args.insertBefore - 1)
+    newSortedTasks = assignItemOrderByPositions(newSortedTasks)
 
-    // TODO: persist tasks that changed
+    await getCustomRepository(TaskRepository).save(newSortedTasks)
 
     return task
   }
 }
 
-function move<T>(items: T[], fromIndex: number, toIndex: number): T[] {
-  const arr = Array.from(items)
-  const item = arr.splice(fromIndex, 1)[0]
-  arr.splice(toIndex, 0, item)
-  return arr
+/**
+ * Sets each Task's `sortOrder` based on its sorted index (shifted to a 1-based index)
+ */
+function assignItemOrderByPositions(tasks) {
+  return tasks.map((task, index) => {
+    task.sortOrder = index + 1
+    return task
+  })
 }

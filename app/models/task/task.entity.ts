@@ -7,16 +7,15 @@ import {
   UpdateDateColumn,
   ManyToOne,
   BeforeInsert,
-  BeforeUpdate,
-  Generated
+  BeforeUpdate
 } from 'typeorm'
-import { validate as validateEntity, IsDate, ValidateNested, IsUUID, IsDefined, IsInt } from 'class-validator'
+import { validate as validateEntity, IsDate, ValidateNested, IsUUID, IsDefined } from 'class-validator'
 import List from '../list/list.entity'
 import User from '../user/user.entity'
 import { DateLike, UUID } from '../../types'
 import ValidationError from '../ValidationError'
 
-@Entity('task')
+@Entity('tasks')
 export default class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: UUID
@@ -32,14 +31,12 @@ export default class Task {
   @ValidateNested()
   list?: List
 
+  @Column('integer', { nullable: true })
+  sortOrder?: number | null
+
   @Column('timestamp with time zone', { nullable: true })
   @IsDate()
   completedAt?: DateLike | null
-
-  @Column('integer')
-  @Generated('increment')
-  @IsInt()
-  itemOrder: number
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   @IsDate()
