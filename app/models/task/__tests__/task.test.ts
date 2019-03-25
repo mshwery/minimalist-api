@@ -1,6 +1,5 @@
 import { getRepository } from 'typeorm'
 import Chance from 'chance'
-import { sortBy } from 'lodash'
 import { Task, TaskModel } from '../'
 import { List } from '../../list'
 import { UserModel } from '../../user'
@@ -198,12 +197,11 @@ describe('TaskModel', () => {
       })
 
       const tasks = await TaskModel.fetchAllByList(viewer, list.id!)
-      const sorted = sortBy(tasks, 'sortOrder')
 
-      expect(sorted[0].id).toEqual(task1.id)
-      expect(sorted[0].sortOrder).toEqual(1)
-      expect(sorted[1].id).toEqual(task2.id)
-      expect(sorted[1].sortOrder).toEqual(2)
+      expect(tasks[0].id).toEqual(task1.id)
+      expect(tasks[0].sortOrder).toEqual(1)
+      expect(tasks[1].id).toEqual(task2.id)
+      expect(tasks[1].sortOrder).toEqual(2)
     })
   })
 })

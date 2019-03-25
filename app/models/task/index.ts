@@ -1,5 +1,4 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
-import { sortBy } from 'lodash'
 import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
 import { move } from '../../lib/array-move'
@@ -176,11 +175,10 @@ export class TaskModel {
       throw new NotFound(`No task found with id "${args.id}"`)
     }
 
-    const sortedTasks = sortBy(tasks, 'sortOrder')
-    const fromIndex = sortedTasks.indexOf(task)
+    const fromIndex = tasks.indexOf(task)
 
     // Reorder the tasks and update their `sortOrder`
-    let newSortedTasks = move(sortedTasks, fromIndex, args.insertBefore - 1)
+    let newSortedTasks = move(tasks, fromIndex, args.insertBefore - 1)
     newSortedTasks = assignItemOrderByPositions(newSortedTasks)
 
     await getCustomRepository(TaskRepository).save(newSortedTasks)
