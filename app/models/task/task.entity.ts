@@ -15,7 +15,12 @@ import User from '../user/user.entity'
 import { DateLike, UUID } from '../../types'
 import ValidationError from '../ValidationError'
 
-@Entity('tasks')
+@Entity('tasks', {
+  orderBy: {
+    sortOrder: 'ASC',
+    createdAt: 'ASC'
+  }
+})
 export default class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: UUID
