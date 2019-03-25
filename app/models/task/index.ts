@@ -1,6 +1,7 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
+import { move } from '../../lib/array-move'
 import { canViewList, canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
@@ -159,4 +160,39 @@ export class TaskModel {
 
     await getCustomRepository(TaskRepository).delete(id)
   }
+
+  /**
+   * Move a single task by id
+   */
+  static async moveTask(viewer: Viewer, args: { id: UUID; listId: UUID; insertBefore: number }): Promise<Task> {
+    // Get all the tasks so we know which ones we have to reorder
+    const tasks = await TaskModel.fetchAllByList(viewer, args.listId)
+
+    // Find the task we need to move
+    const task = tasks.find(t => t.id === args.id)
+
+    if (!task) {
+      throw new NotFound(`No task found with id "${args.id}"`)
+    }
+
+    const fromIndex = tasks.indexOf(task)
+
+    // Reorder the tasks and update their `sortOrder`
+    let newSortedTasks = move(tasks, fromIndex, args.insertBefore - 1)
+    newSortedTasks = assignItemOrderByPositions(newSortedTasks)
+
+    await getCustomRepository(TaskRepository).save(newSortedTasks)
+
+    return task
+  }
+}
+
+/**
+ * Sets each Task's `sortOrder` based on its sorted index (shifted to a 1-based index)
+ */
+function assignItemOrderByPositions(tasks) {
+  return tasks.map((task, index) => {
+    task.sortOrder = index + 1
+    return task
+  })
 }

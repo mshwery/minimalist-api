@@ -15,7 +15,12 @@ import User from '../user/user.entity'
 import { DateLike, UUID } from '../../types'
 import ValidationError from '../ValidationError'
 
-@Entity('task')
+@Entity('tasks', {
+  orderBy: {
+    sortOrder: 'ASC',
+    createdAt: 'ASC'
+  }
+})
 export default class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: UUID
@@ -30,6 +35,9 @@ export default class Task {
   @ManyToOne(_type => List, list => list.tasks, { nullable: true, primary: true, onDelete: 'CASCADE' })
   @ValidateNested()
   list?: List
+
+  @Column('integer', { nullable: true })
+  sortOrder?: number | null
 
   @Column('timestamp with time zone', { nullable: true })
   @IsDate()

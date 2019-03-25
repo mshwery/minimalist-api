@@ -7,22 +7,20 @@ import { UserModel } from '../../user'
 const chance = new Chance()
 const viewer = chance.guid({ version: 4 })
 const nonViewer = chance.guid({ version: 4 })
-const tasks: string[] = []
+const allTasks: string[] = []
 const lists: string[] = []
 
 async function createList(attrs: Partial<List>): Promise<List> {
   const repo = getRepository(List)
-  const list = repo.create(attrs)
-  await repo.save(list)
+  const list = await repo.save(repo.create(attrs))
   lists.push(list.id!)
   return list
 }
 
 async function createTask(attrs: Partial<Task>): Promise<Task> {
   const repo = getRepository(Task)
-  const task = repo.create(attrs)
-  await repo.save(task)
-  tasks.push(task.id!)
+  const task = await repo.save(repo.create(attrs))
+  allTasks.push(task.id!)
   return task
 }
 
@@ -44,8 +42,8 @@ describe('TaskModel', () => {
   })
 
   afterEach(async () => {
-    if (tasks.length > 0) {
-      await getRepository(Task).delete(tasks)
+    if (allTasks.length > 0) {
+      await getRepository(Task).delete(allTasks)
     }
 
     if (lists.length > 0) {
@@ -116,7 +114,94 @@ describe('TaskModel', () => {
       })
 
       task = await TaskModel.fetch(viewer, ogTask.id!)
-      expect(task).toEqual(ogTask)
+      expect(task).toEqual(expect.objectContaining(ogTask))
+    })
+  })
+
+  describe('moveTask', () => {
+    it('should throw if the associated list cannot be found', async () => {
+      const args = {
+        id: chance.guid({ version: 4 }),
+        listId: chance.guid({ version: 4 }),
+        insertBefore: 10
+      }
+
+      await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No list found with id/)
+    })
+
+    it('should throw if the associated list cannot be access by the viewer', async () => {
+      const list = await createList({
+        name: 'moveTask list',
+        createdBy: nonViewer
+      })
+
+      const task = await createTask({
+        content: 'moveTask test',
+        createdBy: nonViewer,
+        list
+      })
+
+      const args = {
+        id: task.id!,
+        listId: task.listId!,
+        insertBefore: 10
+      }
+
+      await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No list found with id/)
+    })
+
+    it('should throw if the task cannot be found', async () => {
+      const list = await createList({
+        name: 'moveTask list',
+        createdBy: viewer
+      })
+
+      const args = {
+        id: chance.guid({ version: 4 }),
+        listId: list.id!,
+        insertBefore: 10
+      }
+
+      await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No task found with id/)
+    })
+
+    it('should not change the order if the item is already in the position', async () => {
+      const list = await createList({
+        name: 'moveTask list',
+        createdBy: viewer
+      })
+
+      const [task1, task2] = await Promise.all([
+        createTask({
+          content: 'moveTask test1',
+          createdBy: viewer,
+          sortOrder: 1,
+          list
+        }),
+        createTask({
+          content: 'moveTask test2',
+          createdBy: viewer,
+          sortOrder: 2,
+          list
+        })
+      ])
+
+      expect(task1.sortOrder).toEqual(1)
+      expect(task2.sortOrder).toEqual(2)
+
+      // Move the item to where it already is!
+      await TaskModel.moveTask(viewer, {
+        id: task1.id!,
+        listId: list.id!,
+        insertBefore: 1
+      })
+
+      const tasks = await TaskModel.fetchAllByList(viewer, list.id!)
+
+      expect(tasks[0].id).toEqual(task1.id)
+      expect(tasks[0].sortOrder).toEqual(1)
+      expect(tasks[1].id).toEqual(task2.id)
+      expect(tasks[1].sortOrder).toEqual(2)
     })
   })
 })

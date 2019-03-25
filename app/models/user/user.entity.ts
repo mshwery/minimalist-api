@@ -15,7 +15,7 @@ import { UUID } from '../../types'
 import ValidationError from '../ValidationError'
 // import List from '../list/list.entity'
 
-@Entity('user')
+@Entity('users')
 export default class User {
   @PrimaryGeneratedColumn('uuid')
   id?: UUID

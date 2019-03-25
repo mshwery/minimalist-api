@@ -11,8 +11,10 @@ extend type Mutation {
   completeTask(input: CompleteTaskInput!): CompleteTaskResponse!
   # Mark a task incomplete
   reopenTask(input: ReopenTaskInput!): ReopenTaskResponse!
-  # Delets a task
+  # Deletes a task
   deleteTask(input: DeleteTaskInput!): DeleteTaskResponse!
+  # Moves a task to a specific position
+  moveTask(input: MoveTaskInput!): MoveTaskResponse!
 }
 
 type Task implements Node {
@@ -108,4 +110,20 @@ type DeleteTaskResponse {
   # The id of the task that was deleted
   id: ID
   # TODO: error types?
+}
+
+# The input variables to move a task
+input MoveTaskInput {
+  # The id of the task to move
+  id: ID!
+  # The id of a list that this task belongs to
+  listId: ID!
+  # The position to insert the task before
+  insertBefore: Int!
+}
+
+# The response payload from moving a task
+type MoveTaskResponse {
+  # The moved task
+  task: Task
 }

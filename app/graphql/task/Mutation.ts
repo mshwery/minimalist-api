@@ -38,5 +38,17 @@ export default {
     const id = args.input.id
     await TaskModel.delete(ctx.viewer, id)
     return { id }
+  },
+
+  async moveTask(
+    _root,
+    args: IMutationInput<{ listId: string; id: string; insertBefore: number }>,
+    ctx: IContext
+  ): Promise<{ task: Task }> {
+    const task = await TaskModel.moveTask(ctx.viewer, args.input)
+
+    return {
+      task
+    }
   }
 }
