@@ -25,7 +25,7 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.4.1"
   },
-  "proxy": "http://localhost:3000/",
+  "proxy": "http://localhost:5000/",
   "eslintConfig": {
     "extends": "react-app"
   },
