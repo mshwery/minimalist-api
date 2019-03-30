@@ -7,14 +7,14 @@ An api for managing tasks and lists of tasks.
 ## Requirements
 
 - Node >= 10.13
-- npm >= 6.x
+- Yarn >= 1.15
 - Postgresql 9.6
 
 ## Getting Started
 
 ### Dependencies
 
-Once you've got Node/npm installed you can run `npm install` to install app dependencies. It is recommended you do this prior to getting the database configured if you want to make use of the `npm run migrate` command.
+Once you've got Node/yarn installed you can run `yarn install` to install app dependencies. It is recommended you do this prior to getting the database configured if you want to make use of the `yarn migrate` command.
 
 ### Running locally via Docker
 
@@ -28,25 +28,25 @@ This project uses Docker for local development, and the Dockerfile can also be u
 
 ```shell
 docker-compose up -d
-npm start
+yarn start
 ```
 
 ### Database and migrations
 
 Typeorm is our ORM / query builder for connecting to a Postgres database.
 
-Migrations can be generated using Typeorm `npx typeorm migration:generate -n NameOfMigration`.
+Migrations can be generated using Typeorm `yarn typeorm migration:generate -n NameOfMigration`.
 
-To run migrations: `npm run migrate` or `npm run migrate:dev` (also runs the build, which is where typeorm's cli is looking for new migrations).
+To run migrations: `yarn migrate` or `yarn migrate:dev` (also runs the build, which is where typeorm's cli is looking for new migrations).
 
 Because the tests rely on actually interacting with a database, we have a separate test db where we run migrations automatically run during test setup in order to drop the schema and start with a fresh database for every test run. You may need to take special consideration for cleaning up any data you create in a test suite, directly so not to impact other tests that may break due to cross contamination. (`TODO: consider safely resetting the entire db with every test`)
 
-### NPM commands
+### Yarn commands
 
-- `npm install` to install dependencies
-- `npm run lint` to check (and fix many) syntax/formatting
-- `npm run migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
-- `npm run build` to compile the build
-- `npm run test` to run lint checks and tests
-- `npm run dev` to run the server in watch mode
-- `npm start` to run the production server
+- `yarn install` to install dependencies
+- `yarn lint` to check (and fix many) syntax/formatting
+- `yarn migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
+- `yarn build` to compile the build
+- `yarn test` to run lint checks and tests
+- `yarn dev` to run the server in watch mode
+- `yarn start` to run the production server

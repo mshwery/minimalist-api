@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
+import path from 'path'
 import config from '../config'
 import restApi from './rest'
 import applyGraphQLMiddleware from './graphql'
@@ -16,7 +17,7 @@ import initConnection from './lib/database'
 import { verifyJwt } from './lib/auth'
 
 const app = express()
-const port = config.get('PORT') || 3000
+const port = config.get('PORT') || 5000
 app.set('port', port)
 
 /** Provide access to request.ips = [x-forwarded-for headers] */
@@ -36,6 +37,17 @@ app.use('/api/v1', cors(), verifyJwt, restApi)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
+
+// In dev mode, let create-react-app serve the proxy for the client-side app
+if (config.get('NODE_ENV') === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../client/build')))
+
+   // Handle React routing, return all requests to React app
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+  })
+}
 
 /** 404 handler */
 app.use(handleNotFound)
