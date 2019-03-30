@@ -2,6 +2,8 @@
 
 FROM node:10.13-alpine
 
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+
 # set our node environment, either development or production
 # defaults to production, compose overrides this to development on build and run
 ARG NODE_ENV=production
@@ -19,10 +21,10 @@ EXPOSE $PORT 5858 9229
 HEALTHCHECK CMD curl -fs http://localhost:$PORT/health || exit 1
 
 WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm install --no-optional
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # copy in our source code last, as it changes the most
 COPY ./ ./
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]

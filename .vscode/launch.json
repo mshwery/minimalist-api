@@ -31,7 +31,7 @@
       ]
     },
     // Launches a new server with ts-node in debug mode
-    // similar to `npm run dev`, but with debugger and editor support
+    // similar to `yarn dev`, but with debugger and editor support
     {
       "name": "Dev Server",
       "type": "node",

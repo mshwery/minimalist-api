@@ -1,4 +1,5 @@
 import { ApolloError, UserInputError, toApolloError } from 'apollo-server-express'
+import { GraphQLError } from 'graphql'
 import { get } from 'lodash'
 import logger from '../lib/logger'
 import config from '../../config'
@@ -21,12 +22,12 @@ function toApolloErrorCode(status: number): string | undefined {
   }
 }
 
-export default function formatError(error): Error {
+export default function formatError(error: GraphQLError): any {
   logger.error(error)
 
   // Remove exception information in production mode
   if (config.get('NODE_ENV') === 'production') {
-    delete error.extensions.exception
+    delete error.extensions!.exception
   }
 
   // Only explicitly exposable errors should be returned as-is
