@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import logger from '../lib/logger'
 
-interface IError extends Error {
+interface HttpError extends Error {
   status?: number
   expose?: boolean
 }
@@ -9,7 +9,7 @@ interface IError extends Error {
 /**
  * Middleware to handle response for errors
  */
-export default function handleErrorResponse(error: IError, _req: Request, res: Response, _next: NextFunction) {
+export default function handleErrorResponse(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
   const status = error.status || 500
   let message = 'Server Error'
 

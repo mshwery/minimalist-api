@@ -1,9 +1,9 @@
 import { Viewer } from '../types'
 
-export interface IContext {
+export interface Context {
   viewer: Viewer
 }
 
-export interface IMutationInput<T> {
+export interface MutationInput<T> {
   input: T
 }

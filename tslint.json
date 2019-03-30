@@ -3,6 +3,7 @@
   "rules": {
     "variable-name": [true, "allow-leading-underscore"],
     "class-name": true,
+    "interface-name": false,
     "comment-format": [true, "check-space"],
     "indent": [true, "spaces"],
     "one-line": [true, "check-open-brace", "check-whitespace"],
