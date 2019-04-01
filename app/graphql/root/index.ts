@@ -9,5 +9,13 @@ export const resolvers = {
   Date: GraphQLDate,
 
   // Custom ISO 8601 UTC datetime
-  DateTime: GraphQLDateTime
+  DateTime: GraphQLDateTime,
+
+  // Apollo Server 2 aims to make the defaults follow best practices, such as defining type resolution for unions/interfaces
+  // @see {@link https://github.com/apollographql/apollo-server/issues/1075}
+  Node: {
+    __resolveType() {
+      return null
+    }
+  }
 }
