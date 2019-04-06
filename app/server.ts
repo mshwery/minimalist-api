@@ -43,7 +43,7 @@ app.use(bodyParser.json())
 app.get('/health', (_req, res) => res.end())
 
 /** api route handlers */
-app.use('/api/v1', cors(), verifyJwt, restApi)
+app.use('/api/v1', cors(), verifyJwt, restApi, handleNotFound)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
@@ -59,7 +59,7 @@ if (config.get('NODE_ENV') === 'production') {
   })
 }
 
-/** 404 handler */
+/** 404 handler – note this only works for non-`get` requests in production due to the React app handling wildcard route ^ */
 app.use(handleNotFound)
 
 /** The error handler must be before any other error middleware */

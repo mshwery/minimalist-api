@@ -14,7 +14,7 @@ export default function handleErrorResponse(error: HttpError, _req: Request, res
   let message = 'Server Error'
 
   if (error.expose) {
-    message = message
+    message = error.message
   }
 
   logger.error(error)
