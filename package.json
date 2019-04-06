@@ -18,7 +18,7 @@
     "server": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' --files app/server.ts",
     "start": "node dist/app/server.js",
     "test": "yarn lint && jest app --runInBand",
-    "heroku-postbuild": "yarn build && cd client && yarn install --frozen-lockfile && yarn build"
+    "heroku-postbuild": "yarn build && cd client && yarn install --frozen-lockfile --production=false && yarn build"
   },
   "author": "Matt Shwery",
   "dependencies": {
