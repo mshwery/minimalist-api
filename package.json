@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "engines": {
-    "node": ">=10.13",
+    "node": "10.x",
     "yarn": "1.x"
   },
   "scripts": {
