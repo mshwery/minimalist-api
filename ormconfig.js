@@ -8,6 +8,7 @@ module.exports = {
   database: config.get('PGDATABASE'),
   username: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
+  ssl: true,
   // output dir after compilation
   entities: ['dist/app/**/*.entity.js'],
   // output dir after compilation

@@ -1,17 +1,14 @@
 import winston from 'winston'
-import config from '../../config'
 
 const logger = winston.createLogger({
-  levels: winston.config.syslog.levels
-})
-
-// Output human readable logs in development
-if (config.get('NODE_ENV') === 'development') {
-  logger.add(
+  levels: winston.config.syslog.levels,
+  format: winston.format.json(),
+  transports: [
+    // Output human readable logs directly to stdout
     new winston.transports.Console({
       format: winston.format.simple()
     })
-  )
-}
+  ]
+})
 
 export default logger
