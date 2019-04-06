@@ -13,10 +13,6 @@ const config = nconf
 /** required environment variables */
 config.required([
   'JWT_SECRET',
-  'PGHOST',
-  'PGPORT',
-  'PGUSER',
-  'PGPASSWORD',
   'PGDATABASE'
 ])
 
