@@ -7,6 +7,7 @@
   "PGDATABASE": "minimalist",
   "PGHOST": "localhost",
   "PGPORT": 5432,
+  "PGSSL": false,
   "SENTRY_DSN": "",
   "TEST_PGPORT": 5436
 }
