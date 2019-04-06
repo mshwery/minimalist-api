@@ -16,7 +16,8 @@
     "migrate": "yarn typeorm migration:run",
     "server": "nodemon --watch 'app/**/*.ts' --exec 'ts-node' --files app/server.ts",
     "start": "node dist/app/server.js",
-    "test": "yarn lint && jest app --runInBand"
+    "test": "yarn lint && jest app --runInBand",
+    "heroku-postbuild": "cd client && yarn install --frozen-lockfile && yarn build"
   },
   "author": "Matt Shwery",
   "dependencies": {
