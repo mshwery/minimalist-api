@@ -1,9 +1,9 @@
 import React from 'react'
-import client, { gql } from '../../lib/graphql-client'
+import client from '../../lib/graphql-client'
 // import Login from './Login'
 
-const getCurrentUser = gql`
-  query GetCurrentUser() {
+const getCurrentUserQuery = `
+  query GetCurrentUser {
     me {
       id
       email
@@ -40,7 +40,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
 
   async componentDidMount() {
     try {
-      const data: Data = await client.request(getCurrentUser.toString())
+      const data: Data = await client.request(getCurrentUserQuery)
       this.setState({ currentUser: data.me })
     } catch (error) {
       // TODO add frontend Segment + error tracking
@@ -53,6 +53,10 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
   render() {
     if (this.state.isLoading) {
       return 'Loading...'
+    }
+
+    if (this.state.error) {
+      return 'Dang, it failed.'
     }
 
     return (

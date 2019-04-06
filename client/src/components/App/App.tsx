@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import LoginContainer from '../Login'
 
 class App extends Component {
   render() {
     return (
       <div>
         <header>
-          Content goes here
+          <LoginContainer />
         </header>
       </div>
     )
