@@ -6,8 +6,8 @@ const nconf = require('nconf')
 const path = require('path')
 
 const config = nconf
-  .argv()
-  .env()
+  .argv({ parseValues: true })
+  .env({ parseValues: true })
   .file(path.resolve(__dirname, 'environment.json'))
 
 /** required environment variables */
