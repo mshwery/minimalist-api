@@ -8,6 +8,7 @@ import express from 'express'
 import helmet from 'helmet'
 import path from 'path'
 import { Connection } from 'typeorm'
+import Sentry from '@sentry/node'
 import config from '../config'
 import restApi from './rest'
 import applyGraphQLMiddleware from './graphql'
@@ -17,12 +18,17 @@ import logger from './lib/logger'
 import initConnection from './lib/database'
 import { verifyJwt } from './lib/auth'
 
+Sentry.init({ dsn: config.get('SENTRY_DSN') })
+
 const app = express()
 const port = config.get('PORT') || 3000
 app.set('port', port)
 
 /** Provide access to request.ips = [x-forwarded-for headers] */
 app.enable('trust proxy')
+
+/** The request handler must be the first middleware on the app */
+app.use(Sentry.Handlers.requestHandler() as express.RequestHandler)
 
 /** node security modules */
 app.use(helmet())
@@ -52,6 +58,9 @@ if (config.get('NODE_ENV') === 'production') {
 
 /** 404 handler */
 app.use(handleNotFound)
+
+/** The error handler must be before any other error middleware */
+app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler)
 
 /** global error catch-all */
 app.use(handleErrorResponse)
