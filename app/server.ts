@@ -43,7 +43,7 @@ app.use(bodyParser.json())
 app.get('/health', (_req, res) => res.end())
 
 /** api route handlers */
-app.use('/api/v1', cors(), verifyJwt, restApi, (_req, _res, next ) => { next(new Error('nope')) }, handleNotFound)
+app.use('/api/v1', cors(), verifyJwt, restApi, handleNotFound)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
