@@ -54,6 +54,7 @@
     "await-promise": true,
     "no-console": {
       "severity": "warning"
-    }
+    },
+    "no-namespace": [true, "allow-declarations"]
   }
 }
