@@ -7,6 +7,7 @@ import requireAuthentication from '../middleware/require-authentication'
 import * as lists from './lists'
 import * as tasks from './tasks'
 import * as users from './users'
+import handleNotFound from '../middleware/not-found'
 
 const router = express.Router()
 
@@ -35,5 +36,7 @@ router.post('/authenticate', users.authenticate)
 router.post('/users', users.createUser)
 router.delete('/users/:id', requireAuthentication, users.deleteUser)
 router.get('/me', requireAuthentication, users.me)
+
+router.use(handleNotFound)
 
 export default router

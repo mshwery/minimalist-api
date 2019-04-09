@@ -2,11 +2,15 @@
  * @overview user route handlers
  */
 
+import { addHours } from 'date-fns'
+import { Response, Request, NextFunction } from 'express'
 import { NotFound } from 'http-errors'
 import { get } from 'lodash'
 import { UserModel } from '../models/user'
+import config from '../../config'
+import { SESSION_COOKIE } from '../lib/auth'
 
-export async function me(req, res, next) {
+export async function me(req: Request, res: Response, next: NextFunction) {
   try {
     const viewer = req.user.sub
     const user = await UserModel.fetchByViewer(viewer)
@@ -21,7 +25,7 @@ export async function me(req, res, next) {
   }
 }
 
-export async function createUser(req, res, next) {
+export async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const viewer = get(req, 'user.sub')
     const { email, password } = req.body
@@ -32,7 +36,7 @@ export async function createUser(req, res, next) {
   }
 }
 
-export async function deleteUser(req, res, next) {
+export async function deleteUser(req: Request, res: Response, next: NextFunction) {
   try {
     await UserModel.delete(req.user.sub, req.params.id)
     res.status(204).end()
@@ -41,11 +45,21 @@ export async function deleteUser(req, res, next) {
   }
 }
 
-export async function authenticate(req, res, next) {
+export async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
     const viewer = get(req, 'user.sub')
     const { email, password } = req.body
+    const expires = addHours(new Date(), 24)
     const result = await UserModel.authenticate(viewer, { email, password })
+
+    // Persist token in an HTTP-only cookie
+    res.cookie(SESSION_COOKIE, result.token, {
+      httpOnly: true,
+      secure: config.get('ENV') === 'production',
+      // TODO: set `domain = '.getminimalist.com'`
+      expires
+    })
+
     res.status(200).json(result)
   } catch (error) {
     next(error)
