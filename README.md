@@ -50,3 +50,11 @@ Because the tests rely on actually interacting with a database, we have a separa
 - `yarn test` to run lint checks and tests
 - `yarn dev` to run the server in watch mode
 - `yarn start` to run the production server
+
+### Heroku
+
+The entire app (server and create-react-app client) is served on Heroku. Deploys happen automatically after successful Circle CI builds to `master`.
+
+To run migrations: `heroku run 'yarn install --frozen-lockfile --production=false && yarn migrate' -a getminimalist2`
+
+TBD how to deal with automatic migrations before code runs. For now we'll just safely migrate databases in a way that won't break code.
