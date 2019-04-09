@@ -3,6 +3,7 @@
  */
 
 import bcrypt from 'bcrypt'
+import express from 'express'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { defaults } from 'lodash'
@@ -11,9 +12,11 @@ import logger from './logger'
 
 const secret = config.get('JWT_SECRET')
 const defaultOptions = {
-  expiresIn: '1hr',
+  expiresIn: '24hr',
   issuer: 'minimalist-api'
 }
+
+export const SESSION_COOKIE = 'session_token'
 
 export async function comparePassword(password, hash): Promise<boolean> {
   try {
@@ -42,5 +45,24 @@ export const verifyJwt = expressJwt({
   secret,
   issuer: defaultOptions.issuer,
   /** this option allows us to handle 401s manually, so we can more granularly handle public vs private queries in graphql */
-  credentialsRequired: false
+  credentialsRequired: false,
+  getToken(req: express.Request) {
+    if (req.headers.authorization) {
+      return getTokenFromHeader(req.headers.authorization)
+    } else if (req.cookies[SESSION_COOKIE]) {
+      return req.cookies[SESSION_COOKIE]
+    }
+
+    return null
+  }
 })
+
+function getTokenFromHeader(authorization: string): string | null {
+  const [scheme, token = null] = authorization.split(' ')
+
+  if (/^Bearer$/i.test(scheme)) {
+    return token
+  }
+
+  return null
+}

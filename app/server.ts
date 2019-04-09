@@ -3,6 +3,7 @@
  */
 
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
@@ -39,11 +40,17 @@ app.use(helmet())
 /** accept json */
 app.use(bodyParser.json())
 
+/** parse cookies */
+app.use(cookieParser())
+
 /** basic health endpoint */
 app.get('/health', (_req, res) => res.end())
 
+/** Check for jwt authorization (either in header or cookie, see `getToken`) */
+app.use(verifyJwt)
+
 /** api route handlers */
-app.use('/api/v1', cors(), verifyJwt, restApi, handleNotFound)
+app.use('/api/v1', cors(), restApi)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)
