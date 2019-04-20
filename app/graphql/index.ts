@@ -2,6 +2,7 @@ import { ApolloServer } from 'apollo-server-express'
 import { Express } from 'express'
 import schema from './schema'
 import formatError from './formatError'
+import requireAuthentication from '../middleware/require-authentication'
 
 function context({ req }) {
   return {
@@ -19,6 +20,8 @@ const server = new ApolloServer({
 })
 
 export default function applyGraphQLMiddleware(app: Express): void {
+  // For now we'll require all graphql queries be authenticated. Use rest to get an auth token.
+  app.use('/graphql', requireAuthentication)
   server.applyMiddleware({
     app,
     cors: true,

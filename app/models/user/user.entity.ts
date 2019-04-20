@@ -25,7 +25,8 @@ export default class User {
   @IsEmail()
   email: string
 
-  @Column({ type: 'text' })
+  // Password is nullable because you can sign up w/ social (Google) instead
+  @Column({ type: 'text', nullable: true })
   @Length(8, 20)
   password: string
 
@@ -50,7 +51,9 @@ export default class User {
 
   @BeforeInsert()
   async hashPasswordOnInsert(): Promise<void> {
-    this.password = await hashPassword(this.password)
+    if (this.password) {
+      this.password = await hashPassword(this.password)
+    }
   }
 
   @BeforeUpdate()

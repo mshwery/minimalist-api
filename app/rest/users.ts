@@ -36,15 +36,6 @@ export async function createUser(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function deleteUser(req: Request, res: Response, next: NextFunction) {
-  try {
-    await UserModel.delete(req.user.sub, req.params.id)
-    res.status(204).end()
-  } catch (error) {
-    next(error)
-  }
-}
-
 export async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
     const viewer = get(req, 'user.sub')
