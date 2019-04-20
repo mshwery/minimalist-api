@@ -12,7 +12,7 @@ import { SESSION_COOKIE } from '../lib/auth'
 
 export async function me(req: Request, res: Response, next: NextFunction) {
   try {
-    const viewer = req.user.sub
+    const viewer = get(req, 'user.sub')
     const user = await UserModel.fetchByViewer(viewer)
 
     if (!user) {
