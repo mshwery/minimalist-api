@@ -50,7 +50,7 @@ app.get('/health', (_req, res) => res.end())
 app.use(verifyJwt)
 
 /** api route handlers */
-app.use('/api/v1', cors(), restApi)
+app.use('/api', cors(), restApi)
 
 /** graphql server (applies middleware) */
 applyGraphQLMiddleware(app)

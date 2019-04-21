@@ -61,7 +61,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
     this.setState({ error: null, isLoggingIn: true, wrongEmail: false, wrongPassword: false })
 
     try {
-      await axios.post('/api/v1/authenticate', {
+      await axios.post('/api/authenticate', {
         email,
         password
       })
