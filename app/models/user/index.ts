@@ -34,6 +34,16 @@ export class UserModel {
   }
 
   /**
+   * Gets or creates a user by email + googleId
+   */
+  static async findOrCreateByEmailAndGoogleId(email: string, googleId: string) {
+    return getCustomRepository(UserRepository).findOrCreate({
+      email,
+      googleId
+    })
+  }
+
+  /**
    * Creates a user given some attributes
    */
   static async create(_viewer: Viewer, attrs: { id?: UUID; email: string; password: string }): Promise<User> {
@@ -62,7 +72,7 @@ export class UserModel {
   /**
    * Authenticates an email and password and returns a token
    */
-  static async authenticate(_viewer: Viewer, attrs: { email: string; password: string }): Promise<{ token: string }> {
+  static async authenticate(attrs: { email: string; password: string }): Promise<{ token: string }> {
     const user = await getCustomRepository(UserRepository).findByEmail(attrs.email)
     if (!user) {
       throw new NotFound(`No user found with email address: "${attrs.email}"`)

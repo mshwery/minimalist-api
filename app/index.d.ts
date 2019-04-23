@@ -8,6 +8,10 @@ declare namespace Express {
     user?: {
       // The jwt "subject" (aka user id)
       sub: string
+    } | any
+    jwt?: {
+      // The jwt "subject" (aka user id)
+      sub: string
     }
   }
 }

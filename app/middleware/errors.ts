@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import logger from '../lib/logger'
+import config from '../../config'
 
 interface HttpError extends Error {
   status?: number
@@ -13,7 +14,7 @@ export default function handleErrorResponse(error: HttpError, _req: Request, res
   const status = error.status || 500
   let message = 'Server Error'
 
-  if (error.expose) {
+  if (error.expose || config.get('NODE_ENV') !== 'production') {
     message = error.message
   }
 

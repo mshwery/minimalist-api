@@ -7,7 +7,7 @@ import requireAuthentication from '../middleware/require-authentication'
 function context({ req }) {
   return {
     // TODO: enrich with other user data
-    viewer: req.user ? req.user.sub : undefined
+    viewer: req.jwt ? req.jwt.sub : undefined
   }
 }
 

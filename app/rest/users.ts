@@ -38,10 +38,9 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 
 export async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
-    const viewer = get(req, 'user.sub')
     const { email, password } = req.body
     const expires = addHours(new Date(), 24)
-    const result = await UserModel.authenticate(viewer, { email, password })
+    const result = await UserModel.authenticate({ email, password })
 
     // Persist token in an HTTP-only cookie
     res.cookie(SESSION_COOKIE, result.token, {

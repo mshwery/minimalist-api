@@ -8,6 +8,7 @@ import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
 import path from 'path'
+import passport from 'passport'
 import { Connection } from 'typeorm'
 import * as Sentry from '@sentry/node'
 import config from '../config'
@@ -17,7 +18,8 @@ import handleErrorResponse from './middleware/errors'
 import handleNotFound from './middleware/not-found'
 import logger from './lib/logger'
 import initConnection from './lib/database'
-import { verifyJwt } from './lib/auth'
+import { verifyJwtMiddleware } from './lib/auth'
+import passportRouter from './passport'
 
 Sentry.init({
   environment: config.get('ENV'),
@@ -38,6 +40,7 @@ app.use(Sentry.Handlers.requestHandler() as express.RequestHandler)
 app.use(helmet())
 
 /** accept json */
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 /** parse cookies */
@@ -46,8 +49,14 @@ app.use(cookieParser())
 /** basic health endpoint */
 app.get('/health', (_req, res) => res.end())
 
+/** setup passport for authentication */
+app.use(passport.initialize())
+// app.use(passport.session())
+
 /** Check for jwt authorization (either in header or cookie, see `getToken`) */
-app.use(verifyJwt)
+app.use(verifyJwtMiddleware)
+
+app.use(passportRouter)
 
 /** api route handlers */
 app.use('/api', cors(), restApi)

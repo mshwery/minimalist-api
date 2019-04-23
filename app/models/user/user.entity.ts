@@ -28,11 +28,14 @@ export default class User {
   // Password is nullable because you can sign up w/ social (Google) instead
   @Column({ type: 'text', nullable: true })
   @Length(8, 20)
-  password: string
+  password: string | null
 
   // @ManyToMany(_type => List, list => list.users, { onDelete: 'CASCADE' })
   // @JoinTable({ name: 'user_lists' })
   // lists?: List[]
+
+  @Column({ type: 'text', nullable: true })
+  googleId?: string
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   @IsDate()
@@ -42,7 +45,7 @@ export default class User {
   @IsDate()
   updatedAt?: Date
 
-  private tempPassword: string
+  private tempPassword: string | null
 
   @AfterLoad()
   setTempPassword(): void {
