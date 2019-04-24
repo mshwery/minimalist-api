@@ -51,7 +51,6 @@ app.get('/health', (_req, res) => res.end())
 
 /** setup passport for authentication */
 app.use(passport.initialize())
-// app.use(passport.session())
 
 /** Check for jwt authorization (either in header or cookie, see `getToken`) */
 app.use(verifyJwtMiddleware)
