@@ -1,14 +1,14 @@
-postgres:
-  image: postgres:9.6
+db:
+  image: postgres:11
   ports:
-    - '5432:5432'
+    - '5433:5432'
   environment:
-    - POSTGRES_DB=minimalist
+    POSTGRES_DB: minimalist
 
 # test image, because typeorm migrations require the db to exist in order to work
-postgres_test:
-  image: postgres:9.6
+db_test:
+  image: postgres:11
   ports:
     - '5436:5432'
   environment:
-    - POSTGRES_DB=minimalist_test
+    POSTGRES_DB: minimalist_test

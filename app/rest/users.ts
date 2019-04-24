@@ -12,7 +12,7 @@ import { SESSION_COOKIE } from '../lib/auth'
 
 export async function me(req: Request, res: Response, next: NextFunction) {
   try {
-    const viewer = req.user.sub
+    const viewer = get(req, 'user.sub')
     const user = await UserModel.fetchByViewer(viewer)
 
     if (!user) {
@@ -36,21 +36,11 @@ export async function createUser(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function deleteUser(req: Request, res: Response, next: NextFunction) {
-  try {
-    await UserModel.delete(req.user.sub, req.params.id)
-    res.status(204).end()
-  } catch (error) {
-    next(error)
-  }
-}
-
 export async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
-    const viewer = get(req, 'user.sub')
     const { email, password } = req.body
     const expires = addHours(new Date(), 24)
-    const result = await UserModel.authenticate(viewer, { email, password })
+    const result = await UserModel.authenticate({ email, password })
 
     // Persist token in an HTTP-only cookie
     res.cookie(SESSION_COOKIE, result.token, {

@@ -6,7 +6,7 @@ import { Unauthorized } from 'http-errors'
  * If no user is attached to the request, throw a 401 Unauthorized
  */
 export default function requireAuthentication(req: Request, _res: Response, next: NextFunction) {
-  if (!req.user) {
+  if (!req.jwt) {
     next(new Unauthorized())
   }
 

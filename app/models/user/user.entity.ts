@@ -25,13 +25,23 @@ export default class User {
   @IsEmail()
   email: string
 
-  @Column({ type: 'text' })
+  // Password is nullable because you can sign up w/ social (Google) instead
+  @Column({ type: 'text', nullable: true })
   @Length(8, 20)
-  password: string
+  password: string | null
 
   // @ManyToMany(_type => List, list => list.users, { onDelete: 'CASCADE' })
   // @JoinTable({ name: 'user_lists' })
   // lists?: List[]
+
+  @Column({ type: 'text', nullable: true })
+  image?: string
+
+  @Column({ type: 'text', nullable: true })
+  name?: string
+
+  @Column({ type: 'text', nullable: true })
+  googleId?: string
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   @IsDate()
@@ -41,7 +51,7 @@ export default class User {
   @IsDate()
   updatedAt?: Date
 
-  private tempPassword: string
+  private tempPassword: string | null
 
   @AfterLoad()
   setTempPassword(): void {
@@ -50,7 +60,9 @@ export default class User {
 
   @BeforeInsert()
   async hashPasswordOnInsert(): Promise<void> {
-    this.password = await hashPassword(this.password)
+    if (this.password) {
+      this.password = await hashPassword(this.password)
+    }
   }
 
   @BeforeUpdate()

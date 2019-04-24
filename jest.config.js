@@ -7,7 +7,9 @@ module.exports = {
   restoreMocks: true,
   notify: false,
   globalSetup: '<rootDir>/test/global-setup.js',
-  setupTestFrameworkScriptFile: '<rootDir>/test/setup.ts',
+  setupFilesAfterEnv: [
+    '<rootDir>/test/setup.ts'
+  ],
   moduleNameMapper: {
     '@/(.+)': '<rootdir>/../../app/$1'
   }
