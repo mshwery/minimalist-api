@@ -36,7 +36,7 @@ passport.use(new GoogleStrategy(
       const name = profile.displayName
       const user = await UserModel.findOrCreateGoogleConnectedUser(email, googleId, image, name)
       done(null, user)
-    } catch(error) {
+    } catch (error) {
       done(error)
     }
   }
