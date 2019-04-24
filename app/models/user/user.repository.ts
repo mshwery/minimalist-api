@@ -7,14 +7,14 @@ export default class UserRepository extends Repository<User> {
     return this.findOne({ email })
   }
 
-  public async findOrCreate({ email, googleId }: { email: string, googleId?: string }) {
-    let user = await this.findOne({ email, googleId })
+  public async findOrCreate(attrs: Partial<User>): Promise<User> {
+    let user = await this.findOne(attrs)
 
     if (user) {
       return user
     }
 
-    user = this.create({ email, googleId })
+    user = this.create(attrs)
     return this.save(user)
   }
 }

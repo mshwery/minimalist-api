@@ -35,6 +35,12 @@ export default class User {
   // lists?: List[]
 
   @Column({ type: 'text', nullable: true })
+  image?: string
+
+  @Column({ type: 'text', nullable: true })
+  name?: string
+
+  @Column({ type: 'text', nullable: true })
   googleId?: string
 
   @CreateDateColumn({ type: 'timestamp with time zone' })

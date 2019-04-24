@@ -11,11 +11,11 @@ interface User {
   id: string
 }
 
-passport.serializeUser(function(user: User, done: Function) {
+passport.serializeUser((user: User, done) => {
   done(null, generateJwt({ sub: user.id }))
 })
 
-passport.deserializeUser(function(token: string, done) {
+passport.deserializeUser((token: string, done) => {
   const user = verifyJwt(token)
   // Turn jwt into a user?
   // TODO: lookup full user in db
@@ -30,9 +30,11 @@ passport.use(new GoogleStrategy(
   },
   async (_accessToken, _refreshToken, profile, done) => {
     try {
-      const email = get(profile, 'emails.0.value')
+      const email = get(profile, 'emails[0].value')
       const googleId = profile.id
-      const user = await UserModel.findOrCreateByEmailAndGoogleId(email, googleId).catch(done)
+      const image = get(profile, 'photos[0].value')
+      const name = profile.displayName
+      const user = await UserModel.findOrCreateGoogleConnectedUser(email, googleId, image, name)
       done(null, user)
     } catch(error) {
       done(error)

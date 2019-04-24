@@ -1,28 +1,30 @@
 import React from 'react'
 import client from '../../lib/graphql-client'
 import Login from './Login'
+import { Avatar, Pane, Heading, Text, majorScale } from 'evergreen-ui'
 
 const getCurrentUserQuery = `
   query GetCurrentUser {
     me {
       id
       email
+      image
+      name
     }
   }
 `
 
 type Maybe<T> = T | null
 
-interface Data {
-  me: Maybe<{
-    id: string
-    email: string
-  }>
-}
-
 interface Viewer {
   id: string
   email: string
+  image: string
+  name: string
+}
+
+interface Data {
+  me: Maybe<Viewer>
 }
 
 interface State {
@@ -55,8 +57,17 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
       return 'Loading...'
     }
 
-    if (this.state.currentUser) {
-      return `Logged in as ${JSON.stringify(this.state.currentUser, null, 2)}`
+    if (this.state.currentUser !== null) {
+      const { email = '', image = '', name = '' } = this.state.currentUser || {}
+      return (
+        <Pane background='white' display='flex' alignItems='center' padding={majorScale(2)} margin='auto' maxWidth={majorScale(50)}>
+          {image && <Avatar src={image} size={majorScale(5)} marginRight={majorScale(2)} />}
+          <Pane flex='1'>
+            <Heading>{name}</Heading>
+            <Text>{email}</Text>
+          </Pane>
+        </Pane>
+      )
     }
 
     return (

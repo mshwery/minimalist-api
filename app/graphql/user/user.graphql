@@ -8,6 +8,12 @@ type User implements Node {
   id: ID!
   # The user's email address
   email: String!
+  # The user's google id, if connected
+  googleId: String
+  # The user's image url
+  image: String
+  # The user's display name
+  name: String
   # When the user was created
   createdAt: DateTime!
   # When the user was last updated

@@ -36,11 +36,16 @@ export class UserModel {
   /**
    * Gets or creates a user by email + googleId
    */
-  static async findOrCreateByEmailAndGoogleId(email: string, googleId: string) {
-    return getCustomRepository(UserRepository).findOrCreate({
-      email,
-      googleId
-    })
+  static async findOrCreateGoogleConnectedUser(email: string, googleId: string, image: string, name: string) {
+    const repo = getCustomRepository(UserRepository)
+    const user = await repo.findOrCreate({ email })
+
+    // Update props from google
+    user.googleId = googleId
+    user.image = image
+    user.name = name
+
+    return repo.save(user)
   }
 
   /**
