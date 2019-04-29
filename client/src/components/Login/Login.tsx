@@ -19,7 +19,7 @@ class Login extends Component<LoginProps> {
       >
         <Heading size={700}>Welcome back.</Heading>
         <Paragraph>Sign in to manage your lists.</Paragraph>
-        <Button is='a' href={this.props.googleAuthUrl} disabled>Sign in with Google</Button>
+        <Button is='a' href={this.props.googleAuthUrl}>Sign in with Google</Button>
         <Pane>
           No account? <Link href='/create'>Create one</Link>
         </Pane>
