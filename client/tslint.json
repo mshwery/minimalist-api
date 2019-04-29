@@ -1,8 +1,6 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
-  "linterOptions": {
-    "exclude": ["src/evergreen-ui.d.ts"]
-  },
+
   "rules": {
     "variable-name": [true, "allow-leading-underscore"],
     "class-name": true,

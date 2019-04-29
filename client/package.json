@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "evergreen-ui": "^4.15.0",
     "graphql-request": "^1.8.2",
     "http-proxy-middleware": "^0.19.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "ui-box": "^1.4.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
