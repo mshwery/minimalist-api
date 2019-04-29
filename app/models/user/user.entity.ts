@@ -68,7 +68,7 @@ export default class User {
   @BeforeUpdate()
   async hashPasswordChanges(): Promise<void> {
     // if the password has changed, we need to hash it again
-    if (this.tempPassword !== this.password) {
+    if (this.password && this.tempPassword !== this.password) {
       this.password = await hashPassword(this.password)
     }
   }

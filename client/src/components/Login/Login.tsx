@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Heading, Link, Pane, Paragraph, majorScale } from 'evergreen-ui'
+import { scale, Button, Card, Heading, Link, Pane, Paragraph } from '../../base-ui'
 
 interface LoginProps {
   googleAuthUrl: string
@@ -12,13 +12,12 @@ class Login extends Component<LoginProps> {
       <Card
         elevation={1}
         maxWidth='100%'
-        width={majorScale(100)}
+        width={scale(100)}
         justifyContent='center'
         margin='auto'
-        padding={majorScale(5)}
-        background='white'
+        padding={scale(5)}
       >
-        <Heading is='h1' size={800}>Welcome back.</Heading>
+        <Heading size={700}>Welcome back.</Heading>
         <Paragraph>Sign in to manage your lists.</Paragraph>
         <Button is='a' href={this.props.googleAuthUrl}>Sign in with Google</Button>
         <Pane>
