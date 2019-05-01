@@ -7,6 +7,7 @@
     "http-proxy-middleware": "^0.19.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "ui-box": "^1.4.0"
   },
@@ -22,6 +23,7 @@
     "@types/jest": "^24.0.11",
     "@types/react": "^16.8.10",
     "@types/react-dom": "^16.8.3",
+    "@types/react-router-dom": "^4.3.2",
     "@types/ui-box": "^1.4.0",
     "csstype": "^2.6.4",
     "husky": "^1.3.1",
