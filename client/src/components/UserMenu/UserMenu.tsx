@@ -1,6 +1,5 @@
 import React from 'react'
 import { scale, Avatar, Pane, Text } from '../../base-ui'
-import { BaseUIProps } from '../../base-ui/types'
 
 interface UserMenuProps {
   email: string
