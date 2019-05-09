@@ -1,4 +1,4 @@
-import { BoxProps } from 'ui-box'
-import * as CSS from 'csstype'
+import React from 'react'
+import Box from 'ui-box'
 
-export type BaseUIProps = BoxProps & CSS.StandardProperties<number | string | boolean | undefined>
+export type BaseUIProps = React.ComponentProps<typeof Box>
