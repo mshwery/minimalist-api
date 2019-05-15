@@ -7,6 +7,7 @@ interface List {
 }
 
 interface Props {
+  isCreatingList?: boolean
   lists: List[]
   onCreateList: (name: string) => Promise<List | null>
 }
@@ -15,7 +16,7 @@ class Lists extends Component<Props> {
   render() {
     return (
       <Pane>
-        <Button width='100%' onClick={() => this.props.onCreateList('Untitled List')}>
+        <Button width='100%' isLoading={this.props.isCreatingList} onClick={() => this.props.onCreateList('Untitled List')}>
           Create a new List
         </Button>
         <Pane marginY={scale(4)}>

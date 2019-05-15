@@ -3,7 +3,14 @@ import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import scale from './scale'
 
+const disabledStyles = {
+  opacity: 0.5,
+  cursor: 'not-allowed'
+}
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Whether or not the button should be disabled */
+  disabled?: boolean
   /** Whether or not the button should display a loading indicator (it will become disabled unless otherwise specified) */
   isLoading?: boolean
 }
@@ -11,6 +18,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export default class Button extends PureComponent<ButtonProps & BaseUIProps> {
   render() {
     const {
+      disabled,
       isLoading,
       ...props
     } = this.props
@@ -18,16 +26,25 @@ export default class Button extends PureComponent<ButtonProps & BaseUIProps> {
     return (
       <Box
         is='button'
+        alignItems='center'
         appearance='none'
         background='#2e8ae6'
         border='none'
-        fontSize='14px'
-        color='white'
         borderRadius={2}
-        paddingX={scale(2)}
-        lineHeight={2}
+        boxSizing='border-box'
+        color='white'
         cursor='pointer'
+        display='inline-flex'
+        fontSize='14px'
+        fontWeight={400}
+        justifyContent='center'
+        lineHeight={2}
+        paddingX={scale(2)}
+        outline='none'
+        textDecoration='none'
+        userSelect='none'
         disabled={isLoading}
+        {...((isLoading || disabled) ? disabledStyles : {})}
         {...props}
       />
     )

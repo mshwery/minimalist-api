@@ -42,6 +42,7 @@ interface CreateListData {
 interface State {
   lists: Maybe<List[]>
   error: Maybe<Error>
+  isCreatingList: boolean
   isLoading: boolean
 }
 
@@ -49,6 +50,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
   state = {
     lists: null,
     error: null,
+    isCreatingList: false,
     isLoading: true
   }
 
@@ -65,19 +67,29 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
   }
 
   handleCreateList = async (name: string) => {
-    const { createList }: CreateListData = await client.request(createListMutation, {
-      input: {
-        name
-      }
-    })
+    this.setState({ isCreatingList: true })
 
-    if (createList.list !== null) {
-      const appended: List[] = Array.from(this.state.lists || [])
-      appended.push(createList.list)
-      this.setState({ lists: appended })
+    let list: null | List = null
+
+    try {
+      const { createList }: CreateListData = await client.request(createListMutation, {
+        input: {
+          name
+        }
+      })
+
+      list = createList.list
+
+      if (list !== null) {
+        const appended: List[] = Array.from(this.state.lists || [])
+        appended.push(list)
+        this.setState({ lists: appended })
+      }
+    } finally {
+      this.setState({ isCreatingList: false })
     }
 
-    return createList.list
+    return list
   }
 
   render() {
@@ -86,7 +98,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
     }
 
     return (
-      <Lists lists={this.state.lists || []} onCreateList={this.handleCreateList} />
+      <Lists lists={this.state.lists || []} onCreateList={this.handleCreateList} isCreatingList={this.state.isCreatingList} />
     )
   }
 }
