@@ -30,7 +30,7 @@ function getElevationStyle(elevation?: Elevation) {
   }
 }
 
-export default class Pane extends PureComponent<PaneProps & BaseUIProps> {
+export class Pane extends PureComponent<PaneProps & BaseUIProps> {
   render() {
     const {
       elevation,

@@ -4,9 +4,8 @@
 
 import React from 'react'
 import getDisplayName from '../../lib/get-display-name'
+import { Difference } from '../../@types/type-helpers'
 import { Consumer, Context } from './context'
-
-type Difference<A, B> = Pick<A, Exclude<keyof A, keyof B>>
 
 export default function withUserContext<P extends Context>(Component: React.ComponentType<P>) {
   return class WithUserContext extends React.Component<Difference<P, Context>> {

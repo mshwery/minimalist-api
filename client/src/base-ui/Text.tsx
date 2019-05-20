@@ -1,11 +1,15 @@
 import React, { PureComponent, HTMLAttributes } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
-import scale from './scale'
+import { scale } from './scale'
+
+type Color = 'muted' | 'default' | string
 
 type TextSize = 300 | 400 | 500 | 600
 
 interface TextProps extends HTMLAttributes<HTMLSpanElement> {
+  /** A shorthand for the text color */
+  color?: Color
   /** A shorthand for fontSize */
   size?: TextSize
 }
@@ -26,21 +30,30 @@ function getFontSize(size?: number) {
 }
 
 const colors: { [key: string]: string } = {
-  'muted': '#787A87'
+  muted: '#C9CACF'
 }
 
-export default class Text extends PureComponent<TextProps & BaseUIProps> {
+function getTextColor(color?: Color) {
+  if (!color) {
+    return
+  }
+
+  return colors[color] || color
+}
+
+
+export class Text extends PureComponent<TextProps & BaseUIProps> {
   render() {
-    const { size = 400, color: colorAlias, ...props } = this.props
+    const { size = 400, color, ...props } = this.props
     const fontSize = getFontSize(size)
-    const color = colors[colorAlias!]
+    const textColor = getTextColor(color)
 
     // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
     return (
       <Box
         is='span'
         fontSize={fontSize}
-        color={color}
+        color={textColor}
         {...props}
       />
     )

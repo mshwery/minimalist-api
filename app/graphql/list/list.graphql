@@ -32,10 +32,10 @@ type List implements Node {
   # When the list was last updated
   updatedAt: DateTime!
   # When the list was archived, null if not archived
-  archivedAt: DateTime!
+  archivedAt: DateTime
 
   # The associated tasks
-  tasks: [Task!]
+  tasks: [Task!]!
 }
 
 # The input variables for creating a new list

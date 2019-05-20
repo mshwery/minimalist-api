@@ -13,7 +13,7 @@ interface AvatarState {
   imageHasFailedLoading: boolean
 }
 
-export default class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState> {
+export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState> {
   state = {
     imageHasFailedLoading: false
   }

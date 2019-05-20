@@ -6,7 +6,7 @@ interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
 
 }
 
-export default class Link extends PureComponent<LinkProps & BaseUIProps> {
+export class Link extends PureComponent<LinkProps & BaseUIProps> {
   render() {
     return (
       <Box
