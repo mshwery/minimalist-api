@@ -1,11 +1,15 @@
 import React, { PureComponent, HTMLAttributes } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
-import scale from './scale'
+import { scale } from './scale'
+
+type Color = 'muted' | 'default' | string
 
 type HeadingSize = 100 | 200 | 300 | 400 | 500 | 600 | 700
 
 interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
+  /** A shorthand for the text color */
+  color?: Color
   /** A shorthand for fontSize */
   size?: HeadingSize
 }
@@ -28,15 +32,29 @@ function getFontSize(size?: number) {
   return fontSizes[size]
 }
 
-export default class Heading extends PureComponent<HeadingProps & BaseUIProps> {
+const colors: { [key: string]: string } = {
+  muted: '#C9CACF'
+}
+
+function getTextColor(color?: Color) {
+  if (!color) {
+    return
+  }
+
+  return colors[color] || color
+}
+
+export class Heading extends PureComponent<HeadingProps & BaseUIProps> {
   render() {
-    const { size, ...props } = this.props
+    const { size, color, ...props } = this.props
+    const textColor = getTextColor(color)
     const fontSize = getFontSize(size)
 
     // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
     return (
       <Box
         is='h1'
+        color={textColor}
         fontSize={fontSize}
         fontWeight={600}
         textTransform={size === 100 ? 'uppercase' : 'none'}

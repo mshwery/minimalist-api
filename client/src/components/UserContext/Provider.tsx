@@ -1,6 +1,7 @@
-import React from 'react'
-import { Provider } from './context'
+import React, { Component } from 'react'
+import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
+import { Provider } from './context'
 
 const getCurrentUserQuery = `
   query GetCurrentUser {
@@ -12,8 +13,6 @@ const getCurrentUserQuery = `
     }
   }
 `
-
-type Maybe<T> = T | null
 
 interface Viewer {
   id: string
@@ -34,7 +33,7 @@ interface UserProviderState {
   }
 }
 
-export default class UserProvider extends React.Component<{}, UserProviderState> {
+export default class UserProvider extends Component<{}, UserProviderState> {
   state = {
     error: null,
     isLoading: true,
@@ -50,7 +49,7 @@ export default class UserProvider extends React.Component<{}, UserProviderState>
 
   async fetchUser() {
     try {
-      const data: Data = await client.request(getCurrentUserQuery)
+      const data = await client.request<Data>(getCurrentUserQuery)
       const context = {
         user: data.me,
         refetchUser: this.fetchUser

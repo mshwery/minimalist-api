@@ -1,43 +1,14 @@
 import React from 'react'
+import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
 import Lists from './Lists'
-
-const getCurrentUserQuery = `
-  query GetLists {
-    lists {
-      id
-      name
-    }
-  }
-`
-
-const createListMutation = `
-  mutation createList($input: CreateListInput!) {
-    createList(input: $input) {
-      list {
-        id
-        name
-      }
-    }
-  }
-`
-
-type Maybe<T> = T | null
-
-interface List {
-  id: string
-  name: string
-}
-
-interface GetListsData {
-  lists: List[]
-}
-
-interface CreateListData {
-  createList: {
-    list: Maybe<List>
-  }
-}
+import {
+  getListsQuery,
+  createListMutation,
+  List,
+  GetListsData,
+  CreateListData
+} from './queries'
 
 interface State {
   lists: Maybe<List[]>
@@ -46,7 +17,7 @@ interface State {
   isLoading: boolean
 }
 
-export default class LoginWithData extends React.PureComponent<{}, State> {
+export default class ListsWithData extends React.PureComponent<{}, State> {
   state = {
     lists: null,
     error: null,
@@ -56,7 +27,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
 
   async componentDidMount() {
     try {
-      const data: GetListsData = await client.request(getCurrentUserQuery)
+      const data = await client.request<GetListsData>(getListsQuery)
       this.setState({ lists: data.lists })
     } catch (error) {
       // TODO add frontend Segment + error tracking
@@ -72,7 +43,7 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
     let list: null | List = null
 
     try {
-      const { createList }: CreateListData = await client.request(createListMutation, {
+      const { createList } = await client.request<CreateListData>(createListMutation, {
         input: {
           name
         }
@@ -98,7 +69,11 @@ export default class LoginWithData extends React.PureComponent<{}, State> {
     }
 
     return (
-      <Lists lists={this.state.lists || []} onCreateList={this.handleCreateList} isCreatingList={this.state.isCreatingList} />
+      <Lists
+        lists={this.state.lists || []}
+        onCreateList={this.handleCreateList}
+        isCreatingList={this.state.isCreatingList}
+      />
     )
   }
 }

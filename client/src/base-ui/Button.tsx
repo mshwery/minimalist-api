@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
-import scale from './scale'
+import { scale } from './scale'
 
 const disabledStyles = {
   opacity: 0.5,
@@ -15,7 +15,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
 }
 
-export default class Button extends PureComponent<ButtonProps & BaseUIProps> {
+export class Button extends PureComponent<ButtonProps & BaseUIProps> {
   render() {
     const {
       disabled,

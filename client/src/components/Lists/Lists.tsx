@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { Button, Heading, Pane, scale } from '../../base-ui'
 
 interface List {
@@ -16,7 +17,7 @@ class Lists extends Component<Props> {
   render() {
     return (
       <Pane>
-        <Button width='100%' isLoading={this.props.isCreatingList} onClick={() => this.props.onCreateList('Untitled List')}>
+        <Button width='100%' isLoading={this.props.isCreatingList} onClick={() => this.props.onCreateList('Untitled')}>
           Create a new List
         </Button>
         <Pane marginY={scale(4)}>
@@ -24,7 +25,9 @@ class Lists extends Component<Props> {
           <Pane is='ul' marginLeft={0} paddingLeft={0}>
             {this.props.lists.map(list => (
               <Pane is='li' listStyle='none' marginY={scale(1)} key={list.id}>
-                {list.name}
+                <RouterLink to={`/lists/${list.id}`}>
+                  {list.name}
+                </RouterLink>
               </Pane>
             ))}
           </Pane>
