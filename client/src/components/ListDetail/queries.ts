@@ -1,4 +1,5 @@
 import { Maybe } from '../../@types/type-helpers'
+import client from '../../lib/graphql-client'
 
 export interface Task {
   id: string
@@ -19,11 +20,11 @@ export interface List {
   tasks: Task[]
 }
 
-export interface GetListData {
+interface GetListData {
   list: Maybe<List>
 }
 
-export const getListQuery = `
+const getListQuery = `
   query GetList($id: ID!) {
     list(id: $id) {
       id
@@ -44,3 +45,42 @@ export const getListQuery = `
     }
   }
 `
+
+export function getList(id: string) {
+  return client.request<GetListData>(getListQuery, { id })
+}
+
+interface RenameListData {
+  renameList: {
+    list: Maybe<List>
+  }
+}
+
+interface RenameListVariables {
+  input: {
+    id: string
+    name: string
+  }
+}
+
+export const renameListMutation = `
+  mutation RenameList($input: RenameListInput!) {
+    renameList(input: $input) {
+      list {
+        id
+        name
+      }
+    }
+  }
+`
+
+export async function renameList(id: string, name: string) {
+  const result = await client.request<RenameListData>(renameListMutation, {
+    input: {
+      id,
+      name
+    }
+  })
+
+  return result.renameList
+}
