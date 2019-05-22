@@ -1,13 +1,10 @@
 import React from 'react'
 import { Maybe } from '../../@types/type-helpers'
-import client from '../../lib/graphql-client'
 import Lists from './Lists'
 import {
-  getListsQuery,
-  createListMutation,
   List,
-  GetListsData,
-  CreateListData
+  getLists,
+  createList
 } from './queries'
 
 interface State {
@@ -27,8 +24,8 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
 
   async componentDidMount() {
     try {
-      const data = await client.request<GetListsData>(getListsQuery)
-      this.setState({ lists: data.lists })
+      const { lists } = await getLists()
+      this.setState({ lists })
     } catch (error) {
       // TODO add frontend Segment + error tracking
       this.setState({ error })
@@ -40,16 +37,8 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
   handleCreateList = async (name: string) => {
     this.setState({ isCreatingList: true })
 
-    let list: null | List = null
-
     try {
-      const { createList } = await client.request<CreateListData>(createListMutation, {
-        input: {
-          name
-        }
-      })
-
-      list = createList.list
+      const { list } = await createList(name)
 
       if (list !== null) {
         const appended: List[] = Array.from(this.state.lists || [])
@@ -59,8 +48,6 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
     } finally {
       this.setState({ isCreatingList: false })
     }
-
-    return list
   }
 
   render() {

@@ -10,7 +10,7 @@ interface List {
 interface Props {
   isCreatingList?: boolean
   lists: List[]
-  onCreateList: (name: string) => Promise<List | null>
+  onCreateList: (name: string) => Promise<void>
 }
 
 class Lists extends Component<Props> {
