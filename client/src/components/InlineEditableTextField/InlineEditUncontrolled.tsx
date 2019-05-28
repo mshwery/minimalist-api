@@ -1,5 +1,6 @@
 import React from 'react'
 import Box from 'ui-box'
+import { BaseUIProps } from '../../base-ui/types'
 
 export interface InlineEditProps {
   editView: React.ReactNode
@@ -14,7 +15,7 @@ interface State {
   wrapperFocused: boolean
 }
 
-export default class InlineEditUncontrolled extends React.Component<InlineEditProps, State> {
+export default class InlineEditUncontrolled extends React.Component<InlineEditProps & BaseUIProps, State> {
   confirmOnBlur = () => {
     // if the wrapper receives blur we should trigger the confirm handler
     if (!this.state.wrapperFocused) {
@@ -41,10 +42,18 @@ export default class InlineEditUncontrolled extends React.Component<InlineEditPr
   }
 
   render() {
-    const { editView, readView, isEditing } = this.props
+    const {
+      editView,
+      readView,
+      isEditing,
+      onCancel,
+      onConfirm,
+      onEditRequested,
+      ...props
+    } = this.props
 
     return (
-      <Box onBlur={this.onWrapperBlur} onFocus={this.onWrapperFocus}>
+      <Box onBlur={this.onWrapperBlur} onFocus={this.onWrapperFocus} {...props}>
         {isEditing
           ? editView
           : <Box onClick={this.onWrapperClick}>{readView}</Box>

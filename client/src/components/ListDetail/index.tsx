@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
 import { Heading, Pane, scale } from '../../base-ui'
-import { List, getList, renameList } from './queries'
+import { List, getList, renameList, createTask, reopenTask, completeTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
-import Box from 'ui-box';
+import Box from 'ui-box'
 
 interface Props {
   listId: string
@@ -51,10 +51,42 @@ export default class ListWithData extends PureComponent<Props, State> {
   }
 
   handleNameChange = () => {
-    if (this.nameRef && this.nameRef.value) {
-      this.setState({ name: this.nameRef.value })
-      this.renameList(this.nameRef.value)
+    if (!this.nameRef) {
+      return
     }
+
+    const name = this.nameRef.value
+    if (name && this.state.name !== name) {
+      this.setState({ name })
+      this.renameList(name)
+    }
+  }
+
+  createNewTask = async (content: string) => {
+    const { task } = await createTask(content, this.props.listId)
+    if (task) {
+      this.setState(prevState => ({
+        list: {
+          ...prevState.list!,
+          tasks: [
+            ...prevState.list!.tasks,
+            task!
+          ]
+        }
+      }))
+    }
+  }
+
+  updateTaskContent = async (content: string, id: string) => {
+    // const { task } = await updateTask(content, id)
+  }
+
+  handleMarkComplete = async (taskId: string) => {
+    const { task } = await completeTask(taskId)
+  }
+
+  handleMarkIncomplete = async (taskId: string) => {
+    const { task } = await reopenTask(taskId)
   }
 
   renameList = async (name: string) => {
@@ -114,19 +146,28 @@ export default class ListWithData extends PureComponent<Props, State> {
                 fontWeight='inherit'
                 color='inherit'
                 appearance='none'
+                borderBottom='2px solid #2e8ae6'
                 style={{ outline: 'none' }}
               />
             )}
             readView={(
-              optimisticName || placeholder
+              <Box borderBottom='2px solid transparent'>
+                {optimisticName || placeholder}
+              </Box>
             )}
             onConfirm={this.handleNameChange}
           />
         </Heading>
         {list.tasks.map(task => (
-          <Task key={task.id} {...task} />
+          <Task
+            {...task}
+            key={task.id}
+            onContentChange={(content) => this.updateTaskContent(content, task.id)}
+            onMarkComplete={() => this.handleMarkComplete(task.id)}
+            onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+          />
         ))}
-        <Task />
+        <Task onContentChange={this.createNewTask} />
 
         {process.env.NODE_ENV !== 'production' && (
           <React.Fragment>

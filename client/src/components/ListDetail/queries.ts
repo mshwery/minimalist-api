@@ -56,13 +56,6 @@ interface RenameListData {
   }
 }
 
-interface RenameListVariables {
-  input: {
-    id: string
-    name: string
-  }
-}
-
 export const renameListMutation = `
   mutation RenameList($input: RenameListInput!) {
     renameList(input: $input) {
@@ -83,4 +76,98 @@ export async function renameList(id: string, name: string) {
   })
 
   return result.renameList
+}
+
+interface CreateTaskData {
+  createTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const createTaskMutation = `
+  mutation CreateTask($input: CreateTaskInput!) {
+    createTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+      }
+    }
+  }
+`
+
+export async function createTask(content: string, listId?: string) {
+  const result = await client.request<CreateTaskData>(createTaskMutation, {
+    input: {
+      content,
+      listId
+    }
+  })
+
+  return result.createTask
+}
+
+interface CompleteTaskData {
+  completeTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const completeTaskMutation = `
+  mutation CompleteTask($input: CompleteTaskInput!) {
+    completeTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+      }
+    }
+  }
+`
+
+export async function completeTask(taskId: string) {
+  const result = await client.request<CompleteTaskData>(completeTaskMutation, {
+    input: {
+      id: taskId
+    }
+  })
+
+  return result.completeTask
+}
+
+interface ReopenTaskData {
+  reopenTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const reopenTaskMutation = `
+  mutation ReopenTask($input: ReopenTaskInput!) {
+    reopenTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+      }
+    }
+  }
+`
+
+export async function reopenTask(taskId: string) {
+  const result = await client.request<ReopenTaskData>(reopenTaskMutation, {
+    input: {
+      id: taskId
+    }
+  })
+
+  return result.reopenTask
 }
