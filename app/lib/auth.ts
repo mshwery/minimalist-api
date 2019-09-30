@@ -31,11 +31,18 @@ export function hashPassword(password): Promise<string> {
   return bcrypt.hash(password, 10)
 }
 
+interface JwtPayload {
+  sub?: string
+}
+
 /**
  * Generates a JWT
  * @see {@link https://github.com/auth0/node-jsonwebtoken#usage}
  */
-export function generateJwt(payload: string | Buffer | object, options: jwt.SignOptions = defaultOptions): string {
+export function generateJwt(
+  payload: string | Buffer | object | JwtPayload,
+  options: jwt.SignOptions = defaultOptions
+): string {
   options = defaults(options, defaultOptions)
   const token = jwt.sign(payload, secret, options)
   return token

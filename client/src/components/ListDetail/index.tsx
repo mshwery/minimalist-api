@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
-import { Heading, Pane, scale } from '../../base-ui'
-import { List, getList, renameList, createTask, reopenTask, completeTask } from './queries'
+import { Heading, Pane, scale, Input } from '../../base-ui'
+import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import Box from 'ui-box'
@@ -19,7 +19,7 @@ interface State {
 }
 
 export default class ListWithData extends PureComponent<Props, State> {
-  nameRef: null | HTMLInputElement = null
+  nameRef = React.createRef<HTMLInputElement>()
 
   state: State = {
     list: null,
@@ -50,12 +50,15 @@ export default class ListWithData extends PureComponent<Props, State> {
     }
   }
 
+  // handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   handleNameChange = () => {
-    if (!this.nameRef) {
+    // const name = event.target.value
+    if (!this.nameRef.current) {
       return
     }
 
-    const name = this.nameRef.value
+    const name = this.nameRef.current.value
+
     if (name && this.state.name !== name) {
       this.setState({ name })
       this.renameList(name)
@@ -77,16 +80,37 @@ export default class ListWithData extends PureComponent<Props, State> {
     }
   }
 
-  updateTaskContent = async (content: string, id: string) => {
-    // const { task } = await updateTask(content, id)
+  updateTaskContent = async (taskId: string, content: string) => {
+    const { task } = await updateTask(taskId, content)
+    this.updateTaskInList(task)
   }
 
   handleMarkComplete = async (taskId: string) => {
     const { task } = await completeTask(taskId)
+    this.updateTaskInList(task)
   }
 
   handleMarkIncomplete = async (taskId: string) => {
     const { task } = await reopenTask(taskId)
+    this.updateTaskInList(task)
+  }
+
+  updateTaskInList = (task: Maybe<TaskType>) => {
+    if (task && this.state.list) {
+      // Update task in list
+      this.setState(prevState => ({
+        list: {
+          ...prevState.list!,
+          tasks: prevState.list!.tasks.map(t => {
+            if (t.id === task.id) {
+              return task
+            }
+
+            return t
+          })
+        }
+      }))
+    }
   }
 
   renameList = async (name: string) => {
@@ -109,10 +133,6 @@ export default class ListWithData extends PureComponent<Props, State> {
     }
   }
 
-  setNameRef = (node: null | HTMLInputElement) => {
-    this.nameRef = node
-  }
-
   render() {
     const { isLoading, list, name } = this.state
 
@@ -132,10 +152,8 @@ export default class ListWithData extends PureComponent<Props, State> {
         <Heading>
           <InlineEdit
             editView={(
-              <Box
-                innerRef={this.setNameRef}
-                is='input'
-                type='text'
+              <Input
+                innerRef={this.nameRef as any}
                 defaultValue={optimisticName}
                 placeholder={placeholder}
                 autoFocus
@@ -145,13 +163,11 @@ export default class ListWithData extends PureComponent<Props, State> {
                 fontSize='inherit'
                 fontWeight='inherit'
                 color='inherit'
-                appearance='none'
-                borderBottom='2px solid #2e8ae6'
                 style={{ outline: 'none' }}
               />
             )}
             readView={(
-              <Box borderBottom='2px solid transparent'>
+              <Box>
                 {optimisticName || placeholder}
               </Box>
             )}
@@ -162,7 +178,7 @@ export default class ListWithData extends PureComponent<Props, State> {
           <Task
             {...task}
             key={task.id}
-            onContentChange={(content) => this.updateTaskContent(content, task.id)}
+            onContentChange={(content) => this.updateTaskContent(task.id, content)}
             onMarkComplete={() => this.handleMarkComplete(task.id)}
             onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
           />

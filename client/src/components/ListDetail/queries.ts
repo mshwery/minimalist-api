@@ -110,6 +110,38 @@ export async function createTask(content: string, listId?: string) {
   return result.createTask
 }
 
+interface UpdateTaskData {
+  updateTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const updateTaskMutation = `
+  mutation UpdateTask($input: UpdateTaskInput!) {
+    updateTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+      }
+    }
+  }
+`
+
+export async function updateTask(taskId: string, content: string) {
+  const result = await client.request<UpdateTaskData>(updateTaskMutation, {
+    input: {
+      id: taskId,
+      content
+    }
+  })
+
+  return result.updateTask
+}
+
 interface CompleteTaskData {
   completeTask: {
     task: Maybe<Task>

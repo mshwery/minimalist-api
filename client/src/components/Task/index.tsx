@@ -16,21 +16,17 @@ interface Props {
 }
 
 export default class Task extends React.PureComponent<Props> {
-  contentRef: null | HTMLInputElement = null
+  contentRef = React.createRef<HTMLInputElement>()
 
   handleContentChange = () => {
-    if (!this.contentRef) {
+    if (!this.contentRef.current) {
       return
     }
 
-    const content = this.contentRef.value
+    const content = this.contentRef.current.value
     if (content && this.props.content !== content && typeof this.props.onContentChange === 'function') {
       this.props.onContentChange(content)
     }
-  }
-
-  setContentRef = (node: null | HTMLInputElement) => {
-    this.contentRef = node
   }
 
   render() {
@@ -47,7 +43,7 @@ export default class Task extends React.PureComponent<Props> {
           minHeight={20}
           editView={(
             <Box
-              innerRef={this.setContentRef}
+              innerRef={this.contentRef as any}
               is='input'
               type='text'
               defaultValue={this.props.content}
@@ -58,8 +54,6 @@ export default class Task extends React.PureComponent<Props> {
               fontSize='inherit'
               fontWeight='inherit'
               color='inherit'
-              appearance='none'
-              outline='none'
               style={{ outline: 'none' }}
             />
           )}
