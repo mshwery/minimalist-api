@@ -3,12 +3,11 @@ declare namespace Express {
     sentry: string
   }
 
+  interface User {
+    id: string
+  }
+
   interface Request {
-    // The currently authenticated user object
-    user?: {
-      // The jwt "subject" (aka user id)
-      sub: string
-    } | any
     jwt?: {
       // The jwt "subject" (aka user id)
       sub: string

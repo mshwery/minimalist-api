@@ -109,6 +109,7 @@ initConnection()
   .then(conn => {
     connection = conn
 
+    // @ts-ignore
     app.listen(port, err => {
       if (err) {
         logger.error(err)

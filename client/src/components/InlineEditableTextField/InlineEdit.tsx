@@ -1,6 +1,6 @@
 import React from 'react'
 import InlineEditUncontrolled, { InlineEditProps } from './InlineEditUncontrolled'
-import { Omit } from '../../@types/type-helpers'
+import { BaseUIProps } from '../../base-ui/types'
 
 type Props = Omit<InlineEditProps,
   | 'onCancel'
@@ -12,7 +12,7 @@ interface State {
   isEditing: boolean
 }
 
-export default class InlineEdit extends React.Component<Props, State> {
+export default class InlineEdit extends React.Component<Props & BaseUIProps, State> {
   state = {
     isEditing: false
   }

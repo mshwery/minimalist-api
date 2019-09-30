@@ -30,7 +30,7 @@ function getFontSize(size?: number) {
 }
 
 const colors: { [key: string]: string } = {
-  muted: '#C9CACF'
+  muted: '#787A87'
 }
 
 function getTextColor(color?: Color) {

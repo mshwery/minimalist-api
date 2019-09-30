@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Redirect, Switch, RouteComponentProps } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
 import ListsPage from './pages/ListsPage'
