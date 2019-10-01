@@ -73,7 +73,7 @@ export default class ListWithData extends PureComponent<Props, State> {
           ...prevState.list!,
           tasks: [
             ...prevState.list!.tasks,
-            task!
+            task
           ]
         }
       }))

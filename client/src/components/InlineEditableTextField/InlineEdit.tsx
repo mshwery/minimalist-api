@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InlineEditUncontrolled, { InlineEditProps } from './InlineEditUncontrolled'
 import { BaseUIProps } from '../../base-ui/types'
 
@@ -8,37 +8,21 @@ type Props = Omit<InlineEditProps,
   | 'onEditRequested'
 >
 
-interface State {
-  isEditing: boolean
+const InlineEdit: React.FunctionComponent<Props & BaseUIProps> = (props) => {
+  const [isEditing, setEditMode] = useState(false)
+
+  return (
+    <InlineEditUncontrolled
+      {...props}
+      onConfirm={() => {
+        setEditMode(false)
+        props.onConfirm()
+      }}
+      onCancel={() => setEditMode(false)}
+      isEditing={isEditing}
+      onEditRequested={() => setEditMode(true)}
+    />
+  )
 }
 
-export default class InlineEdit extends React.Component<Props & BaseUIProps, State> {
-  state = {
-    isEditing: false
-  }
-
-  onConfirm = () => {
-    this.setState({ isEditing: false })
-    this.props.onConfirm()
-  }
-
-  onCancel = () => {
-    this.setState({ isEditing: false })
-  }
-
-  onEditRequested = () => {
-    this.setState({ isEditing: true })
-  }
-
-  render() {
-    return (
-      <InlineEditUncontrolled
-        {...this.props}
-        onConfirm={this.onConfirm}
-        onCancel={this.onCancel}
-        isEditing={this.state.isEditing}
-        onEditRequested={this.onEditRequested}
-      />
-    )
-  }
-}
+export default InlineEdit
