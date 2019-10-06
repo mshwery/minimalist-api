@@ -18,6 +18,6 @@
     "lib": ["esnext"]
   },
   "exclude": ["node_modules", "./dist"],
-  "include": ["./app/**/*.ts", "./migrations/*.ts", "./config/environment.json"],
-  "files": ["./app/server.ts"]
+  "include": ["./server/**/*.ts", "./migrations/*.ts", "./config/environment.json"],
+  "files": ["./server/index.ts"]
 }
