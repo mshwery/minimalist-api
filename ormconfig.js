@@ -10,7 +10,7 @@ module.exports = {
   password: config.get('PGPASSWORD'),
   ssl: config.get('PGSSL') || false,
   // output dir after compilation
-  entities: ['dist/app/**/*.entity.js'],
+  entities: ['dist/server/**/*.entity.js'],
   // output dir after compilation
   migrations: ['dist/migrations/*.js'],
   cli: {
