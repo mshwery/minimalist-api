@@ -13,7 +13,7 @@ export default class TaskRepository extends Repository<Task> {
    * Get all tasks created by the given user id
    * TODO: pagination?
    */
-  public allByAuthor(author: UUID, filters: TaskFilters): Promise<Task[]> {
+  public allByAuthor(author: UUID, filters: TaskFilters = {}): Promise<Task[]> {
     const attrs: Partial<Task> = {
       createdBy: author
     }
