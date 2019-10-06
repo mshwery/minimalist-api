@@ -5,27 +5,3 @@ import { GraphQLClient } from 'graphql-request'
 export const gql = (tag: TemplateStringsArray) => tag
 
 export default new GraphQLClient('/graphql')
-
-// function withGraphQL(query: string | TemplateStringsArray, variables) {
-//   return (Component) => {
-//     return class WithGraphQL extends React.Component {
-//       static displayName = `WithGraphQL(${Component.displayName || 'UnnamedComponent'})`
-
-//       state = {
-//         isLoading: true
-//       }
-
-//       async componentDidMount() {
-//         try {
-//           await client.request(query.toString())
-//         } catch (error) {
-
-//         }
-//       }
-
-//       render() {
-
-//       }
-//     }
-//   }
-// }

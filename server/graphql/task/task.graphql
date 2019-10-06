@@ -1,5 +1,6 @@
 extend type Query {
-  tasks(ids: [ID]): [Task]
+  # Get tasks with optional filters: by ids, listId
+  tasks(ids: [ID!], listId: ID): [Task]!
 }
 
 extend type Mutation {

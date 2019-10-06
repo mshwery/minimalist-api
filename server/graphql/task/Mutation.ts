@@ -7,10 +7,7 @@ export default {
     args: MutationInput<{ content: string; listId?: string }>,
     ctx: Context
   ): Promise<{ task: Task }> {
-    const task = await TaskModel.create(ctx.viewer, {
-      content: args.input.content,
-      listId: args.input.listId
-    })
+    const task = await TaskModel.create(ctx.viewer, args.input)
 
     return { task }
   },

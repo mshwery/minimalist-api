@@ -72,12 +72,15 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllByViewer(viewer: Viewer, ids?: UUID[]): Promise<Task[]> {
+  static async fetchAllByViewer(viewer: Viewer, filters: { ids?: UUID[], listId?: UUID }): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
-    return getCustomRepository(TaskRepository).allByAuthor(viewer, ids)
+    return getCustomRepository(TaskRepository).allByAuthor(viewer, {
+      ids: filters.ids,
+      listId: filters.listId === 'inbox' ? null : filters.listId
+    })
   }
 
   /**

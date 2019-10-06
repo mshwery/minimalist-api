@@ -1,4 +1,4 @@
-import React, { PureComponent, HTMLAttributes } from 'react'
+import React, { HTMLAttributes } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
@@ -42,20 +42,17 @@ function getTextColor(color?: Color) {
 }
 
 
-export class Text extends PureComponent<TextProps & BaseUIProps> {
-  render() {
-    const { size = 400, color, ...props } = this.props
-    const fontSize = getFontSize(size)
-    const textColor = getTextColor(color)
+export const Text: React.FunctionComponent<TextProps & BaseUIProps> = ({ size = 400, color, ...props }) => {
+  const fontSize = getFontSize(size)
+  const textColor = getTextColor(color)
 
-    // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
-    return (
-      <Box
-        is='span'
-        fontSize={fontSize}
-        color={textColor}
-        {...props}
-      />
-    )
-  }
+  // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
+  return (
+    <Box
+      is='span'
+      fontSize={fontSize}
+      color={textColor}
+      {...props}
+    />
+  )
 }

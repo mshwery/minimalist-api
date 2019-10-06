@@ -26,28 +26,40 @@ interface GetListData {
 
 const getListQuery = `
   query GetList($id: ID!) {
-    list(id: $id) {
+    list(id: $id)  {
       id
       name
       isArchived
       createdAt
       updatedAt
       archivedAt
-
-      tasks {
-        id
-        content
-        isCompleted
-        createdAt
-        updatedAt
-        completedAt
-      }
     }
   }
 `
 
 export function getList(id: string) {
   return client.request<GetListData>(getListQuery, { id })
+}
+
+interface GetTasksData {
+  tasks: Task[]
+}
+
+const getTasksQuery = `
+  query GetTasks($listId: ID!) {
+    tasks(listId: $listId) {
+      id
+      content
+      isCompleted
+      createdAt
+      updatedAt
+      completedAt
+    }
+  }
+`
+
+export function getTasks(listId: string) {
+  return client.request<GetTasksData>(getTasksQuery, { listId })
 }
 
 interface RenameListData {
