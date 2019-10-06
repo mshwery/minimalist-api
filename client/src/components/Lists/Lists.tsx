@@ -2,6 +2,25 @@ import React, { Component } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Button, Heading, Pane, scale } from '../../base-ui'
 
+const INBOX = {
+  id: 'inbox',
+  name: 'Inbox'
+}
+
+interface ListLinkProps {
+  list: List
+}
+
+const ListLink: React.FunctionComponent<ListLinkProps> = ({ list }) => {
+  return (
+    <Pane is='li' listStyle='none' marginY={scale(1)}>
+      <RouterLink to={`/lists/${list.id}`}>
+        {list.name}
+      </RouterLink>
+    </Pane>
+  )
+}
+
 interface List {
   id: string
   name: string
@@ -21,14 +40,11 @@ class Lists extends Component<Props> {
           Create a new List
         </Button>
         <Pane marginY={scale(4)}>
-          <Heading size={100} marginBottom={scale(1)}>Your Lists</Heading>
+          <Heading size={100} marginBottom={scale(1)}>Lists</Heading>
           <Pane is='ul' marginLeft={0} paddingLeft={0}>
+            <ListLink list={INBOX} />
             {this.props.lists.map(list => (
-              <Pane is='li' listStyle='none' marginY={scale(1)} key={list.id}>
-                <RouterLink to={`/lists/${list.id}`}>
-                  {list.name}
-                </RouterLink>
-              </Pane>
+              <ListLink list={list} key={list.id} />
             ))}
           </Pane>
         </Pane>

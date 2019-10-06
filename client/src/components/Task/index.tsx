@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox, Pane, scale } from '../../base-ui'
+import { Checkbox, Pane, Text, scale } from '../../base-ui'
 import InlineEdit from '../InlineEditableTextField'
 import Box from 'ui-box'
 
@@ -14,6 +14,18 @@ interface Props {
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
 }
+
+const IncompletedContent: React.FunctionComponent<{ content?: string }> = ({ content }) => (
+  <Box minHeight={20}>
+    <Text>{content}</Text>
+  </Box>
+)
+
+const CompletedContent: React.FunctionComponent<{ content?: string }> = ({ content }) => (
+  <Box minHeight={20} color='#787A87' textDecoration='line-through'>
+    <Text>{content}</Text>
+  </Box>
+)
 
 export default class Task extends React.PureComponent<Props> {
   contentRef = React.createRef<HTMLInputElement>()
@@ -31,7 +43,7 @@ export default class Task extends React.PureComponent<Props> {
 
   render() {
     return (
-      <Pane display='flex'>
+      <Pane display='flex' minHeight={30} alignItems='center'>
         <Checkbox
           checked={this.props.isCompleted}
           onChange={this.props.isCompleted ? this.props.onMarkIncomplete : this.props.onMarkComplete}
@@ -57,11 +69,10 @@ export default class Task extends React.PureComponent<Props> {
               style={{ outline: 'none' }}
             />
           )}
-          readView={(
-            <Box minHeight={20}>
-              {this.props.content}
-            </Box>
-          )}
+          readView={this.props.isCompleted
+            ? <CompletedContent content={this.props.content} />
+            : <IncompletedContent content={this.props.content} />
+          }
           onConfirm={this.handleContentChange}
         />
       </Pane>

@@ -4,8 +4,10 @@ import ListDetail from '../components/ListDetail'
 
 export default class ListPage extends Component<RouteComponentProps<{ listId: string }, {}>> {
   render() {
+    const listId = this.props.match.params.listId
+    const canEditList = listId !== 'inbox'
     return (
-      <ListDetail listId={this.props.match.params.listId} />
+      <ListDetail listId={listId} canEditList={canEditList} />
     )
   }
 }

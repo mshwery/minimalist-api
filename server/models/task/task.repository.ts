@@ -2,18 +2,30 @@ import { EntityRepository, Repository } from 'typeorm'
 import Task from './task.entity'
 import { UUID } from '../../types'
 
+interface TaskFilters {
+  ids?: UUID[]
+  listId?: UUID | null
+}
+
 @EntityRepository(Task)
 export default class TaskRepository extends Repository<Task> {
   /**
    * Get all tasks created by the given user id
    * TODO: pagination?
-   * TODO: filters?
    */
-  public allByAuthor(author: UUID, ids?: UUID[]): Promise<Task[]> {
-    let query = this.createQueryBuilder('task').where({ createdBy: author })
+  public allByAuthor(author: UUID, filters: TaskFilters): Promise<Task[]> {
+    const attrs: Partial<Task> = {
+      createdBy: author
+    }
 
-    if (ids && ids.length > 0) {
-      const dedupedIds = Array.from(new Set(ids))
+    if (filters.listId !== undefined) {
+      attrs.listId = filters.listId
+    }
+
+    let query = this.createQueryBuilder('task').where(attrs)
+
+    if (filters.ids && filters.ids.length > 0) {
+      const dedupedIds = Array.from(new Set(filters.ids))
       query = query.andWhereInIds(dedupedIds)
     }
 
