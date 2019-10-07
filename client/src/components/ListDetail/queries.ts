@@ -215,3 +215,27 @@ export async function reopenTask(taskId: string) {
 
   return result.reopenTask
 }
+
+interface DeleteTaskData {
+  deleteTask: {
+    id?: string
+  }
+}
+
+export const deleteTaskMutation = `
+  mutation DeleteTask($input: DeleteTaskInput!) {
+    deleteTask(input: $input) {
+      id
+    }
+  }
+`
+
+export async function deleteTask(taskId: string) {
+  const result = await client.request<DeleteTaskData>(deleteTaskMutation, {
+    input: {
+      id: taskId
+    }
+  })
+
+  return result.deleteTask
+}

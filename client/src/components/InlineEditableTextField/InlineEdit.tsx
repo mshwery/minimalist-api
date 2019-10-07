@@ -6,10 +6,12 @@ type Props = Omit<InlineEditProps,
   | 'onCancel'
   | 'isEditing'
   | 'onEditRequested'
->
+> & {
+  startInEditMode?: boolean
+}
 
-const InlineEdit: React.FunctionComponent<Props & BaseUIProps> = (props) => {
-  const [isEditing, setEditMode] = useState(false)
+const InlineEdit: React.FunctionComponent<Props & BaseUIProps> = ({ startInEditMode = false, ...props }) => {
+  const [isEditing, setEditMode] = useState(startInEditMode)
 
   return (
     <InlineEditUncontrolled

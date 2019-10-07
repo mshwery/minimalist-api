@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
 import { Heading, Pane, scale, Input } from '../../base-ui'
-import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks } from './queries'
+import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
-import AddTaskButton from './AddTaskButton'
+import CreateNewTask from './CreateNewTask'
 
 interface Props {
   listId: string
@@ -136,6 +136,34 @@ export default class ListWithData extends PureComponent<Props, State> {
     }
   }
 
+  deleteTask = async (id: string) => {
+    try {
+      const data = await deleteTask(id)
+      if (data.id) {
+        // Remove task in set
+        this.setState(prevState => ({
+          tasks: prevState.tasks.filter(t => t.id !== data.id)
+        }))
+      }
+    } catch (error) {
+      // TODO handle error
+    }
+  }
+
+  handleKeyPress = (event: React.KeyboardEvent<Element>, _value: string, _id: string, index: number) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      console.log(`TODO: create a new item at ${index + 1}`)
+    }
+  }
+
+  handleKeyDown = (event: React.KeyboardEvent<Element>, value: string, id: string) => {
+    // Use onKeyDown because we want to check that the value is already empty
+    if (event.key === 'Backspace' && value === '') {
+      this.deleteTask(id)
+    }
+  }
+
   render() {
     const { isLoading, list, tasks, name } = this.state
 
@@ -178,16 +206,18 @@ export default class ListWithData extends PureComponent<Props, State> {
             name
           )}
         </Heading>
-        {tasks.map(task => (
+        {tasks.map((task, index) => (
           <Task
             {...task}
             key={task.id}
             onContentChange={(content) => this.updateTaskContent(task.id, content)}
             onMarkComplete={() => this.handleMarkComplete(task.id)}
             onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+            onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
+            onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id)}
           />
         ))}
-        <AddTaskButton marginTop={scale(1)} onClick={() => this.createNewTask(' ')} />
+        <CreateNewTask onReadyToCreate={() => console.log('onCreate')} />
 
         {process.env.NODE_ENV !== 'production' && (
           <React.Fragment>
