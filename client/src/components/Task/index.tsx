@@ -15,13 +15,15 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
 
 interface State {
   content?: string
+  hasFocus: boolean
 }
 
 export default class Task extends React.PureComponent<Props, State> {
   inputRef = React.createRef<ContentEditableText>()
 
   state = {
-    content: this.props.content
+    content: this.props.content,
+    hasFocus: false
   }
 
   emitChange = (value: string) => {
@@ -51,9 +53,18 @@ export default class Task extends React.PureComponent<Props, State> {
     }
   }
 
+  handleBlur = (event: React.SyntheticEvent, value: string) => {
+    this.setState({ hasFocus: false })
+    this.emitDoneEditing(event, value)
+  }
+
   handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
     this.setState({ content: value })
     this.debouncedEmitChange(value)
+  }
+
+  handleFocus = (event: React.SyntheticEvent) => {
+    this.setState({ hasFocus: true })
   }
 
   handleKeyPress = (event: React.KeyboardEvent<Element>, value: string) => {
@@ -78,7 +89,15 @@ export default class Task extends React.PureComponent<Props, State> {
     } = this.props
 
     return (
-      <Pane display='flex' minHeight={30} alignItems='center'>
+      <Pane
+        display='flex'
+        minHeight={30}
+        alignItems='center'
+        paddingX={scale(1)}
+        paddingY={scale(0.5)}
+        backgroundColor={this.state.hasFocus ? '#f7f9fa' : undefined}
+        borderRadius={4}
+      >
         <Checkbox
           checked={isCompleted}
           onChange={isCompleted ? onMarkIncomplete : onMarkComplete}
@@ -95,11 +114,12 @@ export default class Task extends React.PureComponent<Props, State> {
             outline: 'none'
           }}
           content={this.state.content}
-          onBlur={this.emitDoneEditing}
+          onBlur={this.handleBlur}
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
+          onFocus={this.handleFocus}
         />
       </Pane>
     )
