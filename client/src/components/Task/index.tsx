@@ -1,6 +1,26 @@
 import React from 'react'
+import { css } from 'emotion'
 import { debounce } from 'lodash'
+import { Trash2 } from 'react-feather'
 import { Checkbox, Pane, scale, ContentEditableText } from '../../base-ui'
+
+// TODO: move to base ui
+const dormantColor = '#C9CACF'
+const dangerColor = '#E44343'
+
+const iconStyles = css`
+  display: flex;
+  cursor: pointer;
+  color: ${dormantColor};
+
+  &:hover {
+    color: ${dangerColor};
+  }
+`
+
+const DeleteIcon = (props: any) => (
+  <Trash2 size={scale(2.5)} {...props} className={iconStyles} />
+)
 
 interface Props extends React.ComponentProps<typeof ContentEditableText> {
   // Whether or not to automatically focus this Task on render
@@ -11,11 +31,13 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
+  onRequestDelete?: (event: React.SyntheticEvent) => void
 }
 
 interface State {
   content?: string
   hasFocus: boolean
+  hasHover: boolean
 }
 
 export default class Task extends React.PureComponent<Props, State> {
@@ -23,7 +45,8 @@ export default class Task extends React.PureComponent<Props, State> {
 
   state = {
     content: this.props.content,
-    hasFocus: false
+    hasFocus: false,
+    hasHover: false
   }
 
   emitChange = (value: string) => {
@@ -53,9 +76,14 @@ export default class Task extends React.PureComponent<Props, State> {
     }
   }
 
-  handleBlur = (event: React.SyntheticEvent, value: string) => {
-    this.setState({ hasFocus: false })
-    this.emitDoneEditing(event, value)
+  handleBlur = (event: React.SyntheticEvent) => {
+    const currentTarget = event.currentTarget
+
+    requestAnimationFrame(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        this.setState({ hasFocus: false })
+      }
+    })
   }
 
   handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
@@ -78,6 +106,14 @@ export default class Task extends React.PureComponent<Props, State> {
     }
   }
 
+  handleMouseEnter = (_event: React.MouseEvent) => {
+    this.setState({ hasHover: true })
+  }
+
+  handleMouseLeave = (_event: React.MouseEvent) => {
+    this.setState({ hasHover: false })
+  }
+
   render() {
     const {
       autoFocus,
@@ -85,8 +121,12 @@ export default class Task extends React.PureComponent<Props, State> {
       onMarkComplete,
       onMarkIncomplete,
       onKeyDown,
-      onKeyUp
+      onKeyUp,
+      onRequestDelete
     } = this.props
+
+    const { content, hasFocus, hasHover } = this.state
+    const showActions = hasFocus || hasHover
 
     return (
       <Pane
@@ -95,8 +135,12 @@ export default class Task extends React.PureComponent<Props, State> {
         alignItems='center'
         paddingX={scale(1)}
         paddingY={scale(0.5)}
-        backgroundColor={this.state.hasFocus ? '#f7f9fa' : undefined}
+        backgroundColor={showActions ? '#f7f9fa' : undefined}
         borderRadius={4}
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
       >
         <Checkbox
           checked={isCompleted}
@@ -113,14 +157,14 @@ export default class Task extends React.PureComponent<Props, State> {
           style={{
             outline: 'none'
           }}
-          content={this.state.content}
-          onBlur={this.handleBlur}
+          content={content}
+          onBlur={this.emitDoneEditing}
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
-          onFocus={this.handleFocus}
         />
+        {showActions && <DeleteIcon onClick={onRequestDelete} />}
       </Pane>
     )
   }

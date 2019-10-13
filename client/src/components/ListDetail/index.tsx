@@ -204,7 +204,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     const placeholder = 'Untitled'
 
     return (
-      <Pane paddingX={scale(10)} paddingY={scale(5)}>
+      <Pane paddingX={scale(10)} paddingY={scale(5)} width={scale(75)} maxWidth='100%'>
         <Heading paddingBottom={scale(2)}>
           {this.props.canEditList ? (
             <InlineEdit
@@ -242,6 +242,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
             onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
             onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
+            onRequestDelete={() => this.deleteTask(task.id)}
           />
         ))}
         <CreateNewTask onDoneEditing={this.createNewTask} />

@@ -16,10 +16,11 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
   value,
   ...props
 }) => {
+  const cursor = disabled ? 'not-allowed' : 'pointer'
   return (
     <Box
       is='label'
-      cursor={disabled ? 'not-allowed' : 'pointer'}
+      cursor={cursor}
       position='relative'
       display='flex'
       {...props}
@@ -29,21 +30,24 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
         id={id}
         type='checkbox'
         name={name}
+        cursor='inherit'
         value={value}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        style={{
-          clip: 'rect(1px, 1px, 1px, 1px)'
-        }}
         border='none'
-        height={1}
-        width={1}
+        height='100%'
+        width='100%'
+        top={0}
+        right={0}
+        bottom={0}
+        left={0}
         overflow='hidden'
         padding={0}
         opacity={0}
         position='absolute'
         whiteSpace='nowrap'
+        zIndex={1}
       />
       {checked
         ? <Check size={scale(2.5)} color='#2e8ae6' />
