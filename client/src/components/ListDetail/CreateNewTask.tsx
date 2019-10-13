@@ -1,17 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { TextButton, scale, Pane } from '../../base-ui'
 import Task from '../Task'
 
 interface Props {
-  onReadyToCreate?: (content: string) => any
+  onDoneEditing: (content: string) => any
 }
 
-const CreateNewTask: React.FunctionComponent<Props> = ({ onReadyToCreate }) => {
+const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
   const [isEditing, toggleEditMode] = useState(false)
+  const inputRef = useRef<Task>(null)
 
   if (isEditing) {
-    return <Task autoFocus onContentChange={onReadyToCreate} />
+    return (
+      <Task
+        ref={inputRef}
+        autoFocus
+        onDoneEditing={(event, content) => {
+          if (content) {
+            onDoneEditing(content)
+          }
+
+          if (!content || event.type === 'blur') {
+            toggleEditMode(false)
+          }
+
+          if (inputRef.current) {
+            inputRef.current.resetInput('')
+          }
+        }}
+      />
+    )
   }
 
   return (

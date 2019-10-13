@@ -4,6 +4,7 @@ import { Text } from './Text'
 interface Props {
   content?: string
   disabled?: boolean
+  onBlur?: (event: React.FocusEvent, value: string) => void
   onChange?: (event: React.KeyboardEvent, value: string) => void
   onKeyPress?: (event: React.KeyboardEvent, value: string) => void
   onKeyUp?: (event: React.KeyboardEvent, value: string) => void
@@ -16,23 +17,43 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   elementRef = React.createRef<HTMLSpanElement>()
 
   componentDidMount() {
-    if (this.elementRef.current && this.props.autoFocus) {
+    if (this.props.autoFocus) {
+      this.focusInput()
+    }
+  }
+
+  componentDidUpdate(prevProps: Props & MostTextProps) {
+    if (this.props.autoFocus && !prevProps.autoFocus) {
+      this.focusInput()
+    }
+  }
+
+  focusInput = () => {
+    if (this.elementRef.current) {
       this.elementRef.current.focus()
     }
   }
 
-  shouldComponentUpdate(nextProps: Props & MostTextProps) {
-    // if (
-    //   this.elementRef.current &&
-    //   nextProps.content !== this.elementRef.current.innerText
-    // ) {
-    //   console.log(`content: ${nextProps.content}`, `innerText: ${this.elementRef.current.innerText}`)
-    // }
+  resetInput = (content: string) => {
+    if (this.elementRef.current) {
+      this.elementRef.current.innerText = content
+    }
+  }
 
+  shouldComponentUpdate(nextProps: Props & MostTextProps) {
     return (
       !this.elementRef.current ||
-      nextProps.content !== this.elementRef.current.innerText
+      nextProps.content !== this.elementRef.current.innerText ||
+      nextProps.autoFocus !== this.props.autoFocus
     )
+  }
+
+  onBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
+    const value = this.elementRef.current!.innerText
+
+    if (typeof this.props.onBlur === 'function') {
+      this.props.onBlur(event, value)
+    }
   }
 
   onInput = (event: React.KeyboardEvent<HTMLSpanElement>) => {
@@ -80,8 +101,9 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
 
   render() {
     const {
-      content,
+      content = '',
       disabled,
+      onBlur,
       onChange,
       onKeyPress,
       onKeyUp,
@@ -95,15 +117,14 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
         {...props}
         ref={this.elementRef as any}
         contentEditable={!disabled}
-        suppressContentEditableWarning
+        dangerouslySetInnerHTML={{ __html: content }}
+        onBlur={this.onBlur}
         onInput={this.onInput}
         onKeyPress={this.onKeyPress}
         onKeyUp={this.onKeyUp}
         onKeyDown={this.onKeyDown}
         onPaste={this.onPaste}
-      >
-        {content}
-      </Text>
+      />
     )
   }
 }

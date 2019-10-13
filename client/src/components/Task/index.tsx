@@ -8,6 +8,7 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   content?: string
   isCompleted?: boolean
   onContentChange?: (content: string) => void
+  onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
 }
@@ -17,6 +18,8 @@ interface State {
 }
 
 export default class Task extends React.PureComponent<Props, State> {
+  inputRef = React.createRef<ContentEditableText>()
+
   state = {
     content: this.props.content
   }
@@ -29,9 +32,39 @@ export default class Task extends React.PureComponent<Props, State> {
 
   debouncedEmitChange = debounce(this.emitChange, 300)
 
+  emitDoneEditing= (event: React.SyntheticEvent<Element>, value: string) => {
+    if (typeof this.props.onDoneEditing === 'function') {
+      this.props.onDoneEditing(event, value)
+    }
+  }
+
+  focusInput = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.focusInput()
+    }
+  }
+
+  resetInput = (content: string) => {
+    this.setState({ content })
+    if (this.inputRef.current) {
+      this.inputRef.current.resetInput(content)
+    }
+  }
+
   handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
     this.setState({ content: value })
     this.debouncedEmitChange(value)
+  }
+
+  handleKeyPress = (event: React.KeyboardEvent<Element>, value: string) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      this.emitDoneEditing(event, value)
+    }
+
+    if (typeof this.props.onKeyPress === 'function') {
+      this.props.onKeyPress(event, value)
+    }
   }
 
   render() {
@@ -41,8 +74,7 @@ export default class Task extends React.PureComponent<Props, State> {
       onMarkComplete,
       onMarkIncomplete,
       onKeyDown,
-      onKeyUp,
-      onKeyPress
+      onKeyUp
     } = this.props
 
     return (
@@ -54,6 +86,7 @@ export default class Task extends React.PureComponent<Props, State> {
           marginRight={scale(1)}
         />
         <ContentEditableText
+          ref={this.inputRef}
           autoFocus={autoFocus}
           flex='1'
           color={isCompleted ? '#787A87' : 'inherit'}
@@ -62,10 +95,11 @@ export default class Task extends React.PureComponent<Props, State> {
             outline: 'none'
           }}
           content={this.state.content}
+          onBlur={this.emitDoneEditing}
           onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
-          onKeyPress={onKeyPress}
         />
       </Pane>
     )
