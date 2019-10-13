@@ -40,10 +40,9 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         justifyContent='center'
         lineHeight={2}
         paddingX={scale(2)}
-        outline='none'
         textDecoration='none'
         userSelect='none'
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         {...((isLoading || disabled) ? disabledStyles : {})}
         {...props}
       />

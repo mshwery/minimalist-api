@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
-import { Redirect } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
 import { Heading, Pane, scale, Input } from '../../base-ui'
-import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks } from './queries'
+import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
-import AddTaskButton from './AddTaskButton'
+import CreateNewTask from './CreateNewTask'
 
 interface Props {
   listId: string
@@ -13,6 +13,7 @@ interface Props {
 }
 
 interface State {
+  autoFocusId: Maybe<string>,
   list: Maybe<List>
   tasks: TaskType[],
   name: string
@@ -20,10 +21,12 @@ interface State {
   isLoading: boolean
 }
 
-export default class ListWithData extends PureComponent<Props, State> {
+// TODO: break this up into the list detail view and the task editor
+class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, State> {
   nameRef = React.createRef<HTMLInputElement>()
 
   state: State = {
+    autoFocusId: null,
     list: null,
     tasks: [],
     name: '',
@@ -51,7 +54,12 @@ export default class ListWithData extends PureComponent<Props, State> {
         this.setState({ name: 'Inbox' })
       } else {
         const { list } = await getList(this.props.listId)
-        this.setState({ list, name: list ? list.name : '' })
+
+        if (list) {
+          this.setState({ list, name: list.name })
+        } else {
+          this.props.history.push('/lists')
+        }
       }
 
       const { tasks } = await getTasks(this.props.listId)
@@ -136,15 +144,61 @@ export default class ListWithData extends PureComponent<Props, State> {
     }
   }
 
+  deleteTask = async (id: string) => {
+    try {
+      const data = await deleteTask(id)
+      if (data.id) {
+        // Remove task in set
+        this.setState(prevState => ({
+          tasks: prevState.tasks.filter(t => t.id !== data.id)
+        }))
+      }
+    } catch (error) {
+      // TODO handle error
+    }
+  }
+
+  handleKeyPress = (event: React.KeyboardEvent<Element>, _value: string, _id: string, index: number) => {
+    // TODO: create a new item at this index
+    // TODO: potentially split the text at the cursor (i.e. simulate plaintext editing)
+    if (event.key === 'Enter') {
+      console.log(`TODO: create a new item at ${index + 1}`)
+    }
+  }
+
+  handleKeyDown = (event: React.KeyboardEvent<Element>, value: string, id: string, index: number) => {
+    // Use onKeyDown because we want to check that the value is already empty
+    if (event.key === 'Backspace' && value === '') {
+      this.deleteTask(id)
+      this.focusPreviousTask(index)
+    }
+
+    if (event.key === 'ArrowDown') {
+      this.focusNextTask(index)
+    }
+
+    if (event.key === 'ArrowUp') {
+      this.focusPreviousTask(index)
+    }
+  }
+
+  focusNextTask = (currentIndex: number) => {
+    const nextTask = this.state.tasks[currentIndex + 1]
+    const autoFocusId = nextTask ? nextTask.id : null
+    this.setState({ autoFocusId })
+  }
+
+  focusPreviousTask = (currentIndex: number) => {
+    const nextTask = this.state.tasks[currentIndex - 1]
+    const autoFocusId = nextTask ? nextTask.id : null
+    this.setState({ autoFocusId })
+  }
+
   render() {
-    const { isLoading, list, tasks, name } = this.state
+    const { isLoading, tasks, name, autoFocusId } = this.state
 
     if (isLoading) {
       return 'Loading...'
-    }
-
-    if (!list && this.props.listId !== 'inbox') {
-      return <Redirect to='/lists' />
     }
 
     const placeholder = 'Untitled'
@@ -178,16 +232,19 @@ export default class ListWithData extends PureComponent<Props, State> {
             name
           )}
         </Heading>
-        {tasks.map(task => (
+        {tasks.map((task, index) => (
           <Task
             {...task}
+            autoFocus={autoFocusId === task.id}
             key={task.id}
             onContentChange={(content) => this.updateTaskContent(task.id, content)}
             onMarkComplete={() => this.handleMarkComplete(task.id)}
             onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+            onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
+            onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
           />
         ))}
-        <AddTaskButton marginTop={scale(1)} onClick={() => this.createNewTask(' ')} />
+        <CreateNewTask onDoneEditing={this.createNewTask} />
 
         {process.env.NODE_ENV !== 'production' && (
           <React.Fragment>
@@ -204,3 +261,4 @@ export default class ListWithData extends PureComponent<Props, State> {
   }
 }
 
+export default withRouter(ListWithData)

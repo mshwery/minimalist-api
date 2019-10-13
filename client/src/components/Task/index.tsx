@@ -1,79 +1,105 @@
 import React from 'react'
-import { Checkbox, Pane, Text, scale } from '../../base-ui'
-import InlineEdit from '../InlineEditableTextField'
-import Box from 'ui-box'
+import { debounce } from 'lodash'
+import { Checkbox, Pane, scale, ContentEditableText } from '../../base-ui'
 
-interface Props {
-  id?: string
+interface Props extends React.ComponentProps<typeof ContentEditableText> {
+  // Whether or not to automatically focus this Task on render
+  autoFocus?: boolean
   content?: string
   isCompleted?: boolean
-  createdAt?: string
-  updatedAt?: string
-  completedAt?: string
   onContentChange?: (content: string) => void
+  onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
 }
 
-const IncompletedContent: React.FunctionComponent<{ content?: string }> = ({ content }) => (
-  <Box minHeight={20}>
-    <Text>{content}</Text>
-  </Box>
-)
+interface State {
+  content?: string
+}
 
-const CompletedContent: React.FunctionComponent<{ content?: string }> = ({ content }) => (
-  <Box minHeight={20} color='#787A87' textDecoration='line-through'>
-    <Text>{content}</Text>
-  </Box>
-)
+export default class Task extends React.PureComponent<Props, State> {
+  inputRef = React.createRef<ContentEditableText>()
 
-export default class Task extends React.PureComponent<Props> {
-  contentRef = React.createRef<HTMLInputElement>()
+  state = {
+    content: this.props.content
+  }
 
-  handleContentChange = () => {
-    if (!this.contentRef.current) {
-      return
+  emitChange = (value: string) => {
+    if (value && this.props.content !== value && typeof this.props.onContentChange === 'function') {
+      this.props.onContentChange(value)
+    }
+  }
+
+  debouncedEmitChange = debounce(this.emitChange, 300)
+
+  emitDoneEditing= (event: React.SyntheticEvent<Element>, value: string) => {
+    if (typeof this.props.onDoneEditing === 'function') {
+      this.props.onDoneEditing(event, value)
+    }
+  }
+
+  focusInput = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.focusInput()
+    }
+  }
+
+  resetInput = (content: string) => {
+    this.setState({ content })
+    if (this.inputRef.current) {
+      this.inputRef.current.resetInput(content)
+    }
+  }
+
+  handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
+    this.setState({ content: value })
+    this.debouncedEmitChange(value)
+  }
+
+  handleKeyPress = (event: React.KeyboardEvent<Element>, value: string) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      this.emitDoneEditing(event, value)
     }
 
-    const content = this.contentRef.current.value
-    if (content && this.props.content !== content && typeof this.props.onContentChange === 'function') {
-      this.props.onContentChange(content)
+    if (typeof this.props.onKeyPress === 'function') {
+      this.props.onKeyPress(event, value)
     }
   }
 
   render() {
+    const {
+      autoFocus,
+      isCompleted,
+      onMarkComplete,
+      onMarkIncomplete,
+      onKeyDown,
+      onKeyUp
+    } = this.props
+
     return (
       <Pane display='flex' minHeight={30} alignItems='center'>
         <Checkbox
-          checked={this.props.isCompleted}
-          onChange={this.props.isCompleted ? this.props.onMarkIncomplete : this.props.onMarkComplete}
+          checked={isCompleted}
+          onChange={isCompleted ? onMarkIncomplete : onMarkComplete}
           flex='none'
           marginRight={scale(1)}
         />
-        <InlineEdit
+        <ContentEditableText
+          ref={this.inputRef}
+          autoFocus={autoFocus}
           flex='1'
-          minHeight={20}
-          editView={(
-            <Box
-              innerRef={this.contentRef as any}
-              is='input'
-              type='text'
-              defaultValue={this.props.content}
-              autoFocus
-              width='100%'
-              padding={0}
-              border='none'
-              fontSize='inherit'
-              fontWeight='inherit'
-              color='inherit'
-              style={{ outline: 'none' }}
-            />
-          )}
-          readView={this.props.isCompleted
-            ? <CompletedContent content={this.props.content} />
-            : <IncompletedContent content={this.props.content} />
-          }
-          onConfirm={this.handleContentChange}
+          color={isCompleted ? '#787A87' : 'inherit'}
+          textDecoration={isCompleted ? 'line-through' : undefined}
+          style={{
+            outline: 'none'
+          }}
+          content={this.state.content}
+          onBlur={this.emitDoneEditing}
+          onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
         />
       </Pane>
     )
