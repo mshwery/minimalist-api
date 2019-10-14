@@ -10,6 +10,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
- code {
+a, svg, input, textarea, button, [contenteditable=true] {
+  touch-action: manipulation;
+}
+
+code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
