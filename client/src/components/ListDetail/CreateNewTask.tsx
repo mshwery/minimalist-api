@@ -35,7 +35,7 @@ const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
 
   return (
     <TextButton color='muted' onClick={() => toggleEditMode(true)} minHeight={30}>
-      <Pane display='flex' alignItems='center' justifyContent='center' width={scale(2.5)} marginX={scale(1)}>
+      <Pane display='flex' alignItems='center' justifyContent='center' width={scale(2.5)} marginRight={scale(1)}>
         <Plus size={scale(2)} />
       </Pane>
       Add task

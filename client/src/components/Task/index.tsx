@@ -106,6 +106,12 @@ export default class Task extends React.PureComponent<Props, State> {
     }
   }
 
+  handleMouseMove = (_event: React.MouseEvent) => {
+    if (!this.state.hasHover) {
+      this.setState({ hasHover: true })
+    }
+  }
+
   handleMouseEnter = (_event: React.MouseEvent) => {
     this.setState({ hasHover: true })
   }
@@ -133,6 +139,7 @@ export default class Task extends React.PureComponent<Props, State> {
         display='flex'
         minHeight={30}
         alignItems='center'
+        marginX={scale(-1)}
         paddingX={scale(1)}
         paddingY={scale(0.5)}
         backgroundColor={showActions ? '#f7f9fa' : undefined}
@@ -141,6 +148,7 @@ export default class Task extends React.PureComponent<Props, State> {
         onBlur={this.handleBlur}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
+        onMouseMove={this.handleMouseMove}
       >
         <Checkbox
           checked={isCompleted}

@@ -1,11 +1,28 @@
 import React, { PureComponent } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
 import { Heading, Pane, scale, Input } from '../../base-ui'
 import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import CreateNewTask from './CreateNewTask'
+
+const Container: React.FunctionComponent<{}> = (props) => (
+  <Pane
+    {...props}
+    flex='none'
+    width={scale(75)}
+    maxWidth='100%'
+    className={css`
+      padding: ${scale(10)}px ${scale(5)}px;
+
+      @media (max-width: 700px) {
+        padding: ${scale(3)}px ${scale(2)}px;
+      }
+    `}
+  />
+)
 
 interface Props {
   listId: string
@@ -204,7 +221,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     const placeholder = 'Untitled'
 
     return (
-      <Pane paddingX={scale(10)} paddingY={scale(5)} width={scale(75)} maxWidth='100%'>
+      <Container>
         <Heading paddingBottom={scale(2)}>
           {this.props.canEditList ? (
             <InlineEdit
@@ -247,7 +264,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
         ))}
         <CreateNewTask onDoneEditing={this.createNewTask} />
 
-        {process.env.NODE_ENV !== 'production' && (
+        {/* {process.env.NODE_ENV !== 'production' && (
           <React.Fragment>
             <hr/>
             <pre>
@@ -256,8 +273,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
               </code>
             </pre>
           </React.Fragment>
-        )}
-      </Pane>
+        )} */}
+      </Container>
     )
   }
 }
