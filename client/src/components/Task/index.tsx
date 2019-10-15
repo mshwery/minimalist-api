@@ -38,6 +38,7 @@ interface State {
   content?: string
   hasFocus: boolean
   hasHover: boolean
+  optimisticChecked: boolean
 }
 
 export default class Task extends React.PureComponent<Props, State> {
@@ -46,7 +47,8 @@ export default class Task extends React.PureComponent<Props, State> {
   state = {
     content: this.props.content,
     hasFocus: false,
-    hasHover: false
+    hasHover: false,
+    optimisticChecked: this.props.isCompleted || false
   }
 
   emitChange = (value: string) => {
@@ -120,18 +122,28 @@ export default class Task extends React.PureComponent<Props, State> {
     this.setState({ hasHover: false })
   }
 
+  handleCheckedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isOptimisticallyCompleted = event.target.checked
+    this.setState({ optimisticChecked: isOptimisticallyCompleted })
+
+    const callback = isOptimisticallyCompleted
+      ? this.props.onMarkComplete
+      : this.props.onMarkIncomplete
+
+    if (typeof callback === 'function') {
+      callback(event)
+    }
+  }
+
   render() {
     const {
       autoFocus,
-      isCompleted,
-      onMarkComplete,
-      onMarkIncomplete,
       onKeyDown,
       onKeyUp,
       onRequestDelete
     } = this.props
 
-    const { content, hasFocus, hasHover } = this.state
+    const { content, hasFocus, hasHover, optimisticChecked } = this.state
     const showActions = hasFocus || hasHover
 
     return (
@@ -151,8 +163,8 @@ export default class Task extends React.PureComponent<Props, State> {
         onMouseMove={this.handleMouseMove}
       >
         <Checkbox
-          checked={isCompleted}
-          onChange={isCompleted ? onMarkIncomplete : onMarkComplete}
+          checked={optimisticChecked}
+          onChange={this.handleCheckedChange}
           flex='none'
           marginRight={scale(1)}
         />
@@ -160,8 +172,8 @@ export default class Task extends React.PureComponent<Props, State> {
           ref={this.inputRef}
           autoFocus={autoFocus}
           flex='1'
-          color={isCompleted ? '#787A87' : 'inherit'}
-          textDecoration={isCompleted ? 'line-through' : undefined}
+          color={optimisticChecked ? '#787A87' : 'inherit'}
+          textDecoration={optimisticChecked ? 'line-through' : undefined}
           style={{
             outline: 'none'
           }}
