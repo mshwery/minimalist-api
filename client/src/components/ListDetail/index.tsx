@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { Sidebar as SidebarIcon } from 'react-feather'
 import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
 import { Heading, Pane, scale, Input } from '../../base-ui'
@@ -8,7 +9,7 @@ import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import CreateNewTask from './CreateNewTask'
 
-const Container: React.FunctionComponent<{}> = (props) => (
+const Container: React.FunctionComponent<any> = (props) => (
   <Pane
     {...props}
     flex='none'
@@ -17,8 +18,8 @@ const Container: React.FunctionComponent<{}> = (props) => (
     className={css`
       padding: ${scale(10)}px ${scale(5)}px;
 
-      @media (max-width: 700px) {
-        padding: ${scale(3)}px ${scale(2)}px;
+      @media (max-width: 1224px) {
+        padding: ${scale(3)}px;
       }
     `}
   />
@@ -27,6 +28,8 @@ const Container: React.FunctionComponent<{}> = (props) => (
 interface Props {
   listId: string
   canEditList?: boolean
+  requestSideBar?: () => void
+  requestSideBarClose?: () => void
 }
 
 interface State {
@@ -215,14 +218,23 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     const { isLoading, tasks, name, autoFocusId } = this.state
 
     if (isLoading) {
-      return 'Loading...'
+      return <Container>Loading...</Container>
     }
 
     const placeholder = 'Untitled'
 
     return (
-      <Container>
+      <Container onClick={this.props.requestSideBarClose}>
         <Heading paddingBottom={scale(2)}>
+          <SidebarIcon
+            size={scale(2)}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (typeof this.props.requestSideBar === 'function') {
+                this.props.requestSideBar()
+              }
+            }}
+          />
           {this.props.canEditList ? (
             <InlineEdit
               editView={(
@@ -264,16 +276,16 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
         ))}
         <CreateNewTask onDoneEditing={this.createNewTask} />
 
-        {/* {process.env.NODE_ENV !== 'production' && (
-          <React.Fragment>
+        {process.env.NODE_ENV !== 'production' && (
+          <Pane width='100%'>
             <hr/>
             <pre>
               <code>
                 {JSON.stringify(this.state, null, 2)}
               </code>
             </pre>
-          </React.Fragment>
-        )} */}
+          </Pane>
+        )}
       </Container>
     )
   }

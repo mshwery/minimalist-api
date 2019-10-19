@@ -52,7 +52,7 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
 
   render() {
     if (this.state.isLoading) {
-      return 'Loading...'
+      return null
     }
 
     return (

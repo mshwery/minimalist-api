@@ -2,19 +2,15 @@ import React from 'react'
 import { css } from 'emotion'
 import { debounce } from 'lodash'
 import { Trash2 } from 'react-feather'
-import { Checkbox, Pane, scale, ContentEditableText } from '../../base-ui'
-
-// TODO: move to base ui
-const dormantColor = '#C9CACF'
-const dangerColor = '#E44343'
+import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'
 
 const iconStyles = css`
   display: flex;
   cursor: pointer;
-  color: ${dormantColor};
+  color: ${colors.fill.muted};
 
   &:hover {
-    color: ${dangerColor};
+    color: ${colors.fill.danger};
   }
 `
 
@@ -154,7 +150,7 @@ export default class Task extends React.PureComponent<Props, State> {
         marginX={scale(-1)}
         paddingX={scale(1)}
         paddingY={scale(0.5)}
-        backgroundColor={showActions ? '#f7f9fa' : undefined}
+        backgroundColor={showActions ? colors.fill.background : undefined}
         borderRadius={4}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
@@ -172,7 +168,7 @@ export default class Task extends React.PureComponent<Props, State> {
           ref={this.inputRef}
           autoFocus={autoFocus}
           flex='1'
-          color={optimisticChecked ? '#787A87' : 'inherit'}
+          color={optimisticChecked ? colors.text.muted : 'inherit'}
           textDecoration={optimisticChecked ? 'line-through' : undefined}
           style={{
             outline: 'none'

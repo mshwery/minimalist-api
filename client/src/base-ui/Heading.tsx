@@ -32,16 +32,9 @@ function getFontSize(size?: number) {
   return fontSizes[size]
 }
 
-const colors: { [key: string]: string } = {
-  muted: '#C9CACF'
-}
 
 function getTextColor(color?: Color) {
-  if (!color) {
-    return
-  }
-
-  return colors[color] || color
+  return color
 }
 
 export class Heading extends PureComponent<HeadingProps & BaseUIProps> {

@@ -3,6 +3,7 @@ import Box from 'ui-box'
 import { Check, Square } from 'react-feather'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
+import { colors } from './colors'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
@@ -50,8 +51,8 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
         zIndex={1}
       />
       {checked
-        ? <Check size={scale(2.5)} color='#2e8ae6' />
-        : <Square size={scale(2.5)} color='#A6B1BB' />
+        ? <Check size={scale(2.5)} color={colors.fill.primary} />
+        : <Square size={scale(2.5)} color={colors.fill.secondary} />
       }
     </Box>
   )

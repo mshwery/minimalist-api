@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
+import { colors } from './colors'
 
 const disabledStyles = {
   opacity: 0.5,
@@ -28,7 +29,7 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         is='button'
         alignItems='center'
         appearance='none'
-        background='#2e8ae6'
+        background={colors.fill.primary}
         border='none'
         borderRadius={2}
         boxSizing='border-box'

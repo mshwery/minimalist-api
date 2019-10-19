@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Button, Heading, Pane, scale } from '../../base-ui'
+import { Plus } from 'react-feather'
+import { Button, Heading, Pane, scale, Text } from '../../base-ui'
 
 const INBOX = {
   id: 'inbox',
@@ -37,7 +38,7 @@ class Lists extends Component<Props> {
     return (
       <Pane>
         <Button width='100%' isLoading={this.props.isCreatingList} onClick={() => this.props.onCreateList('Untitled')}>
-          Create a new List
+          <Plus size={scale(2)} /><Text marginLeft={scale(1)} size={300}>Create a new List</Text>
         </Button>
         <Pane marginY={scale(4)}>
           <Heading size={100} marginBottom={scale(1)}>Lists</Heading>

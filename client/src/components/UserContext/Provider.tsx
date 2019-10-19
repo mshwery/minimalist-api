@@ -69,7 +69,7 @@ export default class UserProvider extends Component<{}, UserProviderState> {
 
   render() {
     if (this.state.isLoading) {
-      return 'Loading...'
+      return null
     }
 
     return <Provider value={this.state.context}>{this.props.children}</Provider>

@@ -2,6 +2,7 @@ import React, { HTMLAttributes } from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
+import { colors as theme } from './colors'
 
 type Color = 'muted' | 'default' | string
 
@@ -30,7 +31,7 @@ function getFontSize(size?: number) {
 }
 
 const colors: { [key: string]: string } = {
-  muted: '#787A87'
+  muted: theme.text.muted
 }
 
 function getTextColor(color?: Color) {

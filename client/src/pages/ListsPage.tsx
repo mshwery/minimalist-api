@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Route, Switch, RouteComponentProps } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Route, Switch, RouteComponentProps, useRouteMatch } from 'react-router-dom'
 import { Pane, scale } from '../base-ui'
 import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
@@ -7,18 +7,26 @@ import Sidebar from '../components/Sidebar'
 import UserMenu from '../components/UserMenu'
 import ListPage from '../pages/ListPage'
 
-export default class ListsPage extends Component<RouteComponentProps<{}, {}> & Context> {
-  render() {
-    return (
-      <Pane display='flex'>
-        <Sidebar>
-          <UserMenu {...this.props.user!} marginBottom={scale(8)} />
-          <Lists />
-        </Sidebar>
-        <Switch>
-          <Route path='/lists/:listId' component={ListPage} />
-        </Switch>
-      </Pane>
-    )
-  }
+const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> = ({ user }) => {
+  const [forceOpen, setForceOpen] = useState(false)
+
+  return (
+    <Pane display='flex'>
+      <Sidebar forceOpen={forceOpen}>
+        <UserMenu {...user!} marginBottom={scale(8)} />
+        <Lists />
+      </Sidebar>
+      <Switch>
+        <Route exact path='/lists/:listId' render={routeProps => (
+          <ListPage
+            {...routeProps}
+            requestSideBar={() => setForceOpen(true)}
+            requestSideBarClose={() => setForceOpen(false)}
+          />
+        )} />
+      </Switch>
+    </Pane>
+  )
 }
+
+export default ListsPage
