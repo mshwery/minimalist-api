@@ -23,6 +23,7 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   autoFocus?: boolean
   content?: string
   isCompleted?: boolean
+  id?: string
   onContentChange?: (content: string) => void
   onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
@@ -145,7 +146,6 @@ export default class Task extends React.PureComponent<Props, State> {
     return (
       <Pane
         display='flex'
-        minHeight={30}
         alignItems='center'
         marginX={scale(-1)}
         paddingX={scale(1)}
@@ -157,6 +157,13 @@ export default class Task extends React.PureComponent<Props, State> {
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onMouseMove={this.handleMouseMove}
+        className={css`
+          min-height: 30px;
+
+          @media (max-width: 600px) {
+            min-height: 36px;
+          }
+        `}
       >
         <Checkbox
           checked={optimisticChecked}
@@ -180,7 +187,7 @@ export default class Task extends React.PureComponent<Props, State> {
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
         />
-        {showActions && <DeleteIcon onClick={onRequestDelete} />}
+        {showActions && this.props.id && <DeleteIcon onClick={onRequestDelete} />}
       </Pane>
     )
   }

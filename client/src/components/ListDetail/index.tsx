@@ -226,7 +226,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     return (
       <Container onClick={this.props.requestSideBarClose}>
         <Heading display='flex' paddingBottom={scale(2)} alignItems='center'>
-          <Pane display='inline-flex' marginRight={scale(1)} flex='none'>
+          <Pane display='inline-flex' marginRight={scale(1)} flex='none' className={css`
+            @media (min-width: 1224px) {
+              display: none;
+            }
+          `}>
             <SidebarIcon
               color={colors.fill.muted}
               size={scale(2.5)}
