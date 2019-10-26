@@ -44,7 +44,7 @@ const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
         min-height: 30px;
 
         @media (max-width: 600px) {
-          min-height: 40px;
+          min-height: 36px;
         }
       `}
     >
