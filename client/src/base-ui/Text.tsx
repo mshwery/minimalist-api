@@ -50,7 +50,7 @@ export const Text: React.FunctionComponent<TextProps & BaseUIProps> = React.forw
   return (
     <Box
       is='span'
-      innerRef={ref as any}
+      innerRef={ref as React.RefObject<HTMLSpanElement>}
       fontSize={fontSize}
       color={textColor}
       {...props}

@@ -239,7 +239,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             <InlineEdit
               editView={(
                 <Input
-                  innerRef={this.nameRef as any}
+                  innerRef={this.nameRef}
                   defaultValue={name}
                   placeholder={placeholder}
                   autoFocus

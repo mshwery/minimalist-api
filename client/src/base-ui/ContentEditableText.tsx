@@ -115,7 +115,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     return (
       <Text
         {...props}
-        ref={this.elementRef as any}
+        ref={this.elementRef}
         contentEditable={!disabled}
         dangerouslySetInnerHTML={{ __html: content }}
         onBlur={this.onBlur}

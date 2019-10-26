@@ -1,31 +1,69 @@
-import React, { Component } from 'react'
-import { scale, Button, Card, Heading, Link, Pane, Paragraph } from '../../base-ui'
+import React, { useState } from 'react'
+import { css } from 'emotion'
+import { scale, Button, Card, Paragraph, Pane, colors } from '../../base-ui'
+import { ReactComponent as Logo } from '../../minimalist.svg'
 
 interface LoginProps {
   googleAuthUrl: string
-  facebookAuthUrl?: string
+  // facebookAuthUrl?: string
 }
 
-class Login extends Component<LoginProps> {
-  render() {
-    return (
+const Login: React.FunctionComponent<LoginProps> = (props) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  return (
+    <Pane
+      height='100vh'
+      width='100vw'
+      display='flex'
+      alignItems='center'
+      justifyContent='center'
+      backgroundColor={colors.fill.background}
+    >
       <Card
-        elevation={1}
-        maxWidth='100%'
-        width={scale(100)}
-        justifyContent='center'
-        margin='auto'
-        padding={scale(5)}
+        elevation={2}
+        maxWidth={scale(100)}
+        width='90%'
+        textAlign='center'
+        paddingY={scale(10)}
+        paddingX={scale(5)}
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        className={css`
+          justify-content: center;
+
+          @media (max-width: 600px) {
+            width: 100vw;
+            height: 100vh;
+            justify-content: flex-start;
+          }
+        `}
       >
-        <Heading size={700}>Welcome back.</Heading>
-        <Paragraph>Sign in to manage your lists.</Paragraph>
-        <Button is='a' href={this.props.googleAuthUrl}>Sign in with Google</Button>
-        <Pane>
-          No account? <Link href='/create'>Create one</Link>
-        </Pane>
+        <Logo />
+        <Paragraph maxWidth={scale(38)} marginY={scale(2)} marginX='auto'>
+          The simplest way to keep track of the stuff you want to do.
+        </Paragraph>
+        <Button
+          is='a'
+          href={props.googleAuthUrl}
+          variant='minimal'
+          width={scale(38)}
+          maxWidth='100%'
+          lineHeight='2.5'
+          marginY={scale(2)}
+          onClick={() => setIsLoading(true)}
+          isLoading={isLoading}
+        >
+          Sign in with Google
+        </Button>
+        {/* TODO: support email/pass logins (w/ email verification) */}
+        {/* <Pane>
+          Don't have an account? <Link href='/create'>Create one</Link>
+        </Pane> */}
       </Card>
-    )
-  }
+    </Pane>
+  )
 }
 
 export default Login
