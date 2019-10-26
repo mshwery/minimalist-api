@@ -3,7 +3,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Sidebar as SidebarIcon } from 'react-feather'
 import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
-import { Heading, Pane, scale, Input } from '../../base-ui'
+import { Heading, Pane, scale, Input, colors } from '../../base-ui'
 import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
@@ -225,18 +225,22 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
     return (
       <Container onClick={this.props.requestSideBarClose}>
-        <Heading paddingBottom={scale(2)}>
-          <SidebarIcon
-            size={scale(2)}
-            onClick={(e) => {
-              e.stopPropagation()
-              if (typeof this.props.requestSideBar === 'function') {
-                this.props.requestSideBar()
-              }
-            }}
-          />
+        <Heading display='flex' paddingBottom={scale(2)} alignItems='center'>
+          <Pane display='inline-flex' marginRight={scale(1)} flex='none'>
+            <SidebarIcon
+              color={colors.fill.muted}
+              size={scale(2.5)}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (typeof this.props.requestSideBar === 'function') {
+                  this.props.requestSideBar()
+                }
+              }}
+            />
+          </Pane>
           {this.props.canEditList ? (
             <InlineEdit
+              flex='1'
               editView={(
                 <Input
                   innerRef={this.nameRef}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Plus } from 'react-feather'
-import { Button, Heading, Pane, scale, Text } from '../../base-ui'
+import { Button, Heading, Pane, scale, Text, Link } from '../../base-ui'
 
 const INBOX = {
   id: 'inbox',
@@ -15,9 +15,9 @@ interface ListLinkProps {
 const ListLink: React.FunctionComponent<ListLinkProps> = ({ list }) => {
   return (
     <Pane is='li' listStyle='none' marginY={scale(1)}>
-      <RouterLink to={`/lists/${list.id}`}>
+      <Link is={RouterLink as any} to={`/lists/${list.id}`}>
         {list.name}
-      </RouterLink>
+      </Link>
     </Pane>
   )
 }

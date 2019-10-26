@@ -44,6 +44,7 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
         bottom={0}
         left={0}
         overflow='hidden'
+        margin={0}
         padding={0}
         opacity={0}
         position='absolute'

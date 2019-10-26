@@ -4,15 +4,11 @@ import { useMediaQuery } from 'react-responsive'
 import { Pane, scale, colors } from '../../base-ui'
 
 interface Props {
-  forceOpen?: boolean
+  isOpen?: boolean
 }
 
-const Sidebar: React.FunctionComponent<Props> = ({ children, forceOpen }) => {
+const Sidebar: React.FunctionComponent<Props> = ({ children, isOpen }) => {
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-
-  if (isTabletOrMobile && !forceOpen) {
-    return null
-  }
 
   return (
     <Pane
@@ -24,6 +20,9 @@ const Sidebar: React.FunctionComponent<Props> = ({ children, forceOpen }) => {
       padding={scale(5)}
       className={css`
         padding: ${scale(5)}px;
+
+        margin-left: ${isTabletOrMobile && !isOpen ? `-${scale(35)}px` : 0};
+        transition: margin 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 
         @media (max-width: 1224px) {
           padding: ${scale(4)}px ${scale(2)}px;

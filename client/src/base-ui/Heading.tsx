@@ -49,7 +49,7 @@ export class Heading extends PureComponent<HeadingProps & BaseUIProps> {
         is='h1'
         color={textColor}
         fontSize={fontSize}
-        fontWeight={600}
+        fontWeight={500}
         textTransform={size === 100 ? 'uppercase' : 'none'}
         marginTop={0}
         marginBottom={0}

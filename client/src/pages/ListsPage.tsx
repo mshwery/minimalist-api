@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Route, Switch, RouteComponentProps } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Route, Switch, RouteComponentProps, useLocation } from 'react-router-dom'
 import { Pane, scale } from '../base-ui'
 import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
@@ -8,11 +8,20 @@ import UserMenu from '../components/UserMenu'
 import ListPage from '../pages/ListPage'
 
 const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> = ({ user }) => {
-  const [forceOpen, setForceOpen] = useState(false)
+  const location = useLocation()
+  const [isOpen, setIsOpen] = useState(false)
+
+  // anytime the location changes, reset the sidebar
+  useEffect(
+    () => {
+      setIsOpen(false)
+    },
+    [location, setIsOpen]
+  )
 
   return (
     <Pane display='flex'>
-      <Sidebar forceOpen={forceOpen}>
+      <Sidebar isOpen={isOpen}>
         <UserMenu {...user!} marginBottom={scale(8)} />
         <Lists />
       </Sidebar>
@@ -20,8 +29,8 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
         <Route exact path='/lists/:listId' render={routeProps => (
           <ListPage
             {...routeProps}
-            requestSideBar={() => setForceOpen(true)}
-            requestSideBarClose={() => setForceOpen(false)}
+            requestSideBar={() => setIsOpen(true)}
+            requestSideBarClose={() => setIsOpen(false)}
           />
         )} />
       </Switch>
