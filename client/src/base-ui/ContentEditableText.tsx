@@ -43,6 +43,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   shouldComponentUpdate(nextProps: Props & MostTextProps) {
     return (
       !this.elementRef.current ||
+      nextProps.color !== this.props.color ||
       nextProps.content !== this.elementRef.current.innerText ||
       nextProps.autoFocus !== this.props.autoFocus
     )
