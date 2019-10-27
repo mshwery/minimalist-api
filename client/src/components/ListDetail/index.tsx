@@ -15,6 +15,8 @@ const Container: React.FunctionComponent<any> = (props) => (
     flex='none'
     width={scale(75)}
     maxWidth='100%'
+    maxHeight='100%'
+    overflow='auto'
     className={css`
       padding: ${scale(10)}px ${scale(5)}px;
 
@@ -287,11 +289,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
         {process.env.NODE_ENV !== 'production' && (
           <Pane width='100%'>
             <hr/>
-            <pre>
+            <Pane is='pre' overflow='auto' backgroundColor={colors.fill.background} borderRadius={2} padding={scale(1)}>
               <code>
                 {JSON.stringify(this.state, null, 2)}
               </code>
-            </pre>
+            </Pane>
           </Pane>
         )}
       </Container>

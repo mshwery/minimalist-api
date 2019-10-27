@@ -20,7 +20,7 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
   )
 
   return (
-    <Pane display='flex'>
+    <Pane display='flex' maxWidth='100vw' maxHeight='100vh' overflow='hidden'>
       <Sidebar isOpen={isOpen}>
         <UserMenu {...user!} marginBottom={scale(8)} />
         <Lists />
