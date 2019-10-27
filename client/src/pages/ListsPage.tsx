@@ -22,18 +22,20 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
   return (
     <Pane display='flex' maxWidth='100vw' maxHeight='100vh' overflow='hidden'>
       <Sidebar isOpen={isOpen}>
-        <UserMenu {...user!} marginBottom={scale(8)} />
+        <UserMenu {...user!} marginBottom={scale(4)} />
         <Lists />
       </Sidebar>
-      <Switch>
-        <Route exact path='/lists/:listId' render={routeProps => (
-          <ListPage
-            {...routeProps}
-            requestSideBar={() => setIsOpen(true)}
-            requestSideBarClose={() => setIsOpen(false)}
-          />
-        )} />
-      </Switch>
+      <Pane flex='1' maxHeight='100%' overflow='auto'>
+        <Switch>
+          <Route exact path='/lists/:listId' render={routeProps => (
+            <ListPage
+              {...routeProps}
+              requestSideBar={() => setIsOpen(true)}
+              requestSideBarClose={() => setIsOpen(false)}
+            />
+          )} />
+        </Switch>
+      </Pane>
     </Pane>
   )
 }

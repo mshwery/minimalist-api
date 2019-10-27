@@ -1,26 +1,9 @@
-import React, { Component } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import { Plus } from 'react-feather'
-import { Button, Heading, Pane, scale, Text, Link } from '../../base-ui'
-
-const INBOX = {
-  id: 'inbox',
-  name: 'Inbox'
-}
-
-interface ListLinkProps {
-  list: List
-}
-
-const ListLink: React.FunctionComponent<ListLinkProps> = ({ list }) => {
-  return (
-    <Pane is='li' listStyle='none' marginY={scale(1)}>
-      <Link is={RouterLink as any} to={`/lists/${list.id}`}>
-        {list.name}
-      </Link>
-    </Pane>
-  )
-}
+import React from 'react'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
+import { Heading, Pane, scale } from '../../base-ui'
+import SidebarItem from '../Sidebar/SidebarItem'
+import SidebarList from '../Sidebar/SidebarList'
 
 interface List {
   id: string
@@ -33,25 +16,26 @@ interface Props {
   onCreateList: (name: string) => Promise<void>
 }
 
-class Lists extends Component<Props> {
-  render() {
-    return (
-      <Pane>
-        <Button width='100%' isLoading={this.props.isCreatingList} onClick={() => this.props.onCreateList('Untitled')}>
-          <Plus size={scale(2)} /><Text marginLeft={scale(1)} size={300}>Create a new List</Text>
-        </Button>
-        <Pane marginY={scale(4)}>
-          <Heading size={100} marginBottom={scale(1)}>Lists</Heading>
-          <Pane is='ul' marginLeft={0} paddingLeft={0}>
-            <ListLink list={INBOX} />
-            {this.props.lists.map(list => (
-              <ListLink list={list} key={list.id} />
-            ))}
-          </Pane>
-        </Pane>
-      </Pane>
-    )
-  }
+const Lists: React.FunctionComponent<Props> = (props) => {
+  const { pathname } = useLocation()
+
+  return (
+    <Pane>
+      <SidebarList>
+        <SidebarItem icon={InboxIcon} is={RouterLink} to='/lists/inbox' isSelected={pathname === '/lists/inbox'}>
+          Inbox
+        </SidebarItem>
+        {props.lists.map(list => (
+          <SidebarItem icon={ListIcon} key={list.id} is={RouterLink} to={`/lists/${list.id}`} isSelected={pathname === `/lists/${list.id}`}>
+            {list.name}
+          </SidebarItem>
+        ))}
+        <SidebarItem icon={PlusCircle} onClick={() => props.onCreateList('Untitled')}>
+          Create List
+        </SidebarItem>
+      </SidebarList>
+    </Pane>
+  )
 }
 
 export default Lists

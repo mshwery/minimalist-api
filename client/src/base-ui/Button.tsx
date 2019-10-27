@@ -53,6 +53,10 @@ function getSizeProps(size: 'compact' | 'default' | 'large'): object {
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Whether or not the button should be disabled */
   disabled?: boolean
+  /** An (optional) icon to place after the text */
+  iconAfter?: React.ReactNode,
+  /** An (optional) icon to place before the text */
+  iconBefore?: React.ReactNode,
   /** Whether or not the button should display a loading indicator (it will become disabled unless otherwise specified) */
   isLoading?: boolean
   /** The button style to apply */
@@ -64,7 +68,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export class Button extends PureComponent<ButtonProps & BaseUIProps> {
   render() {
     const {
+      children,
       disabled,
+      iconAfter,
+      iconBefore,
       isLoading,
       size = 'default',
       variant = 'default',
@@ -92,7 +99,11 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         {...variantProps}
         {...((isLoading || disabled) ? disabledStyles : {})}
         {...props}
-      />
+      >
+        {iconBefore && <Box display='inline-flex' marginRight={scale(1)}>{iconBefore}</Box>}
+        {children}
+        {iconAfter && <Box display='inline-flex' marginLeft={scale(1)}>{iconAfter}</Box>}
+      </Box>
     )
   }
 }

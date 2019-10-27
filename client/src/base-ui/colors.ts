@@ -13,6 +13,7 @@ export const colors = {
   text: {
     action: BLUE,
     placeholder: GRAY,
-    muted: '#787A87'
+    muted: '#787A87',
+    default: '#242527'
   }
 }

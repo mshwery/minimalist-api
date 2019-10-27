@@ -4,7 +4,7 @@ import { BaseUIProps } from './types'
 
 type Elevation = 0 | 1 | 2 | 3 | 4
 
-export interface PaneProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PaneProps {
   /** How elevated the element should be (manifesting a box-shadow) */
   elevation?: Elevation
 }

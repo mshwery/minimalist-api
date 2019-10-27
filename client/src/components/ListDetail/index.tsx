@@ -15,8 +15,6 @@ const Container: React.FunctionComponent<any> = (props) => (
     flex='none'
     width={scale(75)}
     maxWidth='100%'
-    maxHeight='100%'
-    overflow='auto'
     className={css`
       padding: ${scale(10)}px ${scale(5)}px;
 
@@ -246,7 +244,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           </Pane>
           {this.props.canEditList ? (
             <InlineEdit
-              flex='1'
+              flex='1 0 auto'
               editView={(
                 <Input
                   innerRef={this.nameRef}
@@ -258,6 +256,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                   border='none'
                   fontSize='inherit'
                   fontWeight='inherit'
+                  fontFamily='inherit'
                   color='inherit'
                   style={{ outline: 'none' }}
                 />
