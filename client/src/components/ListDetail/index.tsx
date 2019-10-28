@@ -13,10 +13,11 @@ const Container: React.FunctionComponent<any> = (props) => (
   <Pane
     {...props}
     flex='none'
-    width={scale(75)}
-    maxWidth='100%'
+    width='100%'
+    maxWidth={scale(75)}
+    minWidth={scale(40)}
     className={css`
-      padding: ${scale(10)}px ${scale(5)}px;
+      padding: ${scale(4)}px ${scale(6)}px;
 
       @media (max-width: 1224px) {
         padding: ${scale(3)}px;
@@ -103,20 +104,16 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
     if (name && this.state.name !== name) {
       this.setState({ name })
-      this.renameList(name)
+      void this.renameList(name)
     }
   }
 
-  createNewTask = async (content: string) => {
+  createNewTask = async (content: string, position?: number) => {
     const listId = this.props.listId === 'inbox' ? undefined : this.props.listId
-    const { task } = await createTask(content, listId)
+    const { task } = await createTask({ content, position, listId })
     if (task) {
-      this.setState(prevState => ({
-        tasks: [
-          ...prevState.tasks,
-          task
-        ]
-      }))
+      const { tasks } = await getTasks(this.props.listId)
+      this.setState({ tasks, autoFocusId: task.id })
     }
   }
 
@@ -182,14 +179,14 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     // TODO: create a new item at this index
     // TODO: potentially split the text at the cursor (i.e. simulate plaintext editing)
     if (event.key === 'Enter') {
-      console.log(`TODO: create a new item at ${index + 1}`)
+      void this.createNewTask('', index + 1)
     }
   }
 
   handleKeyDown = (event: React.KeyboardEvent<Element>, value: string, id: string, index: number) => {
     // Use onKeyDown because we want to check that the value is already empty
     if (event.key === 'Backspace' && value === '') {
-      this.deleteTask(id)
+      void this.deleteTask(id)
       this.focusPreviousTask(index)
     }
 

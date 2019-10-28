@@ -4,7 +4,7 @@ import { Task, TaskModel } from '../../models/task'
 export default {
   async createTask(
     _root,
-    args: MutationInput<{ content: string; listId?: string }>,
+    args: MutationInput<{ content: string; insertAt?: number, listId?: string }>,
     ctx: Context
   ): Promise<{ task: Task }> {
     const task = await TaskModel.create(ctx.viewer, args.input)

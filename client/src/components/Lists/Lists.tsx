@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
-import { Heading, Pane, scale } from '../../base-ui'
+import { Pane } from '../../base-ui'
 import SidebarItem from '../Sidebar/SidebarItem'
 import SidebarList from '../Sidebar/SidebarList'
 

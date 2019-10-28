@@ -52,14 +52,19 @@ export class TaskModel {
   }
 
   /**
-   * Gets all tasks associated with a list
+   * Gets all tasks associated with a list (or the inbox)
    */
-  static async fetchAllByList(viewer: Viewer, listId: UUID): Promise<Task[]> {
+  static async fetchAllByList(viewer: Viewer, listId: UUID | null): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
-    // TODO: fetch just the tasks?
+    if (listId === 'inbox' || listId === null) {
+      return getCustomRepository(TaskRepository).allByAuthor(viewer, {
+        listId: null
+      })
+    }
+
     // TODO: fetch the list via DataLoaders
     const list = await ListModel.fetch(viewer, listId, { withTasks: true })
     if (!list) {
@@ -89,14 +94,14 @@ export class TaskModel {
    */
   static async create(
     viewer: Viewer,
-    attrs: { content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID | null }
+    { insertAt, ...attrs }: { insertAt?: number, content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID | null }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
     }
 
     // @todo real validation
-    if (!attrs.content) {
+    if (typeof attrs.content !== 'string') {
       throw new BadRequest(`Must provide a value for "content".`)
     }
 
@@ -108,9 +113,19 @@ export class TaskModel {
       }
     }
 
-    return getCustomRepository(TaskRepository).apply(new Task(), {
+    const task = await getCustomRepository(TaskRepository).apply(new Task(), {
       ...attrs,
       createdBy: viewer
+    })
+
+    if (!insertAt) {
+      return task
+    }
+
+    return TaskModel.moveTask(viewer, {
+      id: task.id!,
+      listId: attrs.listId || 'inbox',
+      insertBefore: insertAt + 1
     })
   }
 

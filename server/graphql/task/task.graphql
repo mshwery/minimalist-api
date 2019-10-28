@@ -35,6 +35,8 @@ type Task implements Node {
   updatedAt: DateTime!
   # When the task was completed, null if not completed
   completedAt: DateTime
+  # The user-defined order of this item amongst it's siblings
+  sortOrder: Int
 
   # TODO: evaluate exposing 'list' field to find associated parent list
   # (which could result in circular references: task.list.tasks[0].list.tasks etc)
@@ -44,6 +46,8 @@ type Task implements Node {
 input CreateTaskInput {
   # The content of the task
   content: String!
+  # The position to insert the newly created task after
+  insertAt: Int
   # The id of a list that this task should belong to (optionally)
   listId: ID
 }

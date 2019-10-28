@@ -29,7 +29,7 @@ export default class TaskRepository extends Repository<Task> {
       query = query.andWhereInIds(dedupedIds)
     }
 
-    return query.orderBy({ 'task."createdAt"': 'ASC' }).getMany()
+    return query.getMany()
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {

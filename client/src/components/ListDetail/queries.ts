@@ -54,6 +54,7 @@ const getTasksQuery = `
       createdAt
       updatedAt
       completedAt
+      sortOrder
     }
   }
 `
@@ -106,15 +107,23 @@ export const createTaskMutation = `
         createdAt
         updatedAt
         completedAt
+        sortOrder
       }
     }
   }
 `
 
-export async function createTask(content: string, listId?: string) {
+interface CreateTaskArgs {
+  content: string
+  position?: number
+  listId?: string
+}
+
+export async function createTask({ content, position, listId }: CreateTaskArgs) {
   const result = await client.request<CreateTaskData>(createTaskMutation, {
     input: {
       content,
+      insertAt: position,
       listId
     }
   })
@@ -138,6 +147,7 @@ export const updateTaskMutation = `
         createdAt
         updatedAt
         completedAt
+        sortOrder
       }
     }
   }
@@ -170,6 +180,7 @@ export const completeTaskMutation = `
         createdAt
         updatedAt
         completedAt
+        sortOrder
       }
     }
   }
@@ -201,6 +212,7 @@ export const reopenTaskMutation = `
         createdAt
         updatedAt
         completedAt
+        sortOrder
       }
     }
   }
