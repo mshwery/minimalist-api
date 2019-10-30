@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
 import Lists from './Lists'
 import {
@@ -14,7 +15,7 @@ interface State {
   isLoading: boolean
 }
 
-export default class ListsWithData extends React.PureComponent<{}, State> {
+class ListsWithData extends React.PureComponent<RouteComponentProps<{}>, State> {
   state = {
     lists: null,
     error: null,
@@ -44,6 +45,7 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
         const appended: List[] = Array.from(this.state.lists || [])
         appended.push(list)
         this.setState({ lists: appended })
+        this.props.history.push(`/lists/${list.id}`)
       }
     } finally {
       this.setState({ isCreatingList: false })
@@ -64,3 +66,5 @@ export default class ListsWithData extends React.PureComponent<{}, State> {
     )
   }
 }
+
+export default withRouter(ListsWithData)
