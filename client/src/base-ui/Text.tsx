@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
@@ -8,7 +8,7 @@ type Color = 'muted' | 'default' | string
 
 type TextSize = 300 | 400 | 500 | 600
 
-interface TextProps extends HTMLAttributes<HTMLSpanElement> {
+interface TextProps {
   /** A shorthand for the text color */
   color?: Color
   /** A shorthand for fontSize */

@@ -17,7 +17,8 @@ import ValidationError from '../ValidationError'
 
 @Entity('tasks', {
   orderBy: {
-    sortOrder: { order: 'ASC', nulls: 'NULLS LAST'}
+    sortOrder: { order: 'ASC', nulls: 'NULLS LAST'},
+    createdAt: 'ASC'
   }
 })
 export default class Task {

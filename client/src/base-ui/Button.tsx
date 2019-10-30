@@ -17,7 +17,7 @@ const variants = {
   },
   default: {
     background: colors.fill.primary,
-    border: 'none',
+    border: `1px solid ${colors.fill.primary}`,
     color: 'white'
   }
 }
@@ -28,18 +28,18 @@ function getVariantProps(variant: 'minimal' | 'default'): object {
 
 const sizes = {
   compact: {
-    fontSize: '13px',
+    fontSize: '12px',
     lineHeight: 1.6,
     paddingX: scale(2)
   },
   default: {
-    fontSize: '16px',
+    fontSize: '14px',
     lineHeight: 2,
     paddingX: scale(2),
     minWidth: scale(10)
   },
   large: {
-    fontSize: '18px',
+    fontSize: '16px',
     lineHeight: 2.5,
     paddingX: scale(2),
     minWidth: scale(10)
@@ -86,7 +86,7 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         is='button'
         alignItems='center'
         appearance='none'
-        borderRadius={2}
+        borderRadius={3}
         boxSizing='border-box'
         cursor='pointer'
         display='inline-flex'

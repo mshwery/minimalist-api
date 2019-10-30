@@ -1,6 +1,7 @@
 import React from 'react'
 import Box from 'ui-box'
 import { noop } from 'lodash'
+import { useLockBodyScroll } from 'react-use'
 import { scale } from './scale'
 import { Portal } from './Portal'
 import { useFocusTrap } from './useFocusTrap'
@@ -44,6 +45,8 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
     escapeDeactivates: hideOnEsc
   })
 
+  useLockBodyScroll(preventBodyScroll && isShown)
+
   if (!isShown) {
     return null
   }
@@ -63,6 +66,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
           maxWidth='calc(100vw - 32px)'
           marginX='auto'
           marginTop='12vmin'
+          position='relative'
           {...props}
         >
           {children}

@@ -10,6 +10,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 a, svg, input, textarea, button, [contenteditable=true] {
   touch-action: manipulation;
 }

@@ -37,7 +37,7 @@ export function useFocusTrap(isShown: boolean, options: Options = {}) {
     } else {
       focusTrigger()
     }
-  }, [isShown])
+  }, [isShown]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     ref: elementRef

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
-import { Pane, Dialog, scale } from '../../base-ui'
+import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon, X } from 'react-feather'
+import { Pane, Dialog, scale, Icon, colors, Heading, Button, Input } from '../../base-ui'
 import SidebarItem from '../Sidebar/SidebarItem'
 import SidebarList from '../Sidebar/SidebarList'
 
@@ -18,6 +18,7 @@ interface Props {
 
 const Lists: React.FunctionComponent<Props> = (props) => {
   const { pathname } = useLocation()
+  const nameRef = useRef<HTMLInputElement>()
   const [isDialogShown, setIsDialogShown] = useState(false)
 
   return (
@@ -36,8 +37,41 @@ const Lists: React.FunctionComponent<Props> = (props) => {
         </SidebarItem>
       </SidebarList>
 
-      <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} maxWidth={scale(80)}>
-        Dialog
+      <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} maxWidth={scale(60)}>
+        <Icon
+          icon={X}
+          size={scale(2.5)}
+          position='absolute'
+          color={colors.fill.secondary}
+          cursor='pointer'
+          right={scale(2)}
+          top={scale(2)}
+          onClick={() => setIsDialogShown(false)}
+        />
+        <Heading size={300}>Create a list</Heading>
+        <Pane marginTop={scale(4)}>
+          <Input
+            autoFocus
+            placeholder='Name'
+            innerRef={nameRef}
+            width='100%'
+          />
+        </Pane>
+        <Pane display='flex' justifyContent='flex-end' alignItems='center' marginTop={scale(2)}>
+          <Button onClick={() => setIsDialogShown(false)} variant='minimal' marginRight={scale(1)}>Cancel</Button>
+          <Button
+            isLoading={props.isCreatingList}
+            onClick={async () => {
+              if (nameRef.current) {
+                await props.onCreateList(nameRef.current.value)
+                // TODO handle errors
+                setIsDialogShown(false)
+              }
+            }}
+          >
+            Create list
+          </Button>
+        </Pane>
       </Dialog>
     </Pane>
   )

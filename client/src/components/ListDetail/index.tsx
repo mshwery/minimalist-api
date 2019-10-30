@@ -114,7 +114,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     const { task } = await createTask({ content, position, listId })
     if (task) {
       const { tasks } = await getTasks(this.props.listId)
-      this.setState({ tasks, autoFocusId: task.id })
+      this.setState({ tasks, autoFocusId: position !== undefined ? task.id : null })
     }
   }
 
@@ -255,6 +255,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                   fontSize='inherit'
                   fontWeight='inherit'
                   fontFamily='inherit'
+                  lineHeight='inherit'
                   color='inherit'
                   style={{ outline: 'none' }}
                 />
