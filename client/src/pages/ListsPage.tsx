@@ -25,7 +25,7 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
         <UserMenu {...user!} marginBottom={scale(4)} />
         <Lists />
       </Sidebar>
-      <Pane flex='1' maxHeight='100%' overflow='auto'>
+      <Pane flex='1' maxHeight='100%' overflowY='auto' overflowX='hidden'>
         <Switch>
           <Route exact path='/lists/:listId' render={routeProps => (
             <ListPage
