@@ -16,6 +16,7 @@ const Container: React.FunctionComponent<any> = (props) => (
     width='100%'
     maxWidth={scale(75)}
     minWidth={scale(40)}
+    minHeight='100vh'
     className={css`
       padding: ${scale(4)}px ${scale(6)}px;
 
