@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { css } from 'emotion'
 import { scale, Card, Icon, colors, Text } from '../../base-ui'
 
@@ -7,9 +7,24 @@ interface Props {
   isSelected?: boolean
 }
 
-const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({ children, icon, isSelected, ...props }) => {
+const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({ children, icon, isSelected, onClick, ...props }) => {
+  const onKeyPress = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (typeof onClick !== 'function') {
+        return
+      }
+
+      if (event.key === 'Enter' || event.key === ' ') {
+        onClick(event)
+      }
+    },
+    [onClick]
+  )
+
   return (
     <Card
+      onKeyPress={onKeyPress}
+      onClick={onClick}
       display='flex'
       justifyContent='auto'
       alignItems='center'

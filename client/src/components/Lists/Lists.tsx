@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
-import { Pane } from '../../base-ui'
+import { Pane, Dialog, scale } from '../../base-ui'
 import SidebarItem from '../Sidebar/SidebarItem'
 import SidebarList from '../Sidebar/SidebarList'
 
@@ -18,6 +18,7 @@ interface Props {
 
 const Lists: React.FunctionComponent<Props> = (props) => {
   const { pathname } = useLocation()
+  const [isDialogShown, setIsDialogShown] = useState(false)
 
   return (
     <Pane>
@@ -30,10 +31,14 @@ const Lists: React.FunctionComponent<Props> = (props) => {
             {list.name}
           </SidebarItem>
         ))}
-        <SidebarItem icon={PlusCircle} onClick={() => props.onCreateList('Untitled')}>
+        <SidebarItem icon={PlusCircle} onClick={() => setIsDialogShown(true)}>
           Create List
         </SidebarItem>
       </SidebarList>
+
+      <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} maxWidth={scale(80)}>
+        Dialog
+      </Dialog>
     </Pane>
   )
 }
