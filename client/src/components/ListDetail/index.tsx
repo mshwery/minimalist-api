@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react'
+import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Sidebar as SidebarIcon } from 'react-feather'
+import { sortBy } from 'lodash'
 import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
+import { move } from '../../lib/array-move'
 import { Heading, Pane, scale, Input, colors } from '../../base-ui'
-import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask } from './queries'
+import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask, moveTask } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import CreateNewTask from './CreateNewTask'
@@ -137,13 +140,13 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     if (task && this.state.tasks) {
       // Update task in set
       this.setState(prevState => ({
-        tasks: prevState.tasks.map(t => {
+        tasks: sortBy(prevState.tasks.map(t => {
           if (t.id === task.id) {
             return task
           }
 
           return t
-        })
+        }), ['sortOrder', (t) => new Date(t.updatedAt)])
       }))
     }
   }
@@ -173,6 +176,39 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       }
     } catch (error) {
       // TODO handle error
+    }
+  }
+
+  handleDragEnd = async (result: DropResult, provided: ResponderProvided) => {
+    const task = this.state.tasks.find(t => t.id === result.draggableId)
+    if (task && result.destination) {
+      const sortOrder = result.destination.index + 1
+
+      // Reorder the tasks and update their `sortOrder`
+      const resortedTasks = move(this.state.tasks, result.source.index, result.destination.index).map((t, i) => ({
+        ...t,
+        sortOrder: i + 1
+      }))
+
+      // Synchronously update the state before persisting async
+      this.setState({ tasks: resortedTasks })
+
+      const moveTaskInput = {
+        id: task.id,
+        listId: this.props.listId,
+        insertBefore: sortOrder
+      }
+
+      // Update and refetch tasks
+      void moveTask(moveTaskInput)
+        .then(() => getTasks(this.props.listId))
+        .then(({ tasks }) => this.setState({ tasks }))
+    }
+  }
+
+  handleDragStart = () => {
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate(100)
     }
   }
 
@@ -269,19 +305,43 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             name
           )}
         </Heading>
-        {tasks.map((task, index) => (
-          <Task
-            {...task}
-            autoFocus={autoFocusId === task.id}
-            key={task.id}
-            onContentChange={(content) => this.updateTaskContent(task.id, content)}
-            onMarkComplete={() => this.handleMarkComplete(task.id)}
-            onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
-            onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
-            onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
-            onRequestDelete={() => this.deleteTask(task.id)}
-          />
-        ))}
+
+        <DragDropContext onDragStart={this.handleDragStart} onDragEnd={this.handleDragEnd}>
+          <Droppable droppableId={this.props.listId}>
+            {(dropProvided, dropSnapshot) => (
+              <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
+                {tasks.map((task, index) => (
+                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                    {(dragProvided, dragSnapshot) => (
+                      <div
+                        ref={dragProvided.innerRef}
+                        {...dragProvided.draggableProps}
+                      >
+                        <Task
+                          {...task}
+                          key={task.id}
+                          autoFocus={autoFocusId === task.id}
+                          canDelete={Boolean(task.id && !dropSnapshot.isDraggingOver)}
+                          dragHandleProps={dragProvided.dragHandleProps}
+                          isDraggable
+                          isDragging={dragSnapshot.isDragging}
+                          isDraggingAnother={dropSnapshot.isDraggingOver}
+                          onContentChange={(content) => this.updateTaskContent(task.id, content)}
+                          onMarkComplete={() => this.handleMarkComplete(task.id)}
+                          onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+                          onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
+                          onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
+                          onRequestDelete={() => this.deleteTask(task.id)}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {dropProvided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
         <CreateNewTask onDoneEditing={this.createNewTask} />
 
         {process.env.NODE_ENV !== 'production' && (
