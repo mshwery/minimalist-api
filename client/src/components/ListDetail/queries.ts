@@ -8,6 +8,7 @@ export interface Task {
   createdAt: string
   updatedAt: string
   completedAt: string
+  sortOrder: number | null
 }
 
 export interface List {
@@ -162,6 +163,36 @@ export async function updateTask(taskId: string, content: string) {
   })
 
   return result.updateTask
+}
+
+interface MoveTaskData {
+  moveTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const moveTaskMutation = `
+  mutation MoveTask($input: MoveTaskInput!) {
+    moveTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+        sortOrder
+      }
+    }
+  }
+`
+
+export async function moveTask(args: { id: string; listId: string; insertBefore: number }) {
+  const result = await client.request<MoveTaskData>(moveTaskMutation, {
+    input: args
+  })
+
+  return result.moveTask
 }
 
 interface CompleteTaskData {

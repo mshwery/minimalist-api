@@ -1,8 +1,9 @@
 import React from 'react'
 import { css } from 'emotion'
 import { debounce } from 'lodash'
-import { Trash2 } from 'react-feather'
-import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'
+import { Trash2, Menu as DragIcon } from 'react-feather'
+import { Checkbox, Pane, scale, ContentEditableText, Icon, colors } from '../../base-ui'
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
 const iconStyles = css`
   display: flex;
@@ -21,9 +22,14 @@ const DeleteIcon = (props: any) => (
 interface Props extends React.ComponentProps<typeof ContentEditableText> {
   // Whether or not to automatically focus this Task on render
   autoFocus?: boolean
+  canDelete?: boolean
   content?: string
   isCompleted?: boolean
   id?: string
+  isDraggable?: boolean
+  isDragging?: boolean
+  isDraggingAnother?: boolean
+  dragHandleProps?: DraggableProvidedDragHandleProps | null
   onContentChange?: (content: string) => void
   onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
@@ -106,17 +112,21 @@ export default class Task extends React.PureComponent<Props, State> {
   }
 
   handleMouseMove = (_event: React.MouseEvent) => {
-    if (!this.state.hasHover) {
+    if (!this.state.hasHover && !this.props.isDraggingAnother) {
       this.setState({ hasHover: true })
     }
   }
 
   handleMouseEnter = (_event: React.MouseEvent) => {
-    this.setState({ hasHover: true })
+    if (!this.props.isDraggingAnother) {
+      this.setState({ hasHover: true })
+    }
   }
 
   handleMouseLeave = (_event: React.MouseEvent) => {
-    this.setState({ hasHover: false })
+    if (!this.props.isDraggingAnother) {
+      this.setState({ hasHover: false })
+    }
   }
 
   handleCheckedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +145,10 @@ export default class Task extends React.PureComponent<Props, State> {
   render() {
     const {
       autoFocus,
+      canDelete,
+      dragHandleProps,
+      isDraggable,
+      isDragging,
       onKeyDown,
       onKeyUp,
       onRequestDelete
@@ -147,11 +161,13 @@ export default class Task extends React.PureComponent<Props, State> {
       <Pane
         display='flex'
         alignItems='center'
-        marginX={scale(-1)}
+        marginLeft={scale(-3)}
+        marginRight={scale(-1)}
         paddingX={scale(1)}
         paddingY={scale(0.5)}
-        backgroundColor={showActions ? colors.fill.background : undefined}
+        backgroundColor={showActions || isDragging ? colors.fill.background : undefined}
         borderRadius={4}
+        elevation={isDragging ? 1 : 0}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onMouseEnter={this.handleMouseEnter}
@@ -165,6 +181,14 @@ export default class Task extends React.PureComponent<Props, State> {
           }
         `}
       >
+        <Icon
+          icon={DragIcon}
+          size={scale(1.5)}
+          marginRight={scale(0.5)}
+          color={colors.fill.secondary}
+          opacity={(showActions || isDragging) && isDraggable ? 1 : 0}
+          {...dragHandleProps}
+        />
         <Checkbox
           checked={optimisticChecked}
           onChange={this.handleCheckedChange}
@@ -187,7 +211,7 @@ export default class Task extends React.PureComponent<Props, State> {
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
         />
-        {showActions && this.props.id && <DeleteIcon onClick={onRequestDelete} />}
+        {showActions && canDelete && <DeleteIcon onClick={onRequestDelete} />}
       </Pane>
     )
   }

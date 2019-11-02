@@ -24,7 +24,7 @@ export async function resetDb() {
   // TODO: investigate dropping the entire schema on every test?
   const connection: Connection = await createConnection()
   await connection.dropDatabase()
-  await connection.runMigrations({ transaction: true })
+  await connection.runMigrations({ transaction: 'all' })
 
   // Close this connection since each test suite will init and close its own connection
   await connection.close()
