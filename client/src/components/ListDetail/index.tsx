@@ -25,6 +25,7 @@ const Container: React.FunctionComponent<any> = (props) => (
 
       @media (max-width: 1224px) {
         padding: ${scale(3)}px;
+        padding-left: ${scale(4)}px;
       }
     `}
   />

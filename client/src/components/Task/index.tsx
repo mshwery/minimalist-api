@@ -163,7 +163,7 @@ export default class Task extends React.PureComponent<Props, State> {
         alignItems='center'
         marginLeft={scale(-3)}
         marginRight={scale(-1)}
-        paddingX={scale(1)}
+        paddingRight={scale(1)}
         paddingY={scale(0.5)}
         backgroundColor={showActions || isDragging ? colors.fill.background : undefined}
         borderRadius={4}
@@ -184,6 +184,9 @@ export default class Task extends React.PureComponent<Props, State> {
         <Icon
           icon={DragIcon}
           size={scale(1.5)}
+          marginY={scale(-1)}
+          paddingY={scale(1)}
+          paddingLeft={scale(1)}
           marginRight={scale(0.5)}
           color={colors.fill.secondary}
           opacity={(showActions || isDragging) && isDraggable ? 1 : 0}
