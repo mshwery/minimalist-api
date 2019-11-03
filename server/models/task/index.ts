@@ -2,6 +2,7 @@ import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
 import { move } from '../../lib/array-move'
+import analytics from '../../lib/analytics'
 import { canViewList, canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
@@ -118,6 +119,15 @@ export class TaskModel {
       createdBy: viewer
     })
 
+    analytics.track({
+      event: 'Task Created',
+      userId: viewer,
+      properties: {
+        listId: attrs.listId,
+        taskId: task.id
+      }
+    })
+
     if (!insertAt) {
       return task
     }
@@ -139,7 +149,18 @@ export class TaskModel {
       throw new NotFound(`No task found with id "${id}"`)
     }
 
-    return getCustomRepository(TaskRepository).apply(task, attrs)
+    return getCustomRepository(TaskRepository).apply(task, attrs).then(t => {
+      analytics.track({
+        event: 'Task Updated',
+        userId: viewer,
+        properties: {
+          listId: t.listId,
+          taskId: t.id
+        }
+      })
+
+      return t
+    })
   }
 
   /**
@@ -177,6 +198,15 @@ export class TaskModel {
     }
 
     await getCustomRepository(TaskRepository).delete(id)
+
+    analytics.track({
+      event: 'Task Deleted',
+      userId: viewer,
+      properties: {
+        listId: task.listId,
+        taskId: task.id
+      }
+    })
   }
 
   /**
