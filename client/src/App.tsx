@@ -4,7 +4,7 @@ import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
 import ListsPage from './pages/ListsPage'
 import LoginPage from './pages/LoginPage'
-import analytics from './lib/analytics'
+import * as analytics from './lib/analytics'
 
 function trackPageView() {
   analytics.page()
