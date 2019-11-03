@@ -200,16 +200,14 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
         insertBefore: sortOrder
       }
 
-      // Update and refetch tasks
+      // Update async
       void moveTask(moveTaskInput)
-        .then(() => getTasks(this.props.listId))
-        .then(({ tasks }) => this.setState({ tasks }))
     }
   }
 
   handleDragStart = () => {
     if (window.navigator.vibrate) {
-      window.navigator.vibrate(100)
+      window.navigator.vibrate(150)
     }
   }
 

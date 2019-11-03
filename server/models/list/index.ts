@@ -1,6 +1,7 @@
 import { Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { get } from 'lodash'
 import { getCustomRepository, FindOneOptions } from 'typeorm'
+import analytics from '../../lib/analytics'
 import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
@@ -73,7 +74,18 @@ export class ListModel {
       createdBy: viewer
     })
 
-    return repo.save(list)
+    const newList = await repo.save(list)
+
+    analytics.track({
+      event: 'List Created',
+      userId: viewer,
+      properties: {
+        listId: newList.id,
+        createdBy: viewer
+      }
+    })
+
+    return newList
   }
 
   /**
@@ -101,7 +113,17 @@ export class ListModel {
       throw new NotFound(`No list found with id "${id}"`)
     }
 
-    return getCustomRepository(ListRepository).archive(list)
+    return getCustomRepository(ListRepository).archive(list).then(l => {
+      analytics.track({
+        event: 'List Archived',
+        userId: viewer,
+        properties: {
+          listId: l.id
+        }
+      })
+
+      return l
+    })
   }
 
   /**
@@ -113,7 +135,17 @@ export class ListModel {
       throw new NotFound(`No list found with id "${id}"`)
     }
 
-    return getCustomRepository(ListRepository).unarchive(list)
+    return getCustomRepository(ListRepository).unarchive(list).then(l => {
+      analytics.track({
+        event: 'List Unarchived',
+        userId: viewer,
+        properties: {
+          listId: l.id
+        }
+      })
+
+      return l
+    })
   }
 
   /**
@@ -128,5 +160,13 @@ export class ListModel {
     }
 
     await getCustomRepository(ListRepository).delete(id)
+
+    analytics.track({
+      event: 'List Deleted',
+      userId: viewer,
+      properties: {
+        listId: list.id
+      }
+    })
   }
 }

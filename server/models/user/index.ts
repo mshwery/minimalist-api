@@ -1,6 +1,7 @@
 import { Conflict, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
 import { comparePassword, generateJwt } from '../../lib/auth'
+import analytics from '../../lib/analytics'
 import { Viewer, UUID } from '../../types'
 import User from './user.entity'
 import UserRepository from './user.repository'
@@ -40,6 +41,22 @@ export class UserModel {
     const repo = getCustomRepository(UserRepository)
     const user = await repo.findOrCreate({ email })
 
+    analytics.identify({
+      userId: user.id,
+      traits: {
+        email,
+        connectedToGoogle: true
+      }
+    })
+
+    analytics.track({
+      event: 'Logged In',
+      userId: user.id,
+      properties: {
+        loginMethod: 'google'
+      }
+    })
+
     // Update props from google
     user.googleId = googleId
     user.image = image
@@ -58,8 +75,22 @@ export class UserModel {
       throw new Conflict('A user with this email address already exists.')
     }
 
-    const user = repo.create(attrs)
-    return repo.save(user)
+    const user = await repo.save(repo.create(attrs))
+
+    analytics.identify({
+      userId: user.id,
+      traits: {
+        email: user.email,
+        connectedToGoogle: false
+      }
+    })
+
+    analytics.track({
+      event: 'User Created',
+      userId: user.id
+    })
+
+    return user
   }
 
   /**
@@ -72,6 +103,11 @@ export class UserModel {
     }
 
     await getCustomRepository(UserRepository).delete(id)
+
+    analytics.track({
+      event: 'User Deleted',
+      userId: id
+    })
   }
 
   /**
