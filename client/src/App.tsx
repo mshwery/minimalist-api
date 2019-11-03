@@ -4,10 +4,17 @@ import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
 import ListsPage from './pages/ListsPage'
 import LoginPage from './pages/LoginPage'
+import analytics from './lib/analytics'
+
+function trackPageView() {
+  analytics.page()
+  return null
+}
 
 const App: React.FunctionComponent<{}> = () => (
   <UserContextProvider>
     <Router>
+      <Route component={trackPageView} />
       <main>
         <Switch>
           {/* Temporarily redirect while we have no landing page */}
