@@ -42,7 +42,7 @@ function getTextColor(color?: Color) {
   return colors[color] || color
 }
 
-export const Text: React.FunctionComponent<TextProps & BaseUIProps> = React.forwardRef(({ size = 400, color, ...props }, ref) => {
+export const Text = React.forwardRef<HTMLSpanElement, TextProps & BaseUIProps>(({ size = 400, color, ...props }, ref) => {
   const fontSize = getFontSize(size)
   const textColor = getTextColor(color)
 
@@ -50,7 +50,7 @@ export const Text: React.FunctionComponent<TextProps & BaseUIProps> = React.forw
   return (
     <Box
       is='span'
-      innerRef={ref as React.RefObject<HTMLSpanElement>}
+      innerRef={ref}
       fontSize={fontSize}
       color={textColor}
       {...props}
