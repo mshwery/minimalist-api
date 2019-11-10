@@ -24,6 +24,9 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
       cursor={cursor}
       position='relative'
       display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flex='none'
       {...props}
     >
       <Box

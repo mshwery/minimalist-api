@@ -33,6 +33,7 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
 
     return (
       <Box
+        flex='none'
         width={size}
         height={size}
         overflow='hidden'

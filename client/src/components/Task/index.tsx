@@ -1,22 +1,27 @@
 import React from 'react'
-import { css } from 'emotion'
+import { css, cx } from 'emotion'
 import { debounce } from 'lodash'
 import { Trash2, Menu as DragIcon } from 'react-feather'
 import { Checkbox, Pane, scale, ContentEditableText, Icon, colors } from '../../base-ui'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
-const iconStyles = css`
-  display: flex;
-  cursor: pointer;
-  color: ${colors.fill.muted};
+const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Icon>> = ({ className, ...props }) => (
+  <Icon
+    cursor='pointer'
+    size={scale(2.5)}
+    alignItems='center'
+    justifyContent='center'
+    outline='none'
+    className={cx(className, css`
+      outline: none;
+      height: 30px;
 
-  &:hover {
-    color: ${colors.fill.danger};
-  }
-`
-
-const DeleteIcon = (props: any) => (
-  <Trash2 size={scale(2.5)} {...props} className={iconStyles} />
+      @media (max-width: 600px) {
+        height: 36px;
+      }
+    `)}
+    {...props}
+  />
 )
 
 interface Props extends React.ComponentProps<typeof ContentEditableText> {
@@ -160,11 +165,10 @@ export default class Task extends React.PureComponent<Props, State> {
     return (
       <Pane
         display='flex'
-        alignItems='center'
+        alignItems='flex-start'
         marginLeft={scale(-3)}
         marginRight={scale(-1)}
         paddingRight={scale(1)}
-        paddingY={scale(0.5)}
         backgroundColor={showActions || isDragging ? colors.fill.background : undefined}
         borderRadius={4}
         elevation={isDragging ? 1 : 0}
@@ -181,11 +185,9 @@ export default class Task extends React.PureComponent<Props, State> {
           }
         `}
       >
-        <Icon
+        <ActionIcon
           icon={DragIcon}
           size={scale(1.5)}
-          marginY={scale(-1)}
-          paddingY={scale(1)}
           paddingLeft={scale(1)}
           marginRight={scale(0.5)}
           color={colors.fill.secondary}
@@ -195,26 +197,55 @@ export default class Task extends React.PureComponent<Props, State> {
         <Checkbox
           checked={optimisticChecked}
           onChange={this.handleCheckedChange}
-          flex='none'
           marginRight={scale(1)}
+          className={css`
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+            @media (max-width: 600px) {
+              margin-top: 8px;
+              margin-bottom: 8px;
+            }
+          `}
         />
         <ContentEditableText
           ref={this.inputRef}
           autoFocus={autoFocus}
-          flex='1'
           color={optimisticChecked ? colors.text.muted : 'inherit'}
           textDecoration={optimisticChecked ? 'line-through' : undefined}
-          style={{
-            outline: 'none'
-          }}
           content={content}
           onBlur={this.emitDoneEditing}
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
+          className={css`
+            flex: 1;
+            outline: none;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            line-height: 24px;
+
+            @media (max-width: 600px) {
+              line-height: 26px;
+              padding-top: 5px;
+              padding-bottom: 5px;
+            }
+          `}
         />
-        {showActions && canDelete && <DeleteIcon onClick={onRequestDelete} />}
+        {showActions && canDelete && (
+          <ActionIcon
+            icon={Trash2}
+            onClick={onRequestDelete}
+            className={css`
+              color: ${colors.fill.muted};
+
+              &:hover {
+                color: ${colors.fill.danger};
+              }
+            `}
+          />
+        )}
       </Pane>
     )
   }
