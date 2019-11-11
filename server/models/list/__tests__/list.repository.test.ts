@@ -69,7 +69,7 @@ describe('ListRepository', () => {
         createList({ name: 'another author list', createdBy: authorId })
       ])
 
-      const lists = await repo.allByAuthor(authorId, [list2.id!])
+      const lists = await repo.allByAuthor(authorId, { ids: [list2.id!] })
 
       expect(lists.length).toBe(1)
       expect(lists[0]).toEqual(list2)
