@@ -2,7 +2,7 @@ extend type Query {
   # Lookup a list by id.
   list(id: ID!): List
   # Get the lists the user owns.
-  lists(ids: [ID]): [List!]!
+  lists(ids: [ID], status: ListStatus): [List!]!
 }
 
 extend type Mutation {
@@ -100,4 +100,10 @@ type DeleteListResponse {
   # The id of the list that was deleted
   id: ID
   # TODO: error types?
+}
+
+enum ListStatus {
+  ARCHIVED
+  ACTIVE
+  ALL
 }

@@ -12,9 +12,10 @@ interface GetListsData {
 
 const getListsQuery = `
   query GetLists {
-    lists {
+    lists(status: ACTIVE) {
       id
       name
+      archivedAt
     }
   }
 `

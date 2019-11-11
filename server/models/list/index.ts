@@ -5,6 +5,7 @@ import analytics from '../../lib/analytics'
 import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
+import { ListStatus } from '../../graphql/types'
 
 export { List, ListRepository }
 
@@ -51,12 +52,12 @@ export class ListModel {
   /**
    * Get all lists created by the viewer
    */
-  static async fetchAllByViewer(viewer: Viewer, ids?: UUID[]): Promise<List[]> {
+  static async fetchAllByViewer(viewer: Viewer, args: { ids?: UUID[], status?: ListStatus } = {}): Promise<List[]> {
     if (!viewer) {
       return []
     }
 
-    return getCustomRepository(ListRepository).allByAuthor(viewer, ids)
+    return getCustomRepository(ListRepository).allByAuthor(viewer, args)
   }
 
   /**

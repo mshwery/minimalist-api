@@ -7,3 +7,9 @@ export interface Context {
 export interface MutationInput<T> {
   input: T
 }
+
+export enum ListStatus {
+  ARCHIVED = 'ARCHIVED',
+  ACTIVE = 'ACTIVE',
+  ALL = 'ALL'
+}

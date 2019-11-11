@@ -1,4 +1,4 @@
-import { Context } from '../types'
+import { Context, ListStatus } from '../types'
 import { List, ListModel } from '../../models/list'
 
 export default {
@@ -6,7 +6,7 @@ export default {
     return ListModel.fetch(ctx.viewer, args.id)
   },
 
-  async lists(_root, args: { ids: string[] }, ctx: Context): Promise<List[]> {
-    return ListModel.fetchAllByViewer(ctx.viewer, args.ids)
+  async lists(_root, args: { ids?: string[], status?: ListStatus }, ctx: Context): Promise<List[]> {
+    return ListModel.fetchAllByViewer(ctx.viewer, args)
   }
 }
