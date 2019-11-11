@@ -92,6 +92,57 @@ export async function renameList(id: string, name: string) {
   return result.renameList
 }
 
+interface ArchiveListData {
+  archiveList: {
+    list: Maybe<List>
+  }
+}
+
+export const archiveListMutation = `
+  mutation ArchiveList($input: ArchiveListInput!) {
+    archiveList(input: $input) {
+      list {
+        id
+        name
+      }
+    }
+  }
+`
+
+export async function archiveList(id: string) {
+  const result = await client.request<ArchiveListData>(archiveListMutation, {
+    input: {
+      id
+    }
+  })
+
+  return result.archiveList
+}
+
+interface DeleteListData {
+  deleteList: {
+    list: Maybe<List>
+  }
+}
+
+export const deleteListMutation = `
+  mutation DeleteList($input: DeleteListInput!) {
+    deleteList(input: $input) {
+      id
+    }
+  }
+`
+
+export async function deleteList(id: string) {
+  const result = await client.request<DeleteListData>(deleteListMutation, {
+    input: {
+      id
+    }
+  })
+
+  return result.deleteList
+}
+
 interface CreateTaskData {
   createTask: {
     task: Maybe<Task>

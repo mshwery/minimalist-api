@@ -40,7 +40,6 @@ const Lists: React.FunctionComponent<Props> = (props) => {
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} maxWidth={scale(60)}>
         <Icon
           icon={X}
-          size={scale(2.5)}
           position='absolute'
           color={colors.fill.secondary}
           cursor='pointer'

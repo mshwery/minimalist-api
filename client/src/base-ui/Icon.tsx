@@ -1,6 +1,7 @@
 import React from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
+import { scale } from './scale'
 
 interface Props {
   icon: React.ElementType
@@ -8,10 +9,10 @@ interface Props {
   size?: string | number
 }
 
-export const Icon: React.FunctionComponent<Props & BaseUIProps> = ({ icon: IconComponent, color, size, ...props }) => {
+export const Icon = React.forwardRef<HTMLElement, Props & BaseUIProps>(({ icon: IconComponent, color, size = scale(2.5), ...props }, ref) => {
   return (
-    <Box display='inline-flex' {...props}>
+    <Box cursor='pointer' display='inline-flex' alignItems='center' justifyContent='center' innerRef={ref} {...props}>
       <IconComponent color={color} size={size} />
     </Box>
   )
-}
+})

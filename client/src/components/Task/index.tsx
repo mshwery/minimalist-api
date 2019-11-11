@@ -8,7 +8,6 @@ import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Icon>> = ({ className, ...props }) => (
   <Icon
     cursor='pointer'
-    size={scale(2.5)}
     alignItems='center'
     justifyContent='center'
     outline='none'

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
 
@@ -30,18 +30,15 @@ function getElevationStyle(elevation?: Elevation) {
   }
 }
 
-export class Pane extends PureComponent<PaneProps & BaseUIProps> {
-  render() {
-    const {
-      elevation,
-      ...props
-    } = this.props
-
-    return (
-      <Box
-        {...getElevationStyle(elevation)}
-        {...props}
-      />
-    )
-  }
-}
+export const Pane = React.forwardRef<HTMLElement, PaneProps & BaseUIProps>(({
+  elevation,
+  ...props
+}, ref) => {
+  return (
+    <Box
+      {...getElevationStyle(elevation)}
+      innerRef={ref}
+      {...props}
+    />
+  )
+})

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { css } from 'emotion'
 import { Plus } from 'react-feather'
-import { TextButton, scale, Pane } from '../../base-ui'
+import { TextButton, scale, Icon } from '../../base-ui'
 import Task from '../Task'
 
 interface Props {
@@ -48,9 +48,7 @@ const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
         }
       `}
     >
-      <Pane display='flex' alignItems='center' justifyContent='center' width={scale(2.5)} marginRight={scale(1)}>
-        <Plus size={scale(2)} />
-      </Pane>
+      <Icon icon={Plus} size={scale(2)} width={scale(2.5)} marginRight={scale(1)} />
       Add task
     </TextButton>
   )

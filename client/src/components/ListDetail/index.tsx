@@ -7,10 +7,25 @@ import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
 import { Heading, Pane, scale, Input, colors } from '../../base-ui'
-import { List, Task as TaskType, getList, renameList, createTask, reopenTask, completeTask, updateTask, getTasks, deleteTask, moveTask } from './queries'
+import {
+  List,
+  Task as TaskType,
+  getList,
+  renameList,
+  createTask,
+  reopenTask,
+  completeTask,
+  updateTask,
+  getTasks,
+  deleteTask,
+  moveTask,
+  archiveList,
+  deleteList
+} from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import CreateNewTask from './CreateNewTask'
+import ListMenu from './ListMenu'
 
 const Container: React.FunctionComponent<any> = (props) => (
   <Pane
@@ -302,6 +317,18 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             />
           ) : (
             name
+          )}
+          {this.props.canEditList && (
+            <ListMenu
+              onArchiveList={async () => {
+                await archiveList(this.props.listId)
+                this.props.history.push('/lists/inbox')
+              }}
+              onDeleteList={async () => {
+                await deleteList(this.props.listId)
+                this.props.history.push('/lists/inbox')
+              }}
+            />
           )}
         </Heading>
 
