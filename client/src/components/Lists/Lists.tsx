@@ -37,7 +37,7 @@ const Lists: React.FunctionComponent<Props> = (props) => {
         </SidebarItem>
       </SidebarList>
 
-      <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} maxWidth={scale(60)}>
+      <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
         <Icon
           icon={X}
           position='absolute'
