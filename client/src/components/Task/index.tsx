@@ -11,9 +11,14 @@ const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Icon>> = (
     alignItems='center'
     justifyContent='center'
     outline='none'
+    tabIndex={0}
     className={cx(className, css`
       outline: none;
       height: 30px;
+
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(16, 112, 202, 0.25);
+      }
 
       @media (max-width: 600px) {
         height: 36px;

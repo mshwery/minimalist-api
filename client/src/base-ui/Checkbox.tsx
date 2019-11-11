@@ -4,6 +4,7 @@ import { Check, Square } from 'react-feather'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
 import { colors } from './colors'
+import { css } from 'emotion'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
@@ -53,6 +54,11 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
         position='absolute'
         whiteSpace='nowrap'
         zIndex={1}
+        className={css`
+          &:focus + svg {
+            box-shadow: 0 0 0 2px rgba(16, 112, 202, 0.25);
+          }
+        `}
       />
       {checked
         ? <Check size={scale(2.5)} color={colors.fill.primary} />
