@@ -17,4 +17,12 @@ export default class UserRepository extends Repository<User> {
     user = this.create(attrs)
     return this.save(user)
   }
+
+  public async findByListId(listId: string): Promise<User[]> {
+    const query = this.createQueryBuilder('user')
+      .innerJoin('user.lists', 'list')
+      .where('list.id = :listId', { listId })
+
+    return query.getMany()
+  }
 }

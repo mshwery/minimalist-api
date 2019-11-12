@@ -6,6 +6,7 @@ import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
 import { ListStatus } from '../../graphql/types'
+import { UserRepository } from '../user'
 
 export { List, ListRepository }
 
@@ -200,9 +201,42 @@ export class ListModel {
       userId: viewer,
       properties: {
         listId: list.id,
-        invitee: email
+        invited: email
       }
     })
+
+    return list
+  }
+
+  /**
+   * Removes a user from a list
+   */
+  static async removeUser(viewer: Viewer, id: UUID, email: string): Promise<List> {
+    const list = await ListModel.fetch(viewer, id)
+
+    if (!list) {
+      throw new NotFound(`No list found with id "${id}"`)
+    }
+
+    if (list.createdBy !== viewer) {
+      throw new Forbidden(`You cannot remove users from lists you do not own.`)
+    }
+
+    const user = await getCustomRepository(UserRepository).findOne({ email })
+
+    // If there is no corresponding user, don't signal that to consumers, just return as if it was successful
+    if (user) {
+      await getCustomRepository(ListRepository).removeUserFromList(user.id!, id)
+
+      analytics.track({
+        event: 'Removed User From List',
+        userId: viewer,
+        properties: {
+          listId: list.id,
+          uninvited: email
+        }
+      })
+    }
 
     return list
   }
@@ -224,7 +258,7 @@ export class ListModel {
     await getCustomRepository(ListRepository).removeUserFromList(viewer!, id)
 
     analytics.track({
-      event: 'Removed Self From List',
+      event: 'Left List',
       userId: viewer,
       properties: {
         listId: list.id
