@@ -1,7 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm'
+import { EntityRepository, Repository, getCustomRepository } from 'typeorm'
 import List from './list.entity'
 import { UUID } from '../../types'
 import { ListStatus } from '../../graphql/types'
+import { UserRepository } from '../user'
 
 @EntityRepository(List)
 export default class ListRepository extends Repository<List> {
@@ -33,6 +34,26 @@ export default class ListRepository extends Repository<List> {
 
   public async unarchive(list: List): Promise<List> {
     list.isArchived = false
+    return this.save(list)
+  }
+
+  public async addUserToList(email: string, listId: string): Promise<List> {
+    const list = await this.findOneOrFail(listId, { relations: ['users'] })
+    const user = await getCustomRepository(UserRepository).findOrCreate({ email })
+
+    // already has access!
+    if (list.users.find(u => u.id === user.id)) {
+      return list
+    }
+
+    list.users.push(user)
+
+    return this.save(list)
+  }
+
+  public async removeUserFromList(userId: string, listId: string): Promise<List> {
+    const list = await this.findOneOrFail(listId, { relations: ['users'] })
+    list.users = list.users.filter(u => u.id !== userId)
     return this.save(list)
   }
 }

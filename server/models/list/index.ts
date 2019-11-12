@@ -19,6 +19,11 @@ export function canViewList(viewer: Viewer, list: List): boolean {
     return true
   }
 
+  // List is shared with the user
+  if (Array.isArray(list.users) && list.users.find(u => u.id === viewer)) {
+    return true
+  }
+
   return false
 }
 
@@ -36,9 +41,12 @@ export class ListModel {
       return null
     }
 
-    const findOptions: FindOneOptions = {}
+    const findOptions: FindOneOptions = {
+      relations: ['users']
+    }
+
     if (get(options, 'withTasks')) {
-      findOptions.relations = ['tasks']
+      findOptions.relations!.push('tasks')
     }
 
     const list = await getCustomRepository(ListRepository).findOne(id, findOptions)
@@ -156,7 +164,7 @@ export class ListModel {
     const list = await ListModel.fetch(viewer, id)
 
     // viewer can only delete their own lists
-    if (!list || !canEditList(viewer, list)) {
+    if (!list || !canEditList(viewer, list) || list.createdBy !== viewer) {
       throw new Forbidden(`Cannot delete lists that you don't have access to.`)
     }
 
@@ -169,5 +177,60 @@ export class ListModel {
         listId: list.id
       }
     })
+  }
+
+  /**
+   * Adds a user (by email) to a list
+   */
+  static async addUser(viewer: Viewer, id: UUID, email: string): Promise<List> {
+    const list = await ListModel.fetch(viewer, id)
+
+    if (!list) {
+      throw new NotFound(`No list found with id "${id}"`)
+    }
+
+    if (list.createdBy !== viewer) {
+      throw new Forbidden(`You cannot add users to lists you do not own.`)
+    }
+
+    await getCustomRepository(ListRepository).addUserToList(email, id)
+
+    analytics.track({
+      event: 'Added User To List',
+      userId: viewer,
+      properties: {
+        listId: list.id,
+        invitee: email
+      }
+    })
+
+    return list
+  }
+
+  /**
+   * Removes the viewer from a list
+   */
+  static async leaveList(viewer: Viewer, id: UUID): Promise<List> {
+    const list = await ListModel.fetch(viewer, id)
+
+    if (!list) {
+      throw new NotFound(`No list found with id "${id}"`)
+    }
+
+    if (list.createdBy === viewer) {
+      throw new Forbidden(`You cannot leave a list you own.`)
+    }
+
+    await getCustomRepository(ListRepository).removeUserFromList(viewer!, id)
+
+    analytics.track({
+      event: 'Removed Self From List',
+      userId: viewer,
+      properties: {
+        listId: list.id
+      }
+    })
+
+    return list
   }
 }

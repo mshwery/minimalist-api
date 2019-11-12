@@ -3,7 +3,7 @@ import { getCustomRepository } from 'typeorm'
 import { Viewer, UUID } from '../../types'
 import { move } from '../../lib/array-move'
 import analytics from '../../lib/analytics'
-import { canViewList, canEditList, ListModel } from '../list'
+import { canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
 
@@ -19,9 +19,9 @@ export async function canViewTask(viewer: Viewer, task: Task): Promise<boolean> 
   }
 
   if (task.listId) {
-    // if an associated list hasn't been prefetched let's fetch it now
-    const list = task.list || (await ListModel.fetch(viewer, task.listId))
-    if (list && canViewList(viewer, list)) {
+    // if the viewer can `fetch` a list they have access
+    const list = await ListModel.fetch(viewer, task.listId)
+    if (list) {
       return true
     }
   }

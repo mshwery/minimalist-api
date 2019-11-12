@@ -7,13 +7,14 @@ import {
   Index,
   AfterLoad,
   BeforeUpdate,
-  BeforeInsert
+  BeforeInsert,
+  ManyToMany
 } from 'typeorm'
 import { validate as validateEntity, Length, IsEmail, IsDate } from 'class-validator'
 import { hashPassword } from '../../lib/auth'
 import { UUID } from '../../types'
 import ValidationError from '../ValidationError'
-// import List from '../list/list.entity'
+import List from '../list/list.entity'
 
 @Entity('users')
 export default class User {
@@ -30,9 +31,8 @@ export default class User {
   @Length(8, 20)
   password: string | null
 
-  // @ManyToMany(_type => List, list => list.users, { onDelete: 'CASCADE' })
-  // @JoinTable({ name: 'user_lists' })
-  // lists?: List[]
+  @ManyToMany(_type => List, list => list.users)
+  lists: List[]
 
   @Column({ type: 'text', nullable: true })
   image?: string
