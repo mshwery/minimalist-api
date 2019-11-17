@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Sidebar as SidebarIcon } from 'react-feather'
-import { sortBy } from 'lodash'
 import { css } from 'emotion'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
@@ -156,13 +155,13 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     if (task && this.state.tasks) {
       // Update task in set
       this.setState(prevState => ({
-        tasks: sortBy(prevState.tasks.map(t => {
+        tasks: prevState.tasks.map(t => {
           if (t.id === task.id) {
             return task
           }
 
           return t
-        }), ['sortOrder', (t) => new Date(t.updatedAt)])
+        })
       }))
     }
   }
