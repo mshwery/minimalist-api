@@ -8,8 +8,9 @@ import {
   OneToMany,
   ManyToOne,
   BeforeInsert,
-  BeforeUpdate
-  // ManyToMany
+  BeforeUpdate,
+  ManyToMany,
+  JoinTable
 } from 'typeorm'
 import { validate as validateEntity, IsDate, Length, ValidateNested, IsUUID } from 'class-validator'
 import Task from '../task/task.entity'
@@ -30,8 +31,13 @@ export default class List {
   @ValidateNested()
   tasks?: Task[]
 
-  // @ManyToMany(_type => User, user => user.lists, { onDelete: 'CASCADE' })
-  // users?: User[]
+  @ManyToMany(_type => User, user => user.lists, { cascade: true })
+  @JoinTable({
+    name: 'lists_users',
+    joinColumn: { name: 'listId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' }
+  })
+  users: User[]
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   @IsDate()

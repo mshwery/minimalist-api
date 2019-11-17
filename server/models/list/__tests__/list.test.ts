@@ -72,7 +72,7 @@ describe('ListModel', () => {
       })
 
       const list = await ListModel.fetch(viewer, ogList.id!)
-      expect(list).toEqual(ogList)
+      expect(list).toEqual(expect.objectContaining(ogList))
     })
   })
 
@@ -82,7 +82,7 @@ describe('ListModel', () => {
       expect(ogList.id).toBeDefined()
 
       const list = await ListModel.fetch(viewer, ogList.id!)
-      expect(list).toEqual(ogList)
+      expect(list).toEqual(expect.objectContaining(ogList))
     })
   })
 
@@ -109,7 +109,7 @@ describe('ListModel', () => {
       })
 
       const list = await ListModel.fetch(viewer, ogList.id!)
-      expect(list).toEqual(ogList)
+      expect(list).toEqual(expect.objectContaining(ogList))
 
       await ListModel.delete(viewer, ogList.id!)
 

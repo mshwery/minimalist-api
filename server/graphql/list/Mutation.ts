@@ -26,5 +26,22 @@ export default {
     const id = args.input.id
     await ListModel.delete(ctx.viewer, id)
     return { id }
+  },
+
+  // TODO: return list collaborators instead of list?
+  async shareList(_root, args: MutationInput<{ id: string, email: string }>, ctx: Context): Promise<{ list: List }> {
+    const list = await ListModel.addUser(ctx.viewer, args.input.id, args.input.email)
+    return { list }
+  },
+
+  // TODO: return list collaborators instead of list?
+  async unshareList(_root, args: MutationInput<{ id: string, email: string }>, ctx: Context): Promise<{ list: List }> {
+    const list = await ListModel.removeUser(ctx.viewer, args.input.id, args.input.email)
+    return { list }
+  },
+
+  async leaveList(_root, args: MutationInput<{ id: string }>, ctx: Context): Promise<{ success: boolean }> {
+    const list = await ListModel.leaveList(ctx.viewer, args.input.id)
+    return { success: !!list }
   }
 }

@@ -1,7 +1,7 @@
 import Chance from 'chance'
 import { getRepository, getCustomRepository } from 'typeorm'
 import { List, ListRepository } from '../'
-import { User } from '../../user'
+import { User, UserRepository } from '../../user'
 
 const chance = new Chance()
 const authorId = chance.guid({ version: 4 })
@@ -107,6 +107,69 @@ describe('ListRepository', () => {
       list = await repo.findOneOrFail(list.id)
       expect(list.isArchived).toBe(false)
       expect(list.archivedAt).toBeNull()
+    })
+  })
+
+  describe('addUserToList', () => {
+    it('should create a user when none exists by a given email', async () => {
+      const listRepo = getCustomRepository(ListRepository)
+      const userRepo = getCustomRepository(UserRepository)
+
+      let user = await userRepo.findOne({ email: 'shared@example.com' })
+      const list = await createList({ name: 'Shared List', createdBy: authorId })
+      expect(user).not.toBeDefined()
+
+      await listRepo.addUserToList('shared@example.com', list.id!)
+
+      user = await userRepo.findOneOrFail({ email: 'shared@example.com' })
+      expect(user).toBeDefined()
+    })
+
+    it('should give the user access to the list', async () => {
+      const listRepo = getCustomRepository(ListRepository)
+      const userRepo = getCustomRepository(UserRepository)
+      const list = await createList({ name: 'Shared List', createdBy: authorId })
+
+      await listRepo.addUserToList('shared@example.com', list.id!)
+
+      const user = await userRepo.findOneOrFail({
+        email: 'shared@example.com'
+      }, {
+        relations: ['lists']
+      })
+
+      expect(user.lists).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          id: list.id
+        })
+      ]))
+    })
+  })
+
+  describe('removeUserFromList', () => {
+    it('should remove the user\'s access to the list', async () => {
+      const listRepo = getCustomRepository(ListRepository)
+      const userRepo = getCustomRepository(UserRepository)
+
+      // Giveth access
+      const list = await createList({ name: 'Shared List', createdBy: authorId })
+      await listRepo.addUserToList('shared@example.com', list.id!)
+      let user = await userRepo.findOneOrFail({ email: 'shared@example.com' }, {
+        relations: ['lists']
+      })
+
+      // (double check that it worked)
+      expect(user.lists).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          id: list.id
+        })
+      ]))
+
+      // Taketh away
+      await listRepo.removeUserFromList(user.id!, list.id!)
+      user = await userRepo.findOneOrFail({ email: 'shared@example.com' }, { relations: ['lists'] })
+
+      expect(user.lists).toEqual([])
     })
   })
 })

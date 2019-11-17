@@ -35,6 +35,17 @@ export class UserModel {
   }
 
   /**
+   * Gets a list of users who have access to a list
+   */
+  static async fetchAllByList(viewer: Viewer, listId: string): Promise<User[]> {
+    if (!viewer) {
+      return []
+    }
+
+    return getCustomRepository(UserRepository).findByListId(listId)
+  }
+
+  /**
    * Gets or creates a user by email + googleId
    */
   static async findOrCreateGoogleConnectedUser(email: string, googleId: string, image: string, name: string) {

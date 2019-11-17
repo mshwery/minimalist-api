@@ -16,6 +16,12 @@ extend type Mutation {
   unarchiveList(input: UnarchiveListInput!): UnarchiveListResponse!
   # Deletes a list
   deleteList(input: DeleteListInput!): DeleteListResponse!
+  # Adds a user (by email) to a list
+  shareList(input: ShareListInput!): ShareListResponse!
+  # Removes a user (by email) from a list
+  unshareList(input: UnshareListInput!): UnshareListResponse!
+  # Removes the viewer from a (non-owner) list
+  leaveList(input: LeaveListInput!): LeaveListResponse!
 }
 
 type List implements Node {
@@ -36,6 +42,9 @@ type List implements Node {
 
   # The associated tasks
   tasks: [Task!]!
+
+  # A list of collaborators associated with the list
+  collaborators: [User!]!
 }
 
 # The input variables for creating a new list
@@ -100,6 +109,44 @@ type DeleteListResponse {
   # The id of the list that was deleted
   id: ID
   # TODO: error types?
+}
+
+# The input variables to share a list
+input ShareListInput {
+  # The id of the list you wish to share with someone
+  id: ID!
+  # The email address of the person you wish to share the list
+  email: String!
+}
+
+# The response payload from sharing a list
+type ShareListResponse {
+  list: List
+}
+
+# The input variables to unshare a list
+input UnshareListInput {
+  # The id of the list you wish to unshare
+  id: ID!
+  # The email address of the person you wish to remove from the list
+  email: String!
+}
+
+# The response payload from unsharing a list
+type UnshareListResponse {
+  list: List
+}
+
+# The input variables to leave a list
+input LeaveListInput {
+  # The id of the list you wish to unshare
+  id: ID!
+}
+
+# The response payload from leaving a list
+type LeaveListResponse {
+  # Whether or not leaving the list was successful
+  success: Boolean!
 }
 
 enum ListStatus {
