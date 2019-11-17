@@ -1,4 +1,3 @@
-import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
 
 export interface List {
@@ -20,13 +19,14 @@ const getListsQuery = `
   }
 `
 
-export function getLists() {
-  return client.request<GetListsData>(getListsQuery)
+export async function getLists(): Promise<List[]> {
+  const { lists } = await client.request<GetListsData>(getListsQuery)
+  return lists
 }
 
 interface CreateListData {
   createList: {
-    list: Maybe<List>
+    list: List
   }
 }
 
@@ -41,12 +41,7 @@ const createListMutation = `
   }
 `
 
-export async function createList(name: string) {
-  const result = await client.request<CreateListData>(createListMutation, {
-    input: {
-      name
-    }
-  })
-
-  return result.createList
+export async function createList(input: { name: string }): Promise<List> {
+  const result = await client.request<CreateListData>(createListMutation, { input })
+  return result.createList.list
 }

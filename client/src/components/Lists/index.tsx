@@ -1,70 +1,40 @@
 import React from 'react'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { Maybe } from '../../@types/type-helpers'
+import { useHistory } from 'react-router-dom'
+import { useQuery, useMutation } from 'react-query'
 import Lists from './Lists'
-import {
-  List,
-  getLists,
-  createList
-} from './queries'
+import { getLists, createList } from './queries'
 
-interface State {
-  lists: Maybe<List[]>
-  error: Maybe<Error>
-  isCreatingList: boolean
-  isLoading: boolean
-}
+const LISTS_QUERY = 'lists'
 
-class ListsWithData extends React.PureComponent<RouteComponentProps<{}>, State> {
-  state = {
-    lists: null,
-    error: null,
-    isCreatingList: false,
-    isLoading: true
-  }
+const ListsView: React.FunctionComponent = (props) => {
+  const { data: lists, isLoading } = useQuery(LISTS_QUERY, getLists, {
+    staleTime: 120000
+  })
+  const [mutate, { isLoading: isCreatingList }] = useMutation(createList, {
+    refetchQueries: [LISTS_QUERY]
+  })
 
-  async componentDidMount() {
+  const history = useHistory()
+  const handleCreateList = async (name: string) => {
     try {
-      const { lists } = await getLists()
-      this.setState({ lists })
+      const list = await mutate({ name })
+      history.push(`/lists/${list.id}`)
     } catch (error) {
-      // TODO add frontend Segment + error tracking
-      this.setState({ error })
-    } finally {
-      this.setState({ isLoading: false })
+      // TODO: capture error via Sentry
     }
   }
 
-  handleCreateList = async (name: string) => {
-    this.setState({ isCreatingList: true })
-
-    try {
-      const { list } = await createList(name)
-
-      if (list !== null) {
-        const appended: List[] = Array.from(this.state.lists || [])
-        appended.push(list)
-        this.setState({ lists: appended })
-        this.props.history.push(`/lists/${list.id}`)
-      }
-    } finally {
-      this.setState({ isCreatingList: false })
-    }
+  if (isLoading || !lists) {
+    return null
   }
 
-  render() {
-    if (this.state.isLoading) {
-      return null
-    }
-
-    return (
-      <Lists
-        lists={this.state.lists || []}
-        onCreateList={this.handleCreateList}
-        isCreatingList={this.state.isCreatingList}
-      />
-    )
-  }
+  return (
+    <Lists
+      lists={lists}
+      onCreateList={handleCreateList}
+      isCreatingList={isCreatingList}
+    />
+  )
 }
 
-export default withRouter(ListsWithData)
+export default React.memo(ListsView)
