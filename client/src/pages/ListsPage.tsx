@@ -3,7 +3,7 @@ import { Route, Switch, RouteComponentProps, useLocation } from 'react-router-do
 import { Pane, scale } from '../base-ui'
 import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
-import Sidebar from '../components/Sidebar'
+import { Sidebar } from '../components/Sidebar'
 import UserMenu from '../components/UserMenu'
 import ListPage from '../pages/ListPage'
 

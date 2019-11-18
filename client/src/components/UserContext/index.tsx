@@ -1,3 +1,2 @@
-export { Consumer as UserContextConsumer } from './context'
+export { Consumer as UserContextConsumer, useCurrentUser } from './context'
 export { default as UserContextProvider } from './Provider'
-export { default as withUserContext } from './withUserContext'

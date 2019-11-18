@@ -1,8 +1,7 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
-
   "rules": {
-    "variable-name": [true, "allow-leading-underscore"],
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
     "class-name": true,
     "interface-name": false,
     "comment-format": [true, "check-space"],

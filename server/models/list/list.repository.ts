@@ -24,7 +24,7 @@ export default class ListRepository extends Repository<List> {
       query = query.andWhere('list."archivedAt" is not null')
     }
 
-    return query.orderBy({ 'list."createdAt"': 'DESC' }).getMany()
+    return query.orderBy({ 'list."createdAt"': 'ASC' }).getMany()
   }
 
   public async archive(list: List): Promise<List> {

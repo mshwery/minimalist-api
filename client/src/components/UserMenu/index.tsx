@@ -1,1 +1,1 @@
-export { default } from './UserMenu'
+export { UserMenu as default } from './UserMenu'

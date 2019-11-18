@@ -1,23 +1,20 @@
 import React from 'react'
 import { Route, Redirect, RouteProps } from 'react-router-dom'
-import { withUserContext } from '../UserContext'
-import { Context } from '../UserContext/context'
+import { useCurrentUser } from '../UserContext'
 
-const PrivateRoute: React.FunctionComponent<RouteProps & Context> = ({
+export const PrivateRoute: React.FunctionComponent<RouteProps> = ({
   component: Component,
-  user,
-  refetchUser,
   ...routeProps
 }) => {
+  const context = useCurrentUser()
+
   if (!Component) {
     return null
   }
 
-  const userContext = { user, refetchUser }
-
   return (
-    <Route {...routeProps} render={(props) => user
-      ? <Component {...userContext} {...props} />
+    <Route {...routeProps} render={(props) => context.user
+      ? <Component {...context} {...props} />
       : <Redirect to={{
             pathname: '/login',
             state: {
@@ -28,5 +25,3 @@ const PrivateRoute: React.FunctionComponent<RouteProps & Context> = ({
     } />
   )
 }
-
-export default withUserContext(PrivateRoute)

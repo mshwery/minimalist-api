@@ -2,8 +2,7 @@ import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon, X } from 'react-feather'
 import { Pane, Dialog, scale, Icon, colors, Heading, Button, Input } from '../../base-ui'
-import SidebarItem from '../Sidebar/SidebarItem'
-import SidebarList from '../Sidebar/SidebarList'
+import { SidebarItem, SidebarList } from '../Sidebar'
 
 interface List {
   id: string

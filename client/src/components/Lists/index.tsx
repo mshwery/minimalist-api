@@ -1,6 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-query'
+import ms from 'ms'
 import Lists from './Lists'
 import { getLists, createList } from './queries'
 
@@ -8,8 +9,10 @@ const LISTS_QUERY = 'lists'
 
 const ListsView: React.FunctionComponent = (props) => {
   const { data: lists, isLoading } = useQuery(LISTS_QUERY, getLists, {
-    staleTime: 120000
+    // No need to refetch this so often...
+    staleTime: ms('5m')
   })
+
   const [mutate, { isLoading: isCreatingList }] = useMutation(createList, {
     refetchQueries: [LISTS_QUERY]
   })

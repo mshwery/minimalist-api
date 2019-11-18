@@ -7,7 +7,7 @@ interface Props {
   isSelected?: boolean
 }
 
-const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({ children, icon, isSelected, onClick, ...props }) => {
+export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({ children, icon, isSelected, onClick, ...props }) => {
   const onKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
       if (typeof onClick !== 'function') {
@@ -59,5 +59,3 @@ const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof C
     </Card>
   )
 }
-
-export default SidebarItem

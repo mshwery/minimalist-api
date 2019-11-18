@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 const defaultState = {
   refetchUser: () => {},
@@ -14,6 +14,11 @@ export interface Context {
   }
 }
 
-const { Provider, Consumer } = React.createContext<Context>(defaultState)
+const context = React.createContext<Context>(defaultState)
+const { Provider, Consumer } = context
+
+export function useCurrentUser() {
+  return useContext(context)
+}
 
 export { Provider, Consumer, defaultState }
