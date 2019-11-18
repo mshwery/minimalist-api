@@ -8,7 +8,7 @@ interface Props {
   onDoneEditing: (content: string) => any
 }
 
-const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
+export const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
   const [isEditing, toggleEditMode] = useState(false)
   const inputRef = useRef<Task>(null)
 
@@ -53,5 +53,3 @@ const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing }) => {
     </TextButton>
   )
 }
-
-export default CreateNewTask

@@ -23,8 +23,8 @@ import {
 } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
-import CreateNewTask from './CreateNewTask'
-import ListMenu from './ListMenu'
+import { CreateNewTask } from './CreateNewTask'
+import { ListMenu } from './ListMenu'
 
 const Container: React.FunctionComponent<any> = (props) => (
   <Pane
@@ -368,17 +368,6 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           </Droppable>
         </DragDropContext>
         <CreateNewTask onDoneEditing={this.createNewTask} />
-
-        {process.env.NODE_ENV !== 'production' && (
-          <Pane width='100%'>
-            <hr/>
-            <Pane is='pre' overflow='auto' backgroundColor={colors.fill.background} borderRadius={2} padding={scale(1)}>
-              <code>
-                {JSON.stringify(this.state, null, 2)}
-              </code>
-            </Pane>
-          </Pane>
-        )}
       </Container>
     )
   }

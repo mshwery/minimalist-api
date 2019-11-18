@@ -5,10 +5,9 @@ import { ReactComponent as Logo } from '../../minimalist.svg'
 
 interface LoginProps {
   googleAuthUrl: string
-  // facebookAuthUrl?: string
 }
 
-const Login: React.FunctionComponent<LoginProps> = (props) => {
+export const Login: React.FunctionComponent<LoginProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
@@ -65,5 +64,3 @@ const Login: React.FunctionComponent<LoginProps> = (props) => {
     </Pane>
   )
 }
-
-export default Login

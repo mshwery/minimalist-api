@@ -7,7 +7,7 @@ import { getLists, createList } from './queries'
 
 const LISTS_QUERY = 'lists'
 
-const ListsView: React.FunctionComponent = (props) => {
+const ListsView: React.FunctionComponent = () => {
   const { data: lists, isLoading } = useQuery(LISTS_QUERY, getLists, {
     // No need to refetch this so often...
     staleTime: ms('5m')

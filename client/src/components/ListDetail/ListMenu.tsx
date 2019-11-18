@@ -7,7 +7,7 @@ interface Props {
   onArchiveList: () => void
 }
 
-const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchiveList }) => {
+export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchiveList }) => {
   const menu = useMenuState({ placement: 'top-end' })
 
   return (
@@ -46,5 +46,3 @@ const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchiveList 
     </>
   )
 }
-
-export default ListMenu
