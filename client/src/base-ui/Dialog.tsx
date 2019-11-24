@@ -2,10 +2,13 @@ import React from 'react'
 import Box from 'ui-box'
 import { noop } from 'lodash'
 import { useLockBodyScroll } from 'react-use'
+import { X } from 'react-feather'
 import { scale } from './scale'
 import { Portal } from './Portal'
 import { useFocusTrap } from './useFocusTrap'
 import { BaseUIProps } from './types'
+import { Icon } from './Icon'
+import { colors } from './colors'
 
 const Overlay: React.FunctionComponent<{ onClick?: (event: React.SyntheticEvent) => void }> = (props) => {
   return (
@@ -69,6 +72,15 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
           position='relative'
           {...props}
         >
+          <Icon
+            icon={X}
+            position='absolute'
+            color={colors.fill.secondary}
+            cursor='pointer'
+            right={scale(2)}
+            top={scale(2)}
+            onClick={requestClose}
+          />
           {children}
         </Box>
       </Overlay>

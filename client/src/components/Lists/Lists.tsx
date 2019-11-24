@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon, X } from 'react-feather'
-import { Pane, Dialog, scale, Icon, colors, Heading, Button, Input } from '../../base-ui'
+import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
+import { Pane, Dialog, scale, Heading, Button, Input } from '../../base-ui'
 import { SidebarItem, SidebarList } from '../Sidebar'
 
 interface List {
@@ -37,39 +37,31 @@ const Lists: React.FunctionComponent<Props> = (props) => {
       </SidebarList>
 
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
-        <Icon
-          icon={X}
-          position='absolute'
-          color={colors.fill.secondary}
-          cursor='pointer'
-          right={scale(2)}
-          top={scale(2)}
-          onClick={() => setIsDialogShown(false)}
-        />
-        <Heading size={300}>Create a list</Heading>
-        <Pane marginTop={scale(4)}>
-          <Input
-            autoFocus
-            placeholder='Name'
-            innerRef={nameRef}
-            width='100%'
-          />
-        </Pane>
-        <Pane display='flex' justifyContent='flex-end' alignItems='center' marginTop={scale(2)}>
-          <Button onClick={() => setIsDialogShown(false)} variant='minimal' marginRight={scale(1)}>Cancel</Button>
-          <Button
-            isLoading={props.isCreatingList}
-            onClick={async () => {
-              if (nameRef.current) {
-                await props.onCreateList(nameRef.current.value)
-                // TODO handle errors
-                setIsDialogShown(false)
-              }
-            }}
-          >
-            Create list
-          </Button>
-        </Pane>
+        <form onSubmit={async (event) => {
+          event.preventDefault()
+
+          if (nameRef.current && nameRef.current.value) {
+            await props.onCreateList(nameRef.current.value)
+            // TODO handle errors
+            setIsDialogShown(false)
+          }
+        }}>
+          <Heading size={300}>Create a list</Heading>
+          <Pane marginTop={scale(4)}>
+            <Input
+              autoFocus
+              placeholder='Name'
+              innerRef={nameRef}
+              width='100%'
+            />
+          </Pane>
+          <Pane display='flex' justifyContent='flex-end' alignItems='center' marginTop={scale(2)}>
+            <Button onClick={() => setIsDialogShown(false)} variant='minimal' marginRight={scale(1)}>Cancel</Button>
+            <Button type='submit' isLoading={props.isCreatingList}>
+              Create list
+            </Button>
+          </Pane>
+        </form>
       </Dialog>
     </Pane>
   )

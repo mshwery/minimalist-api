@@ -84,6 +84,7 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
     return (
       <Box
         is='button'
+        type='button'
         alignItems='center'
         appearance='none'
         borderRadius={3}

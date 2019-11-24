@@ -1,8 +1,8 @@
+import { css } from 'emotion'
 import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Sidebar as SidebarIcon } from 'react-feather'
-import { css } from 'emotion'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
 import { Heading, Pane, scale, Input, colors } from '../../base-ui'
@@ -136,28 +136,38 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     }
   }
 
-  updateTaskContent = async (taskId: string, content: string) => {
-    const { task } = await updateTask(taskId, content)
+  updateTaskContent = async (id: string, content: string) => {
+    const input = { id, content }
+
+    // Optimistic update
+    this.updateTaskInState(input)
+
+    // TODO handle error
+    const task = await updateTask(input)
     this.updateTaskInState(task)
   }
 
-  handleMarkComplete = async (taskId: string) => {
-    const { task } = await completeTask(taskId)
+  handleMarkComplete = async (id: string) => {
+    // Optimistic update
+    this.updateTaskInState({ id, isCompleted: true, completedAt: new Date().toISOString() })
+    const task = await completeTask({ id })
     this.updateTaskInState(task)
   }
 
-  handleMarkIncomplete = async (taskId: string) => {
-    const { task } = await reopenTask(taskId)
+  handleMarkIncomplete = async (id: string) => {
+    // Optimistic update
+    this.updateTaskInState({ id, isCompleted: false, completedAt: undefined })
+    const task = await reopenTask({ id })
     this.updateTaskInState(task)
   }
 
-  updateTaskInState = (task: Maybe<TaskType>) => {
+  updateTaskInState = (task: Maybe<Partial<TaskType>>) => {
     if (task && this.state.tasks) {
       // Update task in set
       this.setState(prevState => ({
         tasks: prevState.tasks.map(t => {
           if (t.id === task.id) {
-            return task
+            return Object.assign({}, t, task)
           }
 
           return t
@@ -167,13 +177,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   renameList = async (name: string) => {
-    // TODO handle loading state for name change
+    // Optimistic updates
+    this.setState({ name })
+
     try {
-      const data = await renameList(this.props.listId, name)
-      const updatedList = data.list
-      if (updatedList) {
-        this.setState({ name })
-      }
+      await renameList(this.props.listId, name)
     } catch (error) {
       // TODO handle error
       this.setState({ error })
@@ -182,11 +190,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
   deleteTask = async (id: string) => {
     try {
-      const data = await deleteTask(id)
-      if (data.id) {
+      const deletedId = await deleteTask({ id })
+      if (deletedId) {
         // Remove task in set
         this.setState(prevState => ({
-          tasks: prevState.tasks.filter(t => t.id !== data.id)
+          tasks: prevState.tasks.filter(t => t.id !== deletedId)
         }))
       }
     } catch (error) {
@@ -320,12 +328,12 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           {this.props.canEditList && (
             <ListMenu
               onArchiveList={async () => {
-                await archiveList(this.props.listId)
                 this.props.history.push('/lists/inbox')
+                await archiveList(this.props.listId)
               }}
               onDeleteList={async () => {
-                await deleteList(this.props.listId)
                 this.props.history.push('/lists/inbox')
+                await deleteList(this.props.listId)
               }}
             />
           )}

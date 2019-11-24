@@ -1,5 +1,7 @@
+import { setQueryData } from 'react-query'
 import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
+import { LISTS_QUERY } from '../Lists'
 
 export interface Task {
   id: string
@@ -7,8 +9,9 @@ export interface Task {
   isCompleted: boolean
   createdAt: string
   updatedAt: string
-  completedAt: string
+  completedAt?: string
   sortOrder: number | null
+  listId?: string | null
 }
 
 export interface List {
@@ -56,6 +59,7 @@ const getTasksQuery = `
       updatedAt
       completedAt
       sortOrder
+      listId
     }
   }
 `
@@ -82,6 +86,20 @@ export const renameListMutation = `
 `
 
 export async function renameList(id: string, name: string) {
+  // Optimistic update
+  setQueryData(
+    LISTS_QUERY,
+    (lists: List[]) =>
+      lists.map(list => {
+        if (list.id === id) {
+          return { ...list, name }
+        }
+
+        return list
+      }),
+    { shouldRefetch: false }
+  )
+
   const result = await client.request<RenameListData>(renameListMutation, {
     input: {
       id,
@@ -110,6 +128,9 @@ export const archiveListMutation = `
 `
 
 export async function archiveList(id: string) {
+  // Optimistic update
+  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter(l => l.id !== id), { shouldRefetch: false })
+
   const result = await client.request<ArchiveListData>(archiveListMutation, {
     input: {
       id
@@ -121,7 +142,7 @@ export async function archiveList(id: string) {
 
 interface DeleteListData {
   deleteList: {
-    list: Maybe<List>
+    id: Maybe<string>
   }
 }
 
@@ -134,13 +155,16 @@ export const deleteListMutation = `
 `
 
 export async function deleteList(id: string) {
+  // Optimistic update
+  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter(l => l.id !== id), { shouldRefetch: false })
+
   const result = await client.request<DeleteListData>(deleteListMutation, {
     input: {
       id
     }
   })
 
-  return result.deleteList
+  return result.deleteList.id
 }
 
 interface CreateTaskData {
@@ -160,6 +184,7 @@ export const createTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        listId
       }
     }
   }
@@ -200,20 +225,15 @@ export const updateTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        listId
       }
     }
   }
 `
 
-export async function updateTask(taskId: string, content: string) {
-  const result = await client.request<UpdateTaskData>(updateTaskMutation, {
-    input: {
-      id: taskId,
-      content
-    }
-  })
-
-  return result.updateTask
+export async function updateTask(input: { id: string; content: string }) {
+  const result = await client.request<UpdateTaskData>(updateTaskMutation, { input })
+  return result.updateTask.task
 }
 
 interface MoveTaskData {
@@ -233,6 +253,7 @@ export const moveTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        listId
       }
     }
   }
@@ -263,19 +284,15 @@ export const completeTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        listId
       }
     }
   }
 `
 
-export async function completeTask(taskId: string) {
-  const result = await client.request<CompleteTaskData>(completeTaskMutation, {
-    input: {
-      id: taskId
-    }
-  })
-
-  return result.completeTask
+export async function completeTask(input: { id: string }) {
+  const result = await client.request<CompleteTaskData>(completeTaskMutation, { input })
+  return result.completeTask.task
 }
 
 interface ReopenTaskData {
@@ -295,19 +312,15 @@ export const reopenTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        listId
       }
     }
   }
 `
 
-export async function reopenTask(taskId: string) {
-  const result = await client.request<ReopenTaskData>(reopenTaskMutation, {
-    input: {
-      id: taskId
-    }
-  })
-
-  return result.reopenTask
+export async function reopenTask(input: { id: string }) {
+  const result = await client.request<ReopenTaskData>(reopenTaskMutation, { input })
+  return result.reopenTask.task
 }
 
 interface DeleteTaskData {
@@ -324,12 +337,7 @@ export const deleteTaskMutation = `
   }
 `
 
-export async function deleteTask(taskId: string) {
-  const result = await client.request<DeleteTaskData>(deleteTaskMutation, {
-    input: {
-      id: taskId
-    }
-  })
-
-  return result.deleteTask
+export async function deleteTask(input: { id: string }) {
+  const result = await client.request<DeleteTaskData>(deleteTaskMutation, { input })
+  return result.deleteTask.id
 }

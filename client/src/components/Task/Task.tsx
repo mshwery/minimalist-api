@@ -31,7 +31,7 @@ interface State {
   optimisticChecked: boolean
 }
 
-export class Task extends React.PureComponent<Props, State> {
+export class Task extends React.Component<Props, State> {
   inputRef = React.createRef<ContentEditableText>()
 
   state = {
@@ -49,7 +49,7 @@ export class Task extends React.PureComponent<Props, State> {
 
   debouncedEmitChange = debounce(this.emitChange, 300)
 
-  emitDoneEditing= (event: React.SyntheticEvent<Element>, value: string) => {
+  emitDoneEditing = (event: React.SyntheticEvent<Element>, value: string) => {
     if (typeof this.props.onDoneEditing === 'function') {
       this.props.onDoneEditing(event, value)
     }

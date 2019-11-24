@@ -5,7 +5,7 @@ import ms from 'ms'
 import Lists from './Lists'
 import { getLists, createList } from './queries'
 
-const LISTS_QUERY = 'lists'
+export const LISTS_QUERY = 'lists'
 
 const ListsView: React.FunctionComponent = () => {
   const { data: lists, isLoading } = useQuery(LISTS_QUERY, getLists, {
