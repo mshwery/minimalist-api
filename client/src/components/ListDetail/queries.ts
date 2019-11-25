@@ -191,14 +191,16 @@ export const createTaskMutation = `
 `
 
 interface CreateTaskArgs {
+  id?: string
   content: string
   position?: number
   listId?: string
 }
 
-export async function createTask({ content, position, listId }: CreateTaskArgs) {
+export async function createTask({ id, content, position, listId }: CreateTaskArgs) {
   const result = await client.request<CreateTaskData>(createTaskMutation, {
     input: {
+      id,
       content,
       insertAt: position,
       listId

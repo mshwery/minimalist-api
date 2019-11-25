@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { Sidebar as SidebarIcon } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
+import uuidv4 from 'uuid/v4'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
 import { Heading, Pane, scale, Input, colors } from '../../base-ui'
@@ -128,19 +129,36 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   createNewTask = async (content: string, position?: number) => {
+    const id = uuidv4()
     const listId = this.props.listId === 'inbox' ? undefined : this.props.listId
-    const { task } = await createTask({ content, position, listId })
-    if (task) {
-      const { tasks } = await getTasks(this.props.listId)
-      this.setState({ tasks, autoFocusId: position !== undefined ? task.id : null })
+
+    const optimisticTask: TaskType = {
+      id,
+      listId,
+      content,
+      isCompleted: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      sortOrder: position !== undefined ? position + 1 : this.state.tasks.length + 1
     }
+
+    const optimisticTasks: TaskType[] = Array.from(this.state.tasks)
+    if (position !== undefined) {
+      optimisticTasks.splice(position, 0, optimisticTask)
+    } else {
+      optimisticTasks.push(optimisticTask)
+    }
+
+    this.setState({
+      autoFocusId: position !== undefined ? optimisticTask.id : null,
+      tasks: optimisticTasks
+    })
+
+    void createTask({ id, content, position, listId })
   }
 
   updateTaskContent = async (id: string, content: string) => {
     const input = { id, content }
-
-    // Optimistic update
-    this.updateTaskInState(input)
 
     // TODO handle error
     const task = await updateTask(input)
@@ -189,17 +207,13 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   deleteTask = async (id: string) => {
-    try {
-      const deletedId = await deleteTask({ id })
-      if (deletedId) {
-        // Remove task in set
-        this.setState(prevState => ({
-          tasks: prevState.tasks.filter(t => t.id !== deletedId)
-        }))
-      }
-    } catch (error) {
-      // TODO handle error
-    }
+    // Optimistic update
+    this.setState(prevState => ({
+      tasks: prevState.tasks.filter(t => t.id !== id)
+    }))
+
+    // TODO handle error
+    await deleteTask({ id })
   }
 
   handleDragEnd = async (result: DropResult, provided: ResponderProvided) => {
@@ -234,7 +248,6 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   handleKeyPress = (event: React.KeyboardEvent<Element>, _value: string, _id: string, index: number) => {
-    // TODO: create a new item at this index
     // TODO: potentially split the text at the cursor (i.e. simulate plaintext editing)
     if (event.key === 'Enter') {
       void this.createNewTask('', index + 1)
@@ -359,12 +372,17 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                           isDraggable
                           isDragging={dragSnapshot.isDragging}
                           isDraggingAnother={dropSnapshot.isDraggingOver}
-                          onContentChange={(content) => this.updateTaskContent(task.id, content)}
                           onMarkComplete={() => this.handleMarkComplete(task.id)}
                           onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
                           onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
                           onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
                           onRequestDelete={() => this.deleteTask(task.id)}
+                          onDoneEditing={(_event, content) => {
+                            // Only update if there's an actual change.
+                            if (content !== task.content) {
+                              void this.updateTaskContent(task.id, content)
+                            }
+                          }}
                         />
                       </div>
                     )}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'emotion'
-import { debounce } from 'lodash'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import { Trash2, Menu as DragIcon } from 'react-feather'
 import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'
@@ -17,7 +16,6 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   isDragging?: boolean
   isDraggingAnother?: boolean
   dragHandleProps?: DraggableProvidedDragHandleProps | null
-  onContentChange?: (content: string) => void
   onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
@@ -41,23 +39,9 @@ export class Task extends React.Component<Props, State> {
     optimisticChecked: this.props.isCompleted || false
   }
 
-  emitChange = (value: string) => {
-    if (value && this.props.content !== value && typeof this.props.onContentChange === 'function') {
-      this.props.onContentChange(value)
-    }
-  }
-
-  debouncedEmitChange = debounce(this.emitChange, 300)
-
   emitDoneEditing = (event: React.SyntheticEvent<Element>, value: string) => {
     if (typeof this.props.onDoneEditing === 'function') {
       this.props.onDoneEditing(event, value)
-    }
-  }
-
-  focusInput = () => {
-    if (this.inputRef.current) {
-      this.inputRef.current.focusInput()
     }
   }
 
@@ -71,16 +55,13 @@ export class Task extends React.Component<Props, State> {
   handleBlur = (event: React.SyntheticEvent) => {
     const currentTarget = event.currentTarget
 
-    requestAnimationFrame(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        this.setState({ hasFocus: false })
-      }
-    })
+    if (!currentTarget.contains(document.activeElement)) {
+      this.setState({ hasFocus: false })
+    }
   }
 
   handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
     this.setState({ content: value })
-    this.debouncedEmitChange(value)
   }
 
   handleFocus = (_event: React.SyntheticEvent) => {

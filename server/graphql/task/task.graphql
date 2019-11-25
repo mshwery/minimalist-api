@@ -44,6 +44,8 @@ type Task implements Node {
 
 # The input variables for creating a new task
 input CreateTaskInput {
+  # Optional client-generated id
+  id: ID
   # The content of the task
   content: String!
   # The position to insert the newly created task after
