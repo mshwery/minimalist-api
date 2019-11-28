@@ -1,12 +1,12 @@
 import { css } from 'emotion'
 import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
-import { Sidebar as SidebarIcon } from 'react-feather'
+import { Sidebar as SidebarIcon, ChevronDown, ChevronUp } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import uuidv4 from 'uuid/v4'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
-import { Heading, Pane, scale, Input, colors } from '../../base-ui'
+import { Heading, Text, Pane, scale, Input, colors, Icon } from '../../base-ui'
 import {
   List,
   Task as TaskType,
@@ -60,6 +60,7 @@ interface State {
   name: string
   error: Maybe<Error>
   isLoading: boolean
+  showCompletedTasks: boolean
 }
 
 // TODO: break this up into the list detail view and the task editor
@@ -72,7 +73,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     tasks: [],
     name: '',
     error: null,
-    isLoading: true
+    isLoading: true,
+    showCompletedTasks: false
   }
 
   async componentDidMount() {
@@ -282,14 +284,22 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     this.setState({ autoFocusId })
   }
 
+  toggleDisplayCompleted = () => {
+    this.setState(prevState => ({
+      showCompletedTasks: !prevState.showCompletedTasks
+    }))
+  }
+
   render() {
-    const { isLoading, tasks, name, autoFocusId } = this.state
+    const { isLoading, tasks, name, autoFocusId, showCompletedTasks } = this.state
 
     if (isLoading) {
       return <Container>Loading...</Container>
     }
 
     const placeholder = 'Untitled'
+    const completedTasks = tasks.filter(t => t.isCompleted)
+    const remainingTasks = tasks.filter(t => !t.isCompleted)
 
     return (
       <Container onClick={this.props.requestSideBarClose}>
@@ -356,7 +366,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           <Droppable droppableId={this.props.listId}>
             {(dropProvided, dropSnapshot) => (
               <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
-                {tasks.map((task, index) => (
+                {remainingTasks.map((task, index) => (
                   <Draggable key={task.id} draggableId={task.id} index={index}>
                     {(dragProvided, dragSnapshot) => (
                       <div
@@ -394,6 +404,46 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           </Droppable>
         </DragDropContext>
         <CreateNewTask onDoneEditing={this.createNewTask} />
+
+        {completedTasks.length > 0 && (
+          <Pane
+            marginTop={scale(4)}
+            borderTop={`1px solid ${colors.fill.muted}`}
+          >
+            <Pane
+              display='flex'
+              alignItems='center'
+              justifyContent='space-between'
+              onClick={this.toggleDisplayCompleted}
+              paddingY={scale(2)}
+              cursor='pointer'
+            >
+              <Text color={colors.text.muted}>Completed ({completedTasks.length})</Text>
+              <Icon
+                icon={showCompletedTasks ? ChevronUp : ChevronDown}
+                color={colors.fill.secondary}
+                size={scale(2)}
+              />
+            </Pane>
+            {showCompletedTasks && completedTasks.map((task, index) => (
+              <Task
+                {...task}
+                key={task.id}
+                autoFocus={autoFocusId === task.id}
+                canDelete={Boolean(task.id)}
+                onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+                onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
+                onRequestDelete={() => this.deleteTask(task.id)}
+                onDoneEditing={(_event, content) => {
+                  // Only update if there's an actual change.
+                  if (content !== task.content) {
+                    void this.updateTaskContent(task.id, content)
+                  }
+                }}
+              />
+            ))}
+          </Pane>
+        )}
       </Container>
     )
   }
