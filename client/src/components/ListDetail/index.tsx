@@ -139,7 +139,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       isCompleted: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sortOrder: position !== undefined ? position + 1 : this.state.tasks.length + 1
+      sortOrder: position !== undefined ? position : this.state.tasks.length + 1
     }
 
     const optimisticTasks: TaskType[] = Array.from(this.state.tasks)
