@@ -1,12 +1,15 @@
-import { Forbidden, NotFound, Unauthorized } from 'http-errors'
+import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { get } from 'lodash'
 import { getCustomRepository, FindOneOptions } from 'typeorm'
+import config from '../../../config'
 import analytics from '../../lib/analytics'
+import { isEmail } from '../../lib/is-email'
+import { sendEmail } from '../../lib/mailer'
 import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
 import { ListStatus } from '../../graphql/types'
-import { UserRepository } from '../user'
+import { UserModel } from '../user'
 
 export { List, ListRepository }
 
@@ -61,7 +64,7 @@ export class ListModel {
   /**
    * Get all lists created by the viewer
    */
-  static async fetchAllByViewer(viewer: Viewer, args: { ids?: UUID[], status?: ListStatus } = {}): Promise<List[]> {
+  static async fetchAllByViewer(viewer: Viewer, args: { ids?: UUID[]; status?: ListStatus } = {}): Promise<List[]> {
     if (!viewer) {
       return []
     }
@@ -123,17 +126,19 @@ export class ListModel {
       throw new NotFound(`No list found with id "${id}"`)
     }
 
-    return getCustomRepository(ListRepository).archive(list).then(l => {
-      analytics.track({
-        event: 'List Archived',
-        userId: viewer,
-        properties: {
-          listId: l.id
-        }
-      })
+    return getCustomRepository(ListRepository)
+      .archive(list)
+      .then(l => {
+        analytics.track({
+          event: 'List Archived',
+          userId: viewer,
+          properties: {
+            listId: l.id
+          }
+        })
 
-      return l
-    })
+        return l
+      })
   }
 
   /**
@@ -145,17 +150,19 @@ export class ListModel {
       throw new NotFound(`No list found with id "${id}"`)
     }
 
-    return getCustomRepository(ListRepository).unarchive(list).then(l => {
-      analytics.track({
-        event: 'List Unarchived',
-        userId: viewer,
-        properties: {
-          listId: l.id
-        }
-      })
+    return getCustomRepository(ListRepository)
+      .unarchive(list)
+      .then(l => {
+        analytics.track({
+          event: 'List Unarchived',
+          userId: viewer,
+          properties: {
+            listId: l.id
+          }
+        })
 
-      return l
-    })
+        return l
+      })
   }
 
   /**
@@ -184,6 +191,10 @@ export class ListModel {
    * Adds a user (by email) to a list
    */
   static async addUser(viewer: Viewer, id: UUID, email: string): Promise<List> {
+    if (!email || !email.trim() || !isEmail(email)) {
+      throw new BadRequest(`Valid email is required.`)
+    }
+
     const list = await ListModel.fetch(viewer, id)
 
     if (!list) {
@@ -194,16 +205,37 @@ export class ListModel {
       throw new Forbidden(`You cannot add users to lists you do not own.`)
     }
 
-    await getCustomRepository(ListRepository).addUserToList(email, id)
+    const added = await getCustomRepository(ListRepository).addUserToList(email, id)
+    if (added) {
+      // This should always return a user model. If it doesn't there is a problem!
+      const owner = (await UserModel.fetchByViewer(viewer))!
 
-    analytics.track({
-      event: 'Added User To List',
-      userId: viewer,
-      properties: {
-        listId: list.id,
-        invited: email
-      }
-    })
+      // Send email to added user
+      await sendEmail({
+        to: email,
+        replyTo: {
+          email: owner.email,
+          name: owner.name
+        },
+        category: 'collaboration',
+        template: 'invite-to-list',
+        data: {
+          invitedBy: owner.name || owner.email,
+          invitedByImage: owner.image,
+          listName: list.name,
+          listLink: `${config.get('APP_DOMAIN')}/lists/${list.id}`
+        }
+      })
+
+      analytics.track({
+        event: 'Added User To List',
+        userId: viewer,
+        properties: {
+          listId: list.id,
+          invited: email
+        }
+      })
+    }
 
     return list
   }
@@ -222,7 +254,7 @@ export class ListModel {
       throw new Forbidden(`You cannot remove users from lists you do not own.`)
     }
 
-    const user = await getCustomRepository(UserRepository).findOne({ email })
+    const user = await UserModel.findByEmail(viewer, email)
 
     // If there is no corresponding user, don't signal that to consumers, just return as if it was successful
     if (user) {

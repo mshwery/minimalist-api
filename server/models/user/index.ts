@@ -1,7 +1,8 @@
-import { Conflict, Forbidden, NotFound, Unauthorized } from 'http-errors'
+import { BadRequest, Conflict, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
 import { comparePassword, generateJwt } from '../../lib/auth'
 import analytics from '../../lib/analytics'
+import { isEmail } from '../../lib/is-email'
 import { Viewer, UUID } from '../../types'
 import User from './user.entity'
 import UserRepository from './user.repository'
@@ -32,6 +33,17 @@ export class UserModel {
 
     const user = await getCustomRepository(UserRepository).findOne({ id: viewer })
     return user || null
+  }
+
+  /**
+   * Gets the user associated with a given email address
+   */
+  static async findByEmail(viewer: Viewer, email: string): Promise<User | undefined> {
+    if (!viewer) {
+      return undefined
+    }
+
+    return getCustomRepository(UserRepository).findByEmail(email)
   }
 
   /**
@@ -80,6 +92,10 @@ export class UserModel {
    * Creates a user given some attributes
    */
   static async create(_viewer: Viewer, attrs: { id?: UUID; email: string; password: string }): Promise<User> {
+    if (!isEmail(attrs.email)) {
+      throw new BadRequest('Invalid email provided.')
+    }
+
     const repo = getCustomRepository(UserRepository)
 
     if (await repo.findByEmail(attrs.email)) {

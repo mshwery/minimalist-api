@@ -9,6 +9,6 @@ export default {
   },
 
   async collaborators(list: List, _args, ctx: Context): Promise<User[]> {
-    return list.users || UserModel.fetchAllByList(ctx.viewer, list.id!)
+    return UserModel.fetchAllByList(ctx.viewer, list.id!)
   }
 }

@@ -1,4 +1,5 @@
 {
+  "APP_DOMAIN": "https://beta.getminimalist.com",
   "ENV": "local",
   "JWT_SECRET": "sekret",
   "NODE_ENV": "development",
@@ -8,6 +9,8 @@
   "PGHOST": "localhost",
   "PGPORT": 5432,
   "PGSSL": false,
+  "SENDGRID_API_KEY": "",
+  "SENDGRID_SANDBOX_MODE": "true",
   "SENTRY_DSN": "",
   "TEST_PGPORT": 5436
 }
