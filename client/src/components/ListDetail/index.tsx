@@ -32,7 +32,7 @@ const Container: React.FunctionComponent<any> = (props) => (
     {...props}
     flex='none'
     width='100%'
-    maxWidth={scale(75)}
+    maxWidth={scale(80)}
     minWidth={scale(40)}
     minHeight='100vh'
     className={css`

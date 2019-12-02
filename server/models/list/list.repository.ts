@@ -10,7 +10,7 @@ export default class ListRepository extends Repository<List> {
    * Get all lists created by the given user id
    * TODO: pagination?
    */
-  public async allByAuthor(authorId: UUID, { ids, status }: { ids?: UUID[], status?: string } = {}): Promise<List[]> {
+  public async allByAuthor(authorId: UUID, { ids, status }: { ids?: UUID[]; status?: string } = {}): Promise<List[]> {
     let query = this.createQueryBuilder('list').where({ createdBy: authorId })
 
     if (ids && ids.length > 0) {
@@ -37,18 +37,19 @@ export default class ListRepository extends Repository<List> {
     return this.save(list)
   }
 
-  public async addUserToList(email: string, listId: string): Promise<List> {
+  public async addUserToList(email: string, listId: string): Promise<boolean> {
     const list = await this.findOneOrFail(listId, { relations: ['users'] })
     const user = await getCustomRepository(UserRepository).findOrCreate({ email })
 
     // already has access!
     if (list.users.find(u => u.id === user.id)) {
-      return list
+      return false
     }
 
     list.users.push(user)
 
-    return this.save(list)
+    await this.save(list)
+    return true
   }
 
   public async removeUserFromList(userId: string, listId: string): Promise<List> {
