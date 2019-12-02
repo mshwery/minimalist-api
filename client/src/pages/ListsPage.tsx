@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Route, Switch, RouteComponentProps, useLocation } from 'react-router-dom'
+import { Route, Switch, RouteComponentProps, useLocation, Redirect } from 'react-router-dom'
 import { Pane, scale } from '../base-ui'
 import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
@@ -27,6 +27,7 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
       </Sidebar>
       <Pane flex='1' maxHeight='100%' overflowY='auto' overflowX='hidden'>
         <Switch>
+          <Redirect from='/lists' to='/lists/inbox' exact />
           <Route exact path='/lists/:listId' render={routeProps => (
             <ListPage
               {...routeProps}

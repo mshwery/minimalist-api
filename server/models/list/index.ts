@@ -257,14 +257,23 @@ export class ListModel {
       throw new NotFound(`No list found with id "${id}"`)
     }
 
-    if (list.createdBy !== viewer) {
-      throw new Forbidden(`You cannot remove users from lists you do not own.`)
-    }
-
     const user = await UserModel.findByEmail(viewer, email)
 
     // If there is no corresponding user, don't signal that to consumers, just return as if it was successful
     if (user) {
+      const isRemovingSomeoneElse = viewer !== user.id
+      const isViewerOwner = viewer === list.createdBy
+      const isRemovingOwner = list.createdBy === user.id
+
+      if (isRemovingOwner) {
+        throw new Forbidden(`You cannot remove the list owner from a list.`)
+      }
+
+      // You can only remove yourself when you aren't the list owner
+      if (isRemovingSomeoneElse && !isViewerOwner) {
+        throw new Forbidden(`You cannot remove users from lists you do not own.`)
+      }
+
       await getCustomRepository(ListRepository).removeUserFromList(user.id!, id)
 
       analytics.track({

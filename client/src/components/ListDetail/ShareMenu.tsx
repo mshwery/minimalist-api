@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'react-query'
 import { scale, Dialog, Button, Pane, Heading, Input, Icon, colors, Paragraph, Avatar, Text } from '../../base-ui'
 import { shareList, unshareList, getCollaborators } from './queries'
 import { useCurrentUser } from '../UserContext'
+import { useHistory } from 'react-router'
 
 const Names: React.FC<{ primary: string, secondary?: string, isOwner: boolean }> = ({ primary, secondary, isOwner }) => {
   return (
@@ -26,22 +27,28 @@ const Names: React.FC<{ primary: string, secondary?: string, isOwner: boolean }>
 
 interface Props {
   listId: string
+  creator?: string
 }
 
-export const ShareMenu: React.FunctionComponent<Props> = ({ listId }) => {
+export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) => {
   const [isDialogShown, setIsDialogShown] = useState(false)
   const emailRef = useRef<HTMLInputElement>()
+  const history = useHistory()
   const userContext = useCurrentUser()
+  const currentUser = userContext.user!
+  const isCurrentUserOwner = currentUser.id === creator
 
   const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators)
   const [addCollaborator, { isLoading: isUpdating }] = useMutation(shareList, {
     refetchQueries: [['collaborators', { id: listId }]]
   })
-  const [removeCollaborator, { isLoading: isRemoving }] = useMutation(unshareList, {
-    refetchQueries: [['collaborators', { id: listId }]]
-  })
 
-  const isCurrentUserOwner = (collaborators || []).find(user => user.email === userContext.user!.email && user.isOwner)
+  const refetchQueries: Array<string | [string, any]> = [['collaborators', { id: listId }]]
+  // Non-owners will only be "leaving" lists, so we should refetch the lists they have access to after leaving
+  if (!isCurrentUserOwner) {
+    refetchQueries.push('lists')
+  }
+  const [removeCollaborator, { isLoading: isRemoving }] = useMutation(unshareList, { refetchQueries })
 
   if (listId === 'inbox') {
     return null
@@ -99,18 +106,22 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId }) => {
                     : <Names primary={user.email} isOwner={user.isOwner} />
                   }
                 </Pane>
-                {!user.isOwner && (isCurrentUserOwner || user.email === userContext.user!.email) && (
+                {!user.isOwner && (isCurrentUserOwner || user.email === currentUser.email) && (
                   <Icon
                     disabled={isRemoving}
-                    icon={user.email === userContext.user!.email ? LogOut : RemoveIcon}
+                    icon={user.email === currentUser.email ? LogOut : RemoveIcon}
                     color={colors.fill.secondary}
                     size={scale(2)}
-                    title={user.email === userContext.user!.email ? 'Leave this list' : 'Unshare'}
-                    onClick={() => {
+                    title={user.email === currentUser.email ? 'Leave this list' : 'Unshare'}
+                    onClick={async () => {
                       if (isRemoving) {
                         return
                       }
-                      void removeCollaborator({ id: listId, email: user.email })
+                      await removeCollaborator({ id: listId, email: user.email })
+                      if (user.email === currentUser.email) {
+                        setIsDialogShown(false)
+                        history.push('/lists/inbox')
+                      }
                     }}
                   />
                 )}

@@ -8,6 +8,7 @@ const defaultState = {
 export interface Context {
   refetchUser: () => Promise<void> | void
   user: null | {
+    id: string
     email: string
     image: string
     name: string

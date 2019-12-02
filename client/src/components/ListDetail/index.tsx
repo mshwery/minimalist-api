@@ -351,7 +351,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           )}
           {this.props.canEditList && (
             <>
-              <ShareMenu listId={this.props.listId} />
+              <ShareMenu listId={this.props.listId} creator={(this.state.list || {}).createdBy} />
               <ListMenu
                 onArchiveList={async () => {
                   this.props.history.push('/lists/inbox')

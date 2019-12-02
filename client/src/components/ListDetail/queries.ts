@@ -26,6 +26,7 @@ export interface List {
   name: string
   isArchived: boolean
   createdAt: string
+  createdBy: string
   updatedAt: string
   archivedAt: string
   tasks: Task[]
@@ -42,6 +43,7 @@ const getListQuery = `
       name
       isArchived
       createdAt
+      createdBy
       updatedAt
       archivedAt
     }
