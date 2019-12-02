@@ -16,6 +16,7 @@ interface TextProps {
 }
 
 const fontSizes: { [key: string]: number } = {
+  '200': scale(1.5),
   '300': scale(1.75),
   '400': scale(2),
   '500': scale(2.25),

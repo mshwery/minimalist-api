@@ -26,6 +26,7 @@ import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import { CreateNewTask } from './CreateNewTask'
 import { ListMenu } from './ListMenu'
+import { ShareMenu } from './ShareMenu'
 
 const Container: React.FunctionComponent<any> = (props) => (
   <Pane
@@ -349,16 +350,19 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             name
           )}
           {this.props.canEditList && (
-            <ListMenu
-              onArchiveList={async () => {
-                this.props.history.push('/lists/inbox')
-                await archiveList(this.props.listId)
-              }}
-              onDeleteList={async () => {
-                this.props.history.push('/lists/inbox')
-                await deleteList(this.props.listId)
-              }}
-            />
+            <>
+              <ShareMenu listId={this.props.listId} />
+              <ListMenu
+                onArchiveList={async () => {
+                  this.props.history.push('/lists/inbox')
+                  await archiveList(this.props.listId)
+                }}
+                onDeleteList={async () => {
+                  this.props.history.push('/lists/inbox')
+                  await deleteList(this.props.listId)
+                }}
+              />
+            </>
           )}
         </Heading>
 

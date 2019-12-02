@@ -1,7 +1,7 @@
 import React, { PureComponent, HTMLAttributes } from 'react'
-import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
+import { Text } from './Text'
 
 interface ParagraphProps extends HTMLAttributes<HTMLParagraphElement> {
 
@@ -10,9 +10,10 @@ interface ParagraphProps extends HTMLAttributes<HTMLParagraphElement> {
 export class Paragraph extends PureComponent<ParagraphProps & BaseUIProps> {
   render() {
     return (
-      <Box
+      <Text
         is='p'
-        marginTop={scale(1)}
+        marginTop={0}
+        marginBottom={scale(1.5)}
         {...this.props}
       />
     )

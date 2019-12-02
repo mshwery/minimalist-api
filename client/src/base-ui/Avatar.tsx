@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react'
 import Box from 'ui-box'
+import { User } from 'react-feather'
 import { BaseUIProps } from './types'
+import { scale } from './scale'
+import { colors } from './colors'
 
 interface AvatarProps extends React.ButtonHTMLAttributes<HTMLDivElement> {
   /** The width/height of the avatar */
@@ -43,7 +46,11 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
         justifyContent='center'
         {...props}
       >
-        {!imageUnavailable && (
+        {imageUnavailable ? (
+          <Box borderRadius='50%' display='flex' alignItems='center' justifyContent='center' width='100%' height='100%' border={`1px solid ${colors.fill.muted}`}>
+            <User size={scale(2.5)} color={colors.fill.muted} />
+          </Box>
+        ) : (
           <Box
             is='img'
             width='auto'

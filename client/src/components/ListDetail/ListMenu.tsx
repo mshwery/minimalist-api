@@ -16,7 +16,7 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
         {...menu}
         as={Icon}
         icon={MoreVertical}
-        color={colors.fill.muted}
+        color={colors.fill.secondary}
       />
       <Menu
         {...menu}

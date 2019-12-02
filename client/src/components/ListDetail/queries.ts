@@ -14,6 +14,13 @@ export interface Task {
   listId?: string | null
 }
 
+export interface User {
+  id: string
+  email: string
+  name?: string
+  image?: string
+}
+
 export interface List {
   id: string
   name: string
@@ -342,4 +349,103 @@ export const deleteTaskMutation = `
 export async function deleteTask(input: { id: string }) {
   const result = await client.request<DeleteTaskData>(deleteTaskMutation, { input })
   return result.deleteTask.id
+}
+
+interface GetCollaboratorsData {
+  list: Maybe<
+    List & {
+      creator?: User
+      collaborators?: User[]
+    }
+  >
+}
+
+const getCollaboratorsQuery = `
+  query GetCollaborators($id: ID!) {
+    list(id: $id) {
+      id
+      creator {
+        id
+        email
+        name
+        image
+      }
+      collaborators {
+        id
+        email
+        name
+        image
+      }
+    }
+  }
+`
+
+export async function getCollaborators(input: { id: string }) {
+  const result = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, input)
+  const list = result.list!
+  const collaborators = list.collaborators!.map(user => ({ ...user, isOwner: false }))
+  const creator = Object.assign(list.creator, { isOwner: true })
+  return [creator, ...collaborators]
+}
+
+interface ShareListData {
+  shareList: {
+    list: Maybe<
+      List & {
+        collaborators?: User[]
+      }
+    >
+  }
+}
+
+export const shareListMutation = `
+  mutation ShareList($input: ShareListInput!) {
+    shareList(input: $input) {
+      list {
+        id
+        collaborators {
+          id
+          name
+          email
+          image
+        }
+      }
+    }
+  }
+`
+
+export async function shareList(input: { id: string; email: string }) {
+  const result = await client.request<ShareListData>(shareListMutation, { input })
+  return result.shareList.list!.collaborators
+}
+
+interface UnshareListData {
+  unshareList: {
+    list: Maybe<
+      List & {
+        collaborators?: User[]
+      }
+    >
+  }
+}
+
+export const unshareListMutation = `
+  mutation UnshareList($input: UnshareListInput!) {
+    unshareList(input: $input) {
+      list {
+        id
+        collaborators {
+          id
+          name
+          email
+          image
+        }
+      }
+    }
+  }
+`
+
+export async function unshareList(input: { id: string; email: string }) {
+  const result = await client.request<UnshareListData>(unshareListMutation, { input })
+  return result.unshareList.list!.collaborators
 }

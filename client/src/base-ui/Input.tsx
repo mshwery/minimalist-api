@@ -14,7 +14,7 @@ export class Input extends PureComponent<React.ComponentProps<typeof Text>> {
         paddingX={scale(1.5)}
         lineHeight={2.25}
         backgroundColor='white'
-        borderRadius={2}
+        borderRadius={3}
         appearance='none'
         border={`1px solid ${colors.fill.muted}`}
         className={css`

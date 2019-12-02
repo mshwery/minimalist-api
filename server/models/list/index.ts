@@ -9,7 +9,7 @@ import { Viewer, UUID } from '../../types'
 import List from './list.entity'
 import ListRepository from './list.repository'
 import { ListStatus } from '../../graphql/types'
-import { UserModel } from '../user'
+import { UserModel, User, UserRepository } from '../user'
 
 export { List, ListRepository }
 
@@ -59,6 +59,13 @@ export class ListModel {
     }
 
     return canViewList(viewer, list) ? list : null
+  }
+
+  /**
+   * Get the list owner/creator
+   */
+  static async fetchCreator(_viewer: Viewer, list: List): Promise<User> {
+    return getCustomRepository(UserRepository).findOneOrFail({ id: list.createdBy })
   }
 
   /**
