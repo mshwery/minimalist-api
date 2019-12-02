@@ -1,17 +1,23 @@
-import { EntityRepository, Repository, getCustomRepository } from 'typeorm'
+import { EntityRepository, Repository, getCustomRepository, Brackets } from 'typeorm'
 import List from './list.entity'
-import { UUID } from '../../types'
+import { UUID, Viewer } from '../../types'
 import { ListStatus } from '../../graphql/types'
 import { UserRepository } from '../user'
 
 @EntityRepository(List)
 export default class ListRepository extends Repository<List> {
   /**
-   * Get all lists created by the given user id
+   * Get all lists for given user id
    * TODO: pagination?
    */
-  public async allByAuthor(authorId: UUID, { ids, status }: { ids?: UUID[]; status?: string } = {}): Promise<List[]> {
-    let query = this.createQueryBuilder('list').where({ createdBy: authorId })
+  public async allByViewer(viewer: Viewer, { ids, status }: { ids?: UUID[]; status?: string } = {}): Promise<List[]> {
+    let query = this.createQueryBuilder('list')
+      .leftJoin('list.users', 'user', 'user.id = :viewer', { viewer })
+      .where(
+        new Brackets(qb => {
+          qb.where('list.createdBy = :viewer', { viewer }).orWhere('user.id = :viewer', { viewer })
+        })
+      )
 
     if (ids && ids.length > 0) {
       const dedupedIds = Array.from(new Set(ids))

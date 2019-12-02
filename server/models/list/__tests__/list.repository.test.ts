@@ -46,7 +46,7 @@ describe('ListRepository', () => {
     await deleteLists()
   })
 
-  describe('allByAuthor', () => {
+  describe('allByViewer', () => {
     it('should return only lists created by the given user', async () => {
       const repo = getCustomRepository(ListRepository)
 
@@ -55,7 +55,7 @@ describe('ListRepository', () => {
         createList({ name: 'other person list', createdBy: otherPersonId })
       ])
 
-      const lists = await repo.allByAuthor(authorId)
+      const lists = await repo.allByViewer(authorId)
 
       expect(lists.length).toBe(1)
       expect(lists[0].name).toBe('author list')
@@ -69,7 +69,7 @@ describe('ListRepository', () => {
         createList({ name: 'another author list', createdBy: authorId })
       ])
 
-      const lists = await repo.allByAuthor(authorId, { ids: [list2.id!] })
+      const lists = await repo.allByViewer(authorId, { ids: [list2.id!] })
 
       expect(lists.length).toBe(1)
       expect(lists[0]).toEqual(list2)
@@ -132,38 +132,48 @@ describe('ListRepository', () => {
 
       await listRepo.addUserToList('shared@example.com', list.id!)
 
-      const user = await userRepo.findOneOrFail({
-        email: 'shared@example.com'
-      }, {
-        relations: ['lists']
-      })
+      const user = await userRepo.findOneOrFail(
+        {
+          email: 'shared@example.com'
+        },
+        {
+          relations: ['lists']
+        }
+      )
 
-      expect(user.lists).toEqual(expect.arrayContaining([
-        expect.objectContaining({
-          id: list.id
-        })
-      ]))
+      expect(user.lists).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: list.id
+          })
+        ])
+      )
     })
   })
 
   describe('removeUserFromList', () => {
-    it('should remove the user\'s access to the list', async () => {
+    it("should remove the user's access to the list", async () => {
       const listRepo = getCustomRepository(ListRepository)
       const userRepo = getCustomRepository(UserRepository)
 
       // Giveth access
       const list = await createList({ name: 'Shared List', createdBy: authorId })
       await listRepo.addUserToList('shared@example.com', list.id!)
-      let user = await userRepo.findOneOrFail({ email: 'shared@example.com' }, {
-        relations: ['lists']
-      })
+      let user = await userRepo.findOneOrFail(
+        { email: 'shared@example.com' },
+        {
+          relations: ['lists']
+        }
+      )
 
       // (double check that it worked)
-      expect(user.lists).toEqual(expect.arrayContaining([
-        expect.objectContaining({
-          id: list.id
-        })
-      ]))
+      expect(user.lists).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: list.id
+          })
+        ])
+      )
 
       // Taketh away
       await listRepo.removeUserFromList(user.id!, list.id!)

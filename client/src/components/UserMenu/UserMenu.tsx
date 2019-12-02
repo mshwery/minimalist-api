@@ -25,9 +25,9 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({ email = '', i
         className={css`outline: none;`}
       >
         {image && <Avatar src={image} size={scale(5)} marginRight={scale(2)} />}
-        <Pane flex='1' display='flex' flexDirection='column'>
+        <Pane flex='1' display='flex' flexDirection='column' overflow='hidden' marginRight={scale(1)}>
           <Text fontWeight={500} marginY={scale(0.5)}>{name}</Text>
-          <Text size={300} color='muted'>{email}</Text>
+          <Text size={300} color='muted' overflow='hidden' textOverflow='ellipsis'>{email}</Text>
         </Pane>
         <Icon
           icon={ChevronDown}

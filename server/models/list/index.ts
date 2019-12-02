@@ -69,14 +69,14 @@ export class ListModel {
   }
 
   /**
-   * Get all lists created by the viewer
+   * Get all lists for the viewer
    */
   static async fetchAllByViewer(viewer: Viewer, args: { ids?: UUID[]; status?: ListStatus } = {}): Promise<List[]> {
     if (!viewer) {
       return []
     }
 
-    return getCustomRepository(ListRepository).allByAuthor(viewer, args)
+    return getCustomRepository(ListRepository).allByViewer(viewer, args)
   }
 
   /**

@@ -1,15 +1,25 @@
 import React, { useState, useRef } from 'react'
-import { UserPlus, X as RemoveIcon } from 'react-feather'
+import { UserPlus, X as RemoveIcon, LogOut } from 'react-feather'
 import { useMutation, useQuery } from 'react-query'
-import ms from 'ms'
 import { scale, Dialog, Button, Pane, Heading, Input, Icon, colors, Paragraph, Avatar, Text } from '../../base-ui'
 import { shareList, unshareList, getCollaborators } from './queries'
+import { useCurrentUser } from '../UserContext'
 
 const Names: React.FC<{ primary: string, secondary?: string, isOwner: boolean }> = ({ primary, secondary, isOwner }) => {
   return (
     <>
       <Text size={300}>{primary}{isOwner && ' (owner)'}</Text>
-      {secondary && <Text size={200} color='muted' marginTop={scale(0.5)}>{secondary}</Text>}
+      {secondary && (
+        <Text
+          size={200}
+          color='muted'
+          marginTop={scale(0.5)}
+          overflow='hidden'
+          textOverflow='ellipsis'
+        >
+          {secondary}
+        </Text>
+      )}
     </>
   )
 }
@@ -21,16 +31,17 @@ interface Props {
 export const ShareMenu: React.FunctionComponent<Props> = ({ listId }) => {
   const [isDialogShown, setIsDialogShown] = useState(false)
   const emailRef = useRef<HTMLInputElement>()
+  const userContext = useCurrentUser()
 
-  const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators, {
-    staleTime: ms('1m')
-  })
+  const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators)
   const [addCollaborator, { isLoading: isUpdating }] = useMutation(shareList, {
     refetchQueries: [['collaborators', { id: listId }]]
   })
   const [removeCollaborator, { isLoading: isRemoving }] = useMutation(unshareList, {
     refetchQueries: [['collaborators', { id: listId }]]
   })
+
+  const isCurrentUserOwner = (collaborators || []).find(user => user.email === userContext.user!.email && user.isOwner)
 
   if (listId === 'inbox') {
     return null
@@ -82,18 +93,19 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId }) => {
                 paddingY={scale(1)}
               >
                 <Avatar src={user.image} size={scale(5)} marginRight={scale(1.5)} />
-                <Pane flex='1' display='flex' flexDirection='column'>
+                <Pane flex='1' display='flex' flexDirection='column' overflow='hidden' marginRight={scale(1)}>
                   {user.name
                     ? <Names primary={user.name} secondary={user.email} isOwner={user.isOwner} />
                     : <Names primary={user.email} isOwner={user.isOwner} />
                   }
                 </Pane>
-                {!user.isOwner && (
+                {!user.isOwner && (isCurrentUserOwner || user.email === userContext.user!.email) && (
                   <Icon
                     disabled={isRemoving}
-                    icon={RemoveIcon}
+                    icon={user.email === userContext.user!.email ? LogOut : RemoveIcon}
                     color={colors.fill.secondary}
                     size={scale(2)}
+                    title={user.email === userContext.user!.email ? 'Leave this list' : 'Unshare'}
                     onClick={() => {
                       if (isRemoving) {
                         return
