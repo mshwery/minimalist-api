@@ -62,7 +62,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
           role='dialog'
           aria-modal
           tabIndex={-1}
-          padding={scale(2)}
+          padding={scale(3)}
           backgroundColor='white'
           borderRadius={4}
           maxHeight='calc(100vh - 24vmin)'
@@ -70,6 +70,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
           marginX='auto'
           marginTop='12vmin'
           position='relative'
+          overflowY='auto'
           {...props}
         >
           <Icon

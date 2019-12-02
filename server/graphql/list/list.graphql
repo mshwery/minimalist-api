@@ -43,6 +43,9 @@ type List implements Node {
   # The associated tasks
   tasks: [Task!]!
 
+  # The person who created the list (and owns it)
+  creator: User!
+
   # A list of collaborators associated with the list
   collaborators: [User!]!
 }
