@@ -10,15 +10,15 @@ interface TaskFilters {
 @EntityRepository(Task)
 export default class TaskRepository extends Repository<Task> {
   /**
-   * Get all tasks created by the given user id
+   * Get all tasks for the given user id
    * TODO: pagination?
    */
-  public allByAuthor(author: UUID, filters: TaskFilters = {}): Promise<Task[]> {
-    const attrs: Partial<Task> = {
-      createdBy: author
-    }
+  public allByAuthor(viewer: UUID, filters: TaskFilters = {}): Promise<Task[]> {
+    const attrs: Partial<Task> = {}
 
-    if (filters.listId !== undefined) {
+    if (filters.listId === undefined) {
+      attrs.createdBy = viewer
+    } else {
       attrs.listId = filters.listId
     }
 
