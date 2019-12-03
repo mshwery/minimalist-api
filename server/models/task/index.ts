@@ -83,10 +83,20 @@ export class TaskModel {
       return []
     }
 
-    return getCustomRepository(TaskRepository).allByAuthor(viewer, {
-      ids: filters.ids,
-      listId: filters.listId === 'inbox' ? null : filters.listId
-    })
+    if (filters.listId === 'inbox' || filters.listId === undefined) {
+      return getCustomRepository(TaskRepository).allByAuthor(viewer, {
+        ids: filters.ids,
+        listId: null
+      })
+    }
+
+    // TODO: fetch the list via DataLoaders
+    const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
+    if (!list) {
+      return []
+    }
+
+    return Array.isArray(filters.ids) && filters.ids.length ? list.tasks!.filter(t => filters.ids!.includes(t.id!)) : list.tasks!
   }
 
   /**

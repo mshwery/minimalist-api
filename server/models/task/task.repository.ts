@@ -14,11 +14,11 @@ export default class TaskRepository extends Repository<Task> {
    * TODO: pagination?
    */
   public allByAuthor(viewer: UUID, filters: TaskFilters = {}): Promise<Task[]> {
-    const attrs: Partial<Task> = {}
+    const attrs: Partial<Task> = {
+      createdBy: viewer
+    }
 
-    if (filters.listId === undefined) {
-      attrs.createdBy = viewer
-    } else {
+    if (filters.listId !== undefined) {
       attrs.listId = filters.listId
     }
 
