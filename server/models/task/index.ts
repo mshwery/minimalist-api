@@ -83,7 +83,7 @@ export class TaskModel {
       return []
     }
 
-    if (filters.listId === 'inbox') {
+    if (filters.listId === 'inbox' || filters.listId === undefined) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         ids: filters.ids,
         listId: null
@@ -96,7 +96,7 @@ export class TaskModel {
       return []
     }
 
-    return filters.ids ? list.tasks!.filter(t => filter.ids.includes(t.id)) : list.tasks!
+    return Array.isArray(filters.ids) && filters.ids.length ? list.tasks!.filter(t => filters.ids.includes(t.id)) : list.tasks!
   }
 
   /**
