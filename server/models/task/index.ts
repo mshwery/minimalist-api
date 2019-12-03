@@ -96,7 +96,7 @@ export class TaskModel {
       return []
     }
 
-    return Array.isArray(filters.ids) && filters.ids.length ? list.tasks!.filter(t => filters.ids.includes(t.id)) : list.tasks!
+    return Array.isArray(filters.ids) && filters.ids.length ? list.tasks!.filter(t => filters.ids!.includes(t.id!)) : list.tasks!
   }
 
   /**
