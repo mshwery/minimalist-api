@@ -6,7 +6,7 @@ export default {
     return ListModel.fetch(ctx.viewer, args.id)
   },
 
-  async lists(_root, args: { ids?: string[], status?: ListStatus }, ctx: Context): Promise<List[]> {
+  async lists(_root, args: { status?: ListStatus }, ctx: Context): Promise<List[]> {
     return ListModel.fetchAllByViewer(ctx.viewer, args)
   }
 }

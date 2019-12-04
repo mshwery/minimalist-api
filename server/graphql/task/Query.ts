@@ -2,7 +2,7 @@ import { Context } from '../types'
 import { Task, TaskModel } from '../../models/task'
 
 export default {
-  async tasks(_root, args: { ids?: string[], listId?: string }, ctx: Context): Promise<Task[]> {
-    return TaskModel.fetchAllByViewer(ctx.viewer, args)
+  async tasks(_root, args: { listId?: string }, ctx: Context): Promise<Task[]> {
+    return TaskModel.fetchAllBy(ctx.viewer, args)
   }
 }

@@ -2,7 +2,7 @@ extend type Query {
   # Lookup a list by id.
   list(id: ID!): List
   # Get the lists the user owns.
-  lists(ids: [ID], status: ListStatus): [List!]!
+  lists(status: ListStatus): [List!]!
 }
 
 extend type Mutation {

@@ -1,6 +1,6 @@
 import { EntityRepository, Repository, getCustomRepository, Brackets } from 'typeorm'
 import List from './list.entity'
-import { UUID, Viewer } from '../../types'
+import { Viewer } from '../../types'
 import { ListStatus } from '../../graphql/types'
 import { UserRepository } from '../user'
 
@@ -10,7 +10,7 @@ export default class ListRepository extends Repository<List> {
    * Get all lists for given user id
    * TODO: pagination?
    */
-  public async allByViewer(viewer: Viewer, { ids, status }: { ids?: UUID[]; status?: string } = {}): Promise<List[]> {
+  public async allByViewer(viewer: Viewer, { status }: { status?: string } = {}): Promise<List[]> {
     let query = this.createQueryBuilder('list')
       .leftJoin('list.users', 'user', 'user.id = :viewer', { viewer })
       .where(
@@ -18,11 +18,6 @@ export default class ListRepository extends Repository<List> {
           qb.where('list.createdBy = :viewer', { viewer }).orWhere('user.id = :viewer', { viewer })
         })
       )
-
-    if (ids && ids.length > 0) {
-      const dedupedIds = Array.from(new Set(ids))
-      query = query.andWhereInIds(dedupedIds)
-    }
 
     if (status === ListStatus.ACTIVE) {
       query = query.andWhere('list."archivedAt" is null')

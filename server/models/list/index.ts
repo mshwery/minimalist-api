@@ -71,7 +71,7 @@ export class ListModel {
   /**
    * Get all lists for the viewer
    */
-  static async fetchAllByViewer(viewer: Viewer, args: { ids?: UUID[]; status?: ListStatus } = {}): Promise<List[]> {
+  static async fetchAllByViewer(viewer: Viewer, args: { status?: ListStatus } = {}): Promise<List[]> {
     if (!viewer) {
       return []
     }

@@ -1,8 +1,9 @@
 import { getRepository } from 'typeorm'
 import Chance from 'chance'
 import { Task, TaskModel } from '../'
-import { List } from '../../list'
+import { List, ListModel } from '../../list'
 import { UserModel } from '../../user'
+jest.mock('../../../lib/mailer')
 
 const chance = new Chance()
 const viewer = chance.guid({ version: 4 })
@@ -115,6 +116,92 @@ describe('TaskModel', () => {
 
       task = await TaskModel.fetch(viewer, ogTask.id!)
       expect(task).toEqual(expect.objectContaining(ogTask))
+    })
+  })
+
+  describe('fetchAllBy', () => {
+    it('should return an empty array if there is no viewer', async () => {
+      const tasks = await TaskModel.fetchAllBy(undefined, {})
+      expect(tasks.length).toEqual(0)
+    })
+
+    it('should return only non-list tasks they created when fetching the "inbox"', async () => {
+      const task = await createTask({
+        content: 'test task',
+        createdBy: viewer
+      })
+
+      const list = await createList({
+        name: 'Test list',
+        createdBy: viewer
+      })
+
+      const task2 = await createTask({
+        content: 'list task',
+        createdBy: viewer,
+        listId: list.id
+      })
+
+      const tasks = await TaskModel.fetchAllBy(viewer, { listId: 'inbox' })
+      expect(tasks.length).toEqual(1)
+      expect(tasks).toContainEqual(expect.objectContaining(task))
+      expect(tasks).not.toContainEqual(expect.objectContaining(task2))
+    })
+
+    it('should return tasks for a given list, when provided a listId', async () => {
+      const task = await createTask({
+        content: 'test task',
+        createdBy: viewer
+      })
+
+      const list = await createList({
+        name: 'Test list',
+        createdBy: viewer
+      })
+
+      const task2 = await createTask({
+        content: 'list task',
+        createdBy: viewer,
+        listId: list.id
+      })
+
+      const tasks = await TaskModel.fetchAllBy(viewer, { listId: list.id })
+      expect(tasks.length).toEqual(1)
+      expect(tasks).toContainEqual(expect.objectContaining(task2))
+      expect(tasks).not.toContainEqual(expect.objectContaining(task))
+    })
+
+    it('should return tasks for lists created by others, when shared with the viewer', async () => {
+      const list = await createList({
+        name: 'Test list',
+        createdBy: nonViewer
+      })
+
+      const [task1, task2, task3] = await Promise.all([
+        createTask({
+          content: 'test task',
+          createdBy: nonViewer,
+          listId: list.id
+        }),
+        createTask({
+          content: 'test task 2',
+          createdBy: viewer,
+          listId: list.id
+        }),
+        createTask({
+          content: 'unrelated',
+          createdBy: viewer
+        })
+      ])
+
+      // Grant access
+      const { email } = (await UserModel.fetchByViewer(viewer))!
+      await ListModel.addUser(list.createdBy, list.id!, email)
+
+      const tasks = await TaskModel.fetchAllBy(viewer, { listId: list.id })
+      expect(tasks.length).toEqual(2)
+      expect(tasks).toEqual(expect.arrayContaining([expect.objectContaining(task1), expect.objectContaining(task2)]))
+      expect(tasks).not.toContainEqual(expect.objectContaining(task3))
     })
   })
 

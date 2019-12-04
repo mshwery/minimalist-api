@@ -78,25 +78,24 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllByViewer(viewer: Viewer, filters: { ids?: UUID[], listId?: UUID }): Promise<Task[]> {
+  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null }): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
-    if (filters.listId === 'inbox' || filters.listId === undefined) {
+    if (filters.listId === 'inbox' || filters.listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
-        ids: filters.ids,
         listId: null
       })
     }
 
-    // TODO: fetch the list via DataLoaders
-    const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
-    if (!list) {
-      return []
+    if (filters.listId === undefined) {
+      return getCustomRepository(TaskRepository).allByAuthor(viewer)
     }
 
-    return Array.isArray(filters.ids) && filters.ids.length ? list.tasks!.filter(t => filters.ids!.includes(t.id!)) : list.tasks!
+    // TODO: fetch the list via DataLoaders
+    const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
+    return list ? list.tasks! : []
   }
 
   /**
@@ -105,7 +104,17 @@ export class TaskModel {
    */
   static async create(
     viewer: Viewer,
-    { insertAt, ...attrs }: { insertAt?: number; id?: string; content?: string; completedAt?: Date | string | null; isCompleted?: boolean; listId?: UUID | null }
+    {
+      insertAt,
+      ...attrs
+    }: {
+      insertAt?: number
+      id?: string
+      content?: string
+      completedAt?: Date | string | null
+      isCompleted?: boolean
+      listId?: UUID | null
+    }
   ): Promise<Task> {
     if (!viewer) {
       throw new Unauthorized(`Must be logged in create tasks.`)
@@ -159,18 +168,20 @@ export class TaskModel {
       throw new NotFound(`No task found with id "${id}"`)
     }
 
-    return getCustomRepository(TaskRepository).apply(task, attrs).then(t => {
-      analytics.track({
-        event: 'Task Updated',
-        userId: viewer,
-        properties: {
-          listId: t.listId,
-          taskId: t.id
-        }
-      })
+    return getCustomRepository(TaskRepository)
+      .apply(task, attrs)
+      .then(t => {
+        analytics.track({
+          event: 'Task Updated',
+          userId: viewer,
+          properties: {
+            listId: t.listId,
+            taskId: t.id
+          }
+        })
 
-      return t
-    })
+        return t
+      })
   }
 
   /**

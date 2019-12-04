@@ -1,7 +1,7 @@
 import Chance from 'chance'
 import { getRepository, getCustomRepository } from 'typeorm'
 import { List, ListRepository } from '../'
-import { User, UserRepository } from '../../user'
+import { User, UserRepository, UserModel } from '../../user'
 
 const chance = new Chance()
 const authorId = chance.guid({ version: 4 })
@@ -47,7 +47,7 @@ describe('ListRepository', () => {
   })
 
   describe('allByViewer', () => {
-    it('should return only lists created by the given user', async () => {
+    it('should return lists created by the given user', async () => {
       const repo = getCustomRepository(ListRepository)
 
       await Promise.all([
@@ -61,18 +61,23 @@ describe('ListRepository', () => {
       expect(lists[0].name).toBe('author list')
     })
 
-    it('should return lists by ids', async () => {
+    it('should return lists shared with the user', async () => {
       const repo = getCustomRepository(ListRepository)
 
-      const [, list2] = await Promise.all([
+      const user = (await UserModel.fetchByViewer(authorId))!
+
+      const [list1, list2] = await Promise.all([
         createList({ name: 'author list', createdBy: authorId }),
-        createList({ name: 'another author list', createdBy: authorId })
+        createList({ name: 'other person list', createdBy: otherPersonId })
       ])
 
-      const lists = await repo.allByViewer(authorId, { ids: [list2.id!] })
+      // Add the user to the list
+      await repo.addUserToList(user.email, list2.id!)
 
-      expect(lists.length).toBe(1)
-      expect(lists[0]).toEqual(list2)
+      const lists = await repo.allByViewer(authorId)
+
+      expect(lists.length).toBe(2)
+      expect(lists.map(l => l.name)).toEqual(expect.arrayContaining([list1.name, list2.name]))
     })
   })
 

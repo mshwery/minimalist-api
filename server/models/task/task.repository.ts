@@ -3,7 +3,6 @@ import Task from './task.entity'
 import { UUID } from '../../types'
 
 interface TaskFilters {
-  ids?: UUID[]
   listId?: UUID | null
 }
 
@@ -22,14 +21,9 @@ export default class TaskRepository extends Repository<Task> {
       attrs.listId = filters.listId
     }
 
-    let query = this.createQueryBuilder('task').where(attrs)
-
-    if (filters.ids && filters.ids.length > 0) {
-      const dedupedIds = Array.from(new Set(filters.ids))
-      query = query.andWhereInIds(dedupedIds)
-    }
-
-    return query.getMany()
+    return this.createQueryBuilder('task')
+      .where(attrs)
+      .getMany()
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {
