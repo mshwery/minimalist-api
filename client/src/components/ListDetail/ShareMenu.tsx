@@ -6,6 +6,8 @@ import { shareList, unshareList, getCollaborators } from './queries'
 import { useCurrentUser } from '../UserContext'
 import { useHistory } from 'react-router'
 
+const MAX_AVATARS_SHOWN = 4
+
 const Names: React.FC<{ primary: string, secondary?: string, isOwner: boolean }> = ({ primary, secondary, isOwner }) => {
   return (
     <>
@@ -54,15 +56,30 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
     return null
   }
 
+  const collaboratorCount = Array.isArray(collaborators) ? collaborators.length : 0
+  const overflowCount = Math.max(0, collaboratorCount - MAX_AVATARS_SHOWN)
+
   return (
     <>
-      <Icon
-        icon={UserPlus}
-        size={scale(2.5)}
-        color={colors.fill.secondary}
-        marginRight={scale(1)}
-        onClick={() => setIsDialogShown(true)}
-      />
+      <Pane display='flex' alignItems='center'>
+        <Pane display='flex' flexDirection='row-reverse' alignItems='center' onClick={() => setIsDialogShown(true)}>
+          {overflowCount > 0 && (
+            <Pane display='flex' alignItems='center' justifyContent='center' borderRadius='50%' width={scale(4)} height={scale(4)} backgroundColor={colors.fill.secondary} color='white'>
+              <Text size={300}>{overflowCount}</Text>
+            </Pane>
+          )}
+          {Array.isArray(collaborators) && collaborators.slice(0, MAX_AVATARS_SHOWN).reverse().map((user, index) => (
+            <Avatar key={user.id} title={user.name || user.email} cursor='pointer' src={user.image} size={scale(4) + (4)} marginRight={index || overflowCount ? -9 : undefined} border={`2px solid white`} />
+          ))}
+        </Pane>
+        <Icon
+          icon={UserPlus}
+          size={scale(2.5)}
+          color={colors.fill.secondary}
+          marginX={scale(1.5)}
+          onClick={() => setIsDialogShown(true)}
+        />
+      </Pane>
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
         <form onSubmit={async (event) => {
           event.preventDefault()
