@@ -1,4 +1,5 @@
 import React from 'react'
+import { omitBy } from 'lodash'
 import { Text } from './Text'
 
 interface Props {
@@ -41,11 +42,14 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   shouldComponentUpdate(nextProps: Props & MostTextProps) {
+    const props = omitBy(nextProps, (_value, key) => key.startsWith('on') || key === 'content')
+    const hasPropChanges = Object.entries(props).some(([key, value]) => {
+      return props[key] !== this.props[key]
+    })
     return (
       !this.elementRef.current ||
-      nextProps.color !== this.props.color ||
-      nextProps.content !== this.elementRef.current.innerText ||
-      nextProps.autoFocus !== this.props.autoFocus
+      hasPropChanges ||
+      nextProps.content !== this.elementRef.current.innerText
     )
   }
 

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
-import Box from 'ui-box'
+import { css, cx } from 'emotion'
 import { User } from 'react-feather'
+import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { colors } from './colors'
 
@@ -28,6 +29,7 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
     const {
       size = 40,
       src,
+      className,
       ...props
     } = this.props
 
@@ -43,10 +45,22 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
         position='relative'
         display='inline-flex'
         justifyContent='center'
+        backgroundColor={colors.fill.background}
+        className={cx(className, css`
+          &:after {
+            content: ' ';
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+            border-radius: 50%;
+          }
+        `)}
         {...props}
       >
         {imageUnavailable ? (
-          <Box backgroundColor={colors.fill.background} borderRadius='50%' display='flex' alignItems='center' justifyContent='center' width='100%' height='100%'>
+          <Box borderRadius='50%' display='flex' alignItems='center' justifyContent='center' width='100%' height='100%'>
             <User size={size / 2} color={colors.text.muted} />
           </Box>
         ) : (

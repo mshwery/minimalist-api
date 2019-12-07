@@ -116,9 +116,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     }
   }
 
-  // handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   handleNameChange = () => {
-    // const name = event.target.value
     if (!this.nameRef.current) {
       return
     }
@@ -324,13 +322,15 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           {this.props.canEditList ? (
             <InlineEdit
               flex='1 0 auto'
+              overflow='hidden'
+              startInEditMode
               editView={(
                 <Input
                   innerRef={this.nameRef}
                   defaultValue={name}
                   placeholder={placeholder}
                   autoFocus
-                  width='100%'
+                  flex='1 1 auto'
                   padding={0}
                   border='none'
                   fontSize='inherit'

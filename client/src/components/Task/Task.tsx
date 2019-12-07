@@ -124,6 +124,7 @@ export class Task extends React.Component<Props, State> {
 
     const { content, hasFocus, hasHover, optimisticChecked } = this.state
     const showActions = hasFocus || hasHover
+    const showDelete = showActions && canDelete
 
     return (
       <Pane
@@ -182,6 +183,7 @@ export class Task extends React.Component<Props, State> {
           onKeyPress={this.handleKeyPress}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
+          paddingRight={!showDelete && canDelete ? 20 : undefined}
           className={css`
             flex: 1;
             outline: none;
@@ -196,7 +198,7 @@ export class Task extends React.Component<Props, State> {
             }
           `}
         />
-        {showActions && canDelete && (
+        {showDelete && (
           <ActionIcon
             icon={Trash2}
             onClick={onRequestDelete}

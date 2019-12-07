@@ -1,10 +1,10 @@
 import React, { InputHTMLAttributes } from 'react'
-import Box from 'ui-box'
+import { css } from 'emotion'
 import { Check, Square } from 'react-feather'
+import Box from 'ui-box'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
 import { colors } from './colors'
-import { css } from 'emotion'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }

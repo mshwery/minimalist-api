@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react'
 import { UserPlus, X as RemoveIcon, LogOut } from 'react-feather'
 import { useMutation, useQuery } from 'react-query'
+import { useMediaQuery } from 'react-responsive'
+import { useHistory } from 'react-router'
 import { scale, Dialog, Button, Pane, Heading, Input, Icon, colors, Paragraph, Avatar, Text } from '../../base-ui'
 import { shareList, unshareList, getCollaborators } from './queries'
 import { useCurrentUser } from '../UserContext'
-import { useHistory } from 'react-router'
 
 const MAX_AVATARS_SHOWN = 4
 
@@ -37,6 +38,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   const emailRef = useRef<HTMLInputElement>()
   const history = useHistory()
   const userContext = useCurrentUser()
+  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
   const currentUser = userContext.user!
   const isCurrentUserOwner = currentUser.id === creator
 
@@ -62,16 +64,18 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   return (
     <>
       <Pane display='flex' alignItems='center'>
-        <Pane display='flex' flexDirection='row-reverse' alignItems='center' onClick={() => setIsDialogShown(true)}>
-          {overflowCount > 0 && (
-            <Pane display='flex' alignItems='center' justifyContent='center' borderRadius='50%' width={scale(4)} height={scale(4)} backgroundColor={colors.fill.secondary} color='white'>
-              <Text size={300}>{overflowCount}</Text>
-            </Pane>
-          )}
-          {Array.isArray(collaborators) && collaborators.slice(0, MAX_AVATARS_SHOWN).reverse().map((user, index) => (
-            <Avatar key={user.id} title={user.name || user.email} cursor='pointer' src={user.image} size={scale(4) + (4)} marginRight={index || overflowCount ? -9 : undefined} border={`2px solid white`} />
-          ))}
-        </Pane>
+        {!isTabletOrMobile && (
+          <Pane display='flex' flexDirection='row-reverse' alignItems='center' onClick={() => setIsDialogShown(true)}>
+            {overflowCount > 0 && (
+              <Pane display='flex' alignItems='center' justifyContent='center' borderRadius='50%' width={scale(4)} height={scale(4)} backgroundColor={colors.fill.secondary} color='white'>
+                <Text size={300}>{overflowCount}</Text>
+              </Pane>
+            )}
+            {Array.isArray(collaborators) && collaborators.slice(0, MAX_AVATARS_SHOWN).reverse().map((user, index) => (
+              <Avatar key={user.id} title={user.name || user.email} cursor='pointer' src={user.image} size={scale(4) + (4)} marginRight={index || overflowCount ? -9 : undefined} border={`2px solid white`} />
+            ))}
+          </Pane>
+        )}
         <Icon
           icon={UserPlus}
           size={scale(2.5)}
