@@ -33,7 +33,7 @@ const Container: React.FunctionComponent<any> = (props) => (
     {...props}
     flex='none'
     width='100%'
-    maxWidth={scale(80)}
+    maxWidth={scale(90)}
     minWidth={scale(40)}
     minHeight='100vh'
     className={css`
@@ -55,9 +55,9 @@ interface Props {
 }
 
 interface State {
-  autoFocusId: Maybe<string>,
+  autoFocusId: Maybe<string>
   list: Maybe<List>
-  tasks: TaskType[],
+  tasks: TaskType[]
   name: string
   error: Maybe<Error>
   isLoading: boolean
@@ -242,12 +242,6 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     }
   }
 
-  handleDragStart = () => {
-    if (window.navigator.vibrate) {
-      window.navigator.vibrate(150)
-    }
-  }
-
   handleKeyPress = (event: React.KeyboardEvent<Element>, _value: string, _id: string, index: number) => {
     // TODO: potentially split the text at the cursor (i.e. simulate plaintext editing)
     if (event.key === 'Enter') {
@@ -366,7 +360,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           )}
         </Heading>
 
-        <DragDropContext onDragStart={this.handleDragStart} onDragEnd={this.handleDragEnd}>
+        <DragDropContext onDragEnd={this.handleDragEnd}>
           <Droppable droppableId={this.props.listId}>
             {(dropProvided, dropSnapshot) => (
               <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
