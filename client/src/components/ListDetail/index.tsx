@@ -220,10 +220,14 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   handleDragEnd = async (result: DropResult, provided: ResponderProvided) => {
     const task = this.state.tasks.find(t => t.id === result.draggableId)
     if (task && result.destination) {
-      const sortOrder = result.destination.index + 1
+      // find the sortOrder in the full list (for now, since completed tasks are excluded in this `destination.index`)
+      const taskAtIndex = this.state.tasks.filter(t => !t.isCompleted)[result.destination.index]
+      const trueDestinationIndex = this.state.tasks.indexOf(taskAtIndex)
+      const trueSourceIndex = this.state.tasks.indexOf(task)
+      const sortOrder = trueDestinationIndex + 1
 
       // Reorder the tasks and update their `sortOrder`
-      const resortedTasks = move(this.state.tasks, result.source.index, result.destination.index).map((t, i) => ({
+      const resortedTasks = move(this.state.tasks, trueSourceIndex, trueDestinationIndex).map((t, i) => ({
         ...t,
         sortOrder: i + 1
       }))
