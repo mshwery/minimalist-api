@@ -1,5 +1,5 @@
-import { addHours } from 'date-fns'
-import express from 'express'
+import { addHours, addMinutes } from 'date-fns'
+import express, { Request, Response, NextFunction } from 'express'
 import { get } from 'lodash'
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
@@ -40,11 +40,39 @@ passport.use(
   )
 )
 
+function getDynamicCallbackURL(redirect?: string) {
+  if (redirect) {
+    return `/connect/google/callback?redirect=${redirect}`
+  }
+  return `/connect/google/callback`
+}
+
 const router = express.Router()
-router.get('/connect/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+router.get('/connect/google', (req: Request, res: Response, next: NextFunction) => {
+  res.cookie('redirectTo', req.query.redirect, {
+    httpOnly: true,
+    secure: config.get('ENV') === 'production',
+    expires: addMinutes(new Date(), 10)
+  })
+
+  // @ts-ignore
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    prompt: 'select_account',
+    callbackURL: getDynamicCallbackURL('') // req.query.redirect)
+  })(req, res, next)
+})
+
 router.get(
   '/connect/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  (req: Request, res: Response, next: NextFunction) => {
+    const redirect = req.query.redirect ? decodeURIComponent(req.query.redirect) : '/'
+    // @ts-ignore
+    passport.authenticate('google', {
+      failureRedirect: redirect,
+      callbackURL: getDynamicCallbackURL('') // req.query.redirect)
+    })(req, res, next)
+  },
   (req: express.Request, res: express.Response) => {
     // TODO move this so we aren't duplicating it for each provider
     const expires = addHours(new Date(), 24)
@@ -58,7 +86,14 @@ router.get(
       expires
     })
 
-    res.redirect('/')
+    let redirect = '/'
+    if (req.query.redirect) {
+      redirect = decodeURIComponent(req.query.redirect) + `?token=${token}`
+    } else if (req.cookies.redirectTo) {
+      redirect = req.cookies.redirectTo + `?token=${token}`
+    }
+    console.log('redirecting to: ' + redirect)
+    res.redirect(redirect)
   }
 )
 
