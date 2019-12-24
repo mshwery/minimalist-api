@@ -92,7 +92,7 @@ router.get(
     } else if (req.cookies.redirectTo) {
       redirect = req.cookies.redirectTo + `?token=${token}`
     }
-    console.log('redirecting to: ' + redirect)
+
     res.redirect(redirect)
   }
 )
