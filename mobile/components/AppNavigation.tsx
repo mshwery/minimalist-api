@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -8,6 +8,7 @@ import AuthLoadingScreen from './AuthLoadingScreen'
 import LoginScreen from './LoginScreen'
 import Screen1 from './Screen1'
 import Screen2 from './Screen2'
+import Sidebar from './Sidebar'
 
 class NavigationDrawerStructure extends React.Component<any> {
   toggleDrawer = () => {
@@ -64,6 +65,9 @@ const AppStack = createDrawerNavigator({
       drawerLabel: 'Demo Screen 2',
     },
   }
+}, {
+  contentComponent: Sidebar,
+  drawerPosition: 'left'
 })
 
 const AuthStack = createStackNavigator({
