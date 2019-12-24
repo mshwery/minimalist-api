@@ -2,9 +2,8 @@ import React from 'react'
 import { View, StyleSheet, SafeAreaView, Image, Text, TouchableOpacity, AsyncStorage } from 'react-native'
 import { DrawerItems } from 'react-navigation-drawer'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import { Feather } from '@expo/vector-icons'
+import { UserProvider, useCurrentUser } from './UserContext'
 
 const styles = StyleSheet.create({
   container: {
@@ -48,38 +47,27 @@ const styles = StyleSheet.create({
   }
 })
 
-const GetCurrentUser = gql`
-  query GetCurrentUser {
-    me {
-      id
-      email
-      image
-      name
-    }
-  }
-`
-
 const Sidebar: React.FC<any> = (props) => {
-  const { loading, data, error } = useQuery(GetCurrentUser)
+  const { user, logout } = useCurrentUser()
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {loading || error || !data || !data.me ? null : (
+        {user && (
           <>
             <View style={styles.user}>
-              {data.me.image
-                ? <Image style={styles.avatar} source={{ uri: data.me.image }} />
+              {user.image
+                ? <Image style={styles.avatar} source={{ uri: user.image }} />
                 : <View style={styles.avatar} />
               }
               <View>
-                <Text style={styles.name}>{data.me.name}</Text>
-                <Text style={styles.email}>{data.me.email}</Text>
+                <Text style={styles.name}>{user.name}</Text>
+                <Text style={styles.email}>{user.email}</Text>
               </View>
             </View>
             <DrawerItems {...props} />
             <TouchableOpacity style={[styles.section, styles.menuItem]} onPress={async () => {
-              await AsyncStorage.removeItem('jwtToken')
+              await logout()
               props.navigation.navigate('Auth')
             }}>
               <Feather name='log-out' size={20} color='gray' />

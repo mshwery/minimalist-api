@@ -4,6 +4,7 @@ import { AuthSession } from 'expo'
 import LogoMark from '../assets/logomark.svg'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
 import { lineHeight } from '../lib/line-height'
+import { useCurrentUser } from './UserContext'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,53 +23,23 @@ const styles = StyleSheet.create({
   }
 })
 
-class LoginScreen extends React.Component<NavigationStackScreenProps> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <LogoMark />
-        <Text style={styles.description}>
-          The simplest way to keep track of the stuff you want to do.
-        </Text>
-        <Button title='Sign in with Google' onPress={this.signIn} />
-      </View>
-    )
-  }
+const LoginScreen: React.FC<NavigationStackScreenProps> = (props) => {
+  const { login } = useCurrentUser()
 
-  // private signIn = () => Linking.openURL(`https://4d0a170b.ngrok.io/connect/google?redirect=${encodeURIComponent(Linking.makeUrl('login'))}`)
-  private signIn = async () => {
-    // Retrieve the redirect URL (should be in the allowed callback urls list)
-    const redirectUrl = AuthSession.getRedirectUrl()
-    console.log(`Redirect URL: ${redirectUrl}`)
-
-    // Structure the auth parameters and URL
-    const origin = 'https://4d0a170b.ngrok.io'
-    const query = `redirect=${encodeURIComponent(redirectUrl)}`
-    const authUrl = `${origin}/connect/google?${query}`
-
-    // Perform the authentication
-    const response = await AuthSession.startAsync({ authUrl })
-    console.log('Authentication response', response)
-
-    // TODO handle error
-    if (response.type === 'success') {
-      this.handleResponse(response.params)
-    }
-  }
-
-  private handleResponse = (response) => {
-    if (response.error) {
-      Alert.alert('Authentication error', response.error_description || 'something went wrong')
-      return
-    }
-
-    const jwtToken = response.token
-    if (jwtToken) {
-      void AsyncStorage.setItem('jwtToken', jwtToken).then(() => {
-        this.props.navigation.navigate('App')
-      })
-    }
-  }
+  return (
+    <View style={styles.container}>
+      <LogoMark />
+      <Text style={styles.description}>
+        The simplest way to keep track of the stuff you want to do.
+      </Text>
+      <Button title='Sign in with Google' onPress={async () => {
+        const user = await login()
+        if (user) {
+          props.navigation.navigate('App')
+        }
+      }} />
+    </View>
+  )
 }
 
 export default LoginScreen

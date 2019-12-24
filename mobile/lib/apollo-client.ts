@@ -10,5 +10,11 @@ export const client = new ApolloClient({
         Authorization: token ? `Bearer ${token}` : ''
       }
     })
+  },
+  onError: ({ networkError }) => {
+    if (networkError && networkError.name === 'ServerParseError') {
+      // @ts-ignore
+      networkError.message = networkError.bodyText
+    }
   }
 })
