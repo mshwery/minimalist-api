@@ -35,7 +35,7 @@ async function signIn() {
   console.log(`Redirect URL: ${redirectUrl}`)
 
   // Structure the auth parameters and URL
-  const origin = 'https://4d0a170b.ngrok.io'
+  const origin = 'https://ffe6c808.ngrok.io'
   const query = `redirect=${encodeURIComponent(redirectUrl)}`
   const authUrl = `${origin}/connect/google?${query}`
 
@@ -100,11 +100,17 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
   // anytime the user query changes, reset the state
   useEffect(
     () => {
-      setContext({
-        user: data ? data.me : null,
-        login,
-        logout
-      })
+      let user = null
+
+      if (data) {
+        user = data.me
+      }
+
+      if (error) {
+        void logout()
+      } else {
+        setContext({ user, login, logout })
+      }
     },
     [loading, data, error]
   )
