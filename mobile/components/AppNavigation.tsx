@@ -2,26 +2,24 @@ import React from 'react'
 import { View } from 'react-native'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createDrawerNavigator } from 'react-navigation-drawer'
-import { createStackNavigator } from 'react-navigation-stack'
-import { Feather } from '@expo/vector-icons'
+import { createStackNavigator, NavigationStackScreenProps } from 'react-navigation-stack'
 import AuthLoadingScreen from './AuthLoadingScreen'
+import IconButton from './IconButton'
 import LoginScreen from './LoginScreen'
 import Screen1 from './Screen1'
 import Screen2 from './Screen2'
 import Sidebar from './Sidebar'
 
-class NavigationDrawerStructure extends React.Component<any> {
-  toggleDrawer = () => {
-    this.props.navigation.toggleDrawer()
-  }
-
-  render() {
-    return (
-      <View style={{ flexDirection: 'row', marginLeft: 12 }}>
-        <Feather name='arrow-left' size={24} color='white' onPress={this.toggleDrawer.bind(this)} />
-      </View>
-    )
-  }
+const NavigationDrawerStructure: React.FC<{ navigation: NavigationStackScreenProps['navigation'] }> = ({ navigation }) => {
+  return (
+    <View style={{ flexDirection: 'row', marginLeft: 12 }}>
+      <IconButton
+        name='arrow-left'
+        size={24}
+        onPress={navigation.toggleDrawer}
+      />
+    </View>
+  )
 }
 
 const DemoScreen1Navigator = createStackNavigator({
@@ -67,7 +65,9 @@ const AppStack = createDrawerNavigator({
   }
 }, {
   contentComponent: Sidebar,
-  drawerPosition: 'left'
+  drawerPosition: 'left',
+  edgeWidth: 60,
+  minSwipeDistance: 20
 })
 
 const AuthStack = createStackNavigator({
