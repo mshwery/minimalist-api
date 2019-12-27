@@ -1,33 +1,12 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { AuthSession } from 'expo'
 import { AsyncStorage } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-
-interface CurrentUser {
-  id: string
-  email: string
-  image: string | null
-  name: string | null
-}
-
-interface Context {
-  login: () => Promise<any>
-  logout: () => Promise<any>
-  user: null | CurrentUser
-}
-
-const defaultState = {
-  login: async () => {},
-  logout: async () => {},
-  user: null
-}
-
-const UserContext = React.createContext<Context>(defaultState)
-
-export function useCurrentUser() {
-  return useContext(UserContext)
-}
+import LoadingScreen from './LoadingScreen'
+import LoginScreen from './LoginScreen'
+import { Context, defaultState, UserContext } from '../context/UserContext'
 
 async function signIn() {
   // Retrieve the redirect URL (should be in the allowed callback urls list)
@@ -63,6 +42,8 @@ const GetCurrentUser = gql`
   }
 `
 
+const AuthStack = createStackNavigator()
+
 export const UserProvider: React.FC<{}> = ({ children }) => {
   const [context, setContext] = useState<Context>(defaultState)
   const { loading, data, error, refetch: refetchUser } = useQuery(GetCurrentUser)
@@ -78,8 +59,10 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
 
     let user = null
     try {
-      const response = await refetchUser()
-      user = response.data.me
+      if (jwtToken) {
+        const response = await refetchUser()
+        user = response.data.me
+      }
     } catch (error) {
       // TODO: handle error
     }
@@ -115,9 +98,20 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
     [loading, data, error]
   )
 
-  if (loading) {
-    return null
-  }
-
-  return <UserContext.Provider value={context}>{children}</UserContext.Provider>
+  return (
+    <UserContext.Provider value={context}>
+      <AuthStack.Navigator headerMode='none'>
+        {loading ? (
+          // We haven't finished checking for the token yet
+          <AuthStack.Screen name='Splash' component={LoadingScreen} />
+        ) : context.user === null ? (
+          // User isn't signed in
+          <AuthStack.Screen name='Log In' component={LoginScreen} />
+        ) : (
+          // User is signed in, so return child routes/components
+          <AuthStack.Screen name='App' component={() => <>{children}</>} />
+        )}
+      </AuthStack.Navigator>
+    </UserContext.Provider>
+  )
 }

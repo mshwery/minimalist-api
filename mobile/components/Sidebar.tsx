@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, StyleSheet, ScrollView, Image, Text, TouchableNativeFeedback } from 'react-native'
-import { SafeAreaView } from 'react-navigation'
-import { DrawerItems } from 'react-navigation-drawer'
-import { Feather } from '@expo/vector-icons'
-import { useCurrentUser } from './UserContext'
+import { View, StyleSheet, Image, Text } from 'react-native'
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer'
+import { useCurrentUser } from '../context/UserContext'
+import { createDrawerIcon } from './DrawerIcon'
 
 const styles = StyleSheet.create({
   container: {
@@ -36,57 +35,68 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#C9CACF',
     paddingTop: 4,
-  },
-  menuItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-  },
-  menuItemText: {
-    fontSize: 14,
-    color: '#787A87'
+    marginTop: 4,
   }
 })
 
-const Sidebar: React.FC<any> = (props) => {
+interface MenuItemProps extends React.ComponentProps<typeof DrawerItem> {
+  iconName: string
+  appearance?: 'primary' | 'secondary'
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ appearance = 'primary', iconName, ...props }) => {
+  return (
+    <DrawerItem
+      icon={iconName ? createDrawerIcon(iconName) : undefined}
+      {...props}
+    />
+  )
+}
+
+interface Props {
+  drawerProps: DrawerContentComponentProps
+  isLoading: boolean
+  error?: null | any
+  refetchLists: () => Promise<any>
+}
+
+const Sidebar: React.FC<Props> = ({ drawerProps, error, refetchLists, ...props }) => {
   const { user, logout } = useCurrentUser()
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
-        {user && (
-          <>
-            <View style={styles.user}>
-              {user.image
-                ? <Image style={styles.avatar} source={{ uri: user.image }} />
-                : <View style={styles.avatar} />
-              }
-              <View style={styles.names}>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.name}>{user.name}</Text>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.email}>{user.email}</Text>
-              </View>
+    <DrawerContentScrollView {...drawerProps}>
+      {user && (
+        <>
+          <View style={styles.user}>
+            {user.image
+              ? <Image style={styles.avatar} source={{ uri: user.image }} />
+              : <View style={styles.avatar} />
+            }
+            <View style={styles.names}>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.name}>{user.name}</Text>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.email}>{user.email}</Text>
             </View>
-            <DrawerItems {...props} />
-            <View style={styles.section}>
-              {/* <Text>{Object.keys(props).join(',\n')}</Text>
-              <Text>{JSON.stringify(props.items, null, 2)}</Text> */}
-              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onPress={async () => {
-                await logout()
-                props.navigation.navigate('Auth')
-              }}>
-                <View style={styles.menuItem}>
-                  <Feather name='log-out' size={20} color='gray' />
-                  <Text style={[styles.menuItemText, { marginLeft: 12 }]}>
-                    Log out
-                  </Text>
-                </View>
-              </TouchableNativeFeedback>
-            </View>
-          </>
-        )}
-      </SafeAreaView>
-    </ScrollView>
+          </View>
+          <DrawerItemList {...drawerProps} />
+          <View style={styles.section}>
+            {error ? (
+              <MenuItem
+                label='Loading error. Retry?'
+                iconName='refresh-cw'
+                onPress={() => refetchLists()}
+              />
+            ) : (
+              <MenuItem
+                label='Log out'
+                iconName='log-out'
+                appearance='secondary'
+                onPress={logout}
+              />
+            )}
+          </View>
+        </>
+      )}
+    </DrawerContentScrollView>
   )
 }
 

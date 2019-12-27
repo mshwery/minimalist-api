@@ -1,10 +1,10 @@
 import React from 'react'
-import { StyleSheet, Button, View, AsyncStorage, Text, Alert } from 'react-native'
-import { AuthSession } from 'expo'
+import { StyleSheet, Button, View, Text } from 'react-native'
+import { ParamListBase } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 import LogoMark from '../assets/logomark.svg'
-import { NavigationStackScreenProps } from 'react-navigation-stack'
 import { lineHeight } from '../lib/line-height'
-import { useCurrentUser } from './UserContext'
+import { useCurrentUser } from '../context/UserContext'
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,11 @@ const styles = StyleSheet.create({
   }
 })
 
-const LoginScreen: React.FC<NavigationStackScreenProps> = (props) => {
+interface Props {
+  navigation: StackNavigationProp<ParamListBase>
+}
+
+const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { login } = useCurrentUser()
 
   return (
@@ -35,7 +39,7 @@ const LoginScreen: React.FC<NavigationStackScreenProps> = (props) => {
       <Button title='Sign in with Google' onPress={async () => {
         const user = await login()
         if (user) {
-          props.navigation.navigate('App')
+          navigation.navigate('App')
         }
       }} />
     </View>

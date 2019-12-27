@@ -1,87 +1,73 @@
 import React from 'react'
-import { View } from 'react-native'
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { createDrawerNavigator } from 'react-navigation-drawer'
-import { createStackNavigator, NavigationStackScreenProps } from 'react-navigation-stack'
-import AuthLoadingScreen from './AuthLoadingScreen'
-import IconButton from './IconButton'
-import LoginScreen from './LoginScreen'
-import Screen1 from './Screen1'
-import Screen2 from './Screen2'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import InboxScreen from './InboxScreen'
+import ListScreen from './ListScreen'
+import LoadingScreen from './LoadingScreen'
 import Sidebar from './Sidebar'
+import { createDrawerIcon } from './DrawerIcon'
 
-const NavigationDrawerStructure: React.FC<{ navigation: NavigationStackScreenProps['navigation'] }> = ({ navigation }) => {
+const GetLists = gql`
+  query GetLists {
+    lists(status: ACTIVE) {
+      id
+      name
+    }
+  }
+`
+
+const Drawer = createDrawerNavigator()
+
+const AppNavigation: React.FC<{}> = () => {
+  // Fetch user's lists, so we can construct the sidebar navigation
+  const { loading, data, error, refetch } = useQuery(GetLists)
+
   return (
-    <View style={{ flexDirection: 'row', marginLeft: 12 }}>
-      <IconButton
-        name='arrow-left'
-        size={24}
-        onPress={navigation.toggleDrawer}
-      />
-    </View>
+    <Drawer.Navigator
+      drawerContent={(props) => <Sidebar drawerProps={props} isLoading={loading} error={error} refetchLists={refetch} />}
+      drawerContentOptions={{
+        itemStyle: {
+          marginTop: 0
+        }
+      }}
+      edgeWidth={60}
+      minSwipeDistance={20}
+    >
+      {loading || error ? (
+        // We haven't finished fetching lists yet
+        <Drawer.Screen name='Splash' component={LoadingScreen} />
+      ) : (
+        <>
+          <Drawer.Screen
+            name='Inbox'
+            component={InboxScreen}
+            options={{
+              drawerIcon: createDrawerIcon('inbox')
+            }}
+            initialParams={{
+              id: 'inbox',
+              name: 'Inbox'
+            }}
+          />
+          {data.lists.map(list => (
+            <Drawer.Screen
+              key={list.id}
+              name={list.name}
+              component={ListScreen}
+              options={{
+                drawerIcon: createDrawerIcon('menu')
+              }}
+              initialParams={{
+                id: list.id,
+                name: list.name
+              }}
+            />
+          ))}
+        </>
+      )}
+    </Drawer.Navigator>
   )
 }
 
-const DemoScreen1Navigator = createStackNavigator({
-  Screen1: {
-    screen: Screen1,
-    navigationOptions: ({ navigation }) => ({
-      title: 'Demo Screen 1',
-      headerLeft: <NavigationDrawerStructure navigation={navigation} />,
-      headerStyle: {
-        backgroundColor: '#2e8ae6',
-      },
-      headerTintColor: '#fff',
-    }),
-  },
-})
-
-const DemoScreen2Navigator = createStackNavigator({
-  Screen2: {
-    screen: Screen2,
-    navigationOptions: ({ navigation }) => ({
-      title: 'Demo Screen 2',
-      headerLeft: <NavigationDrawerStructure navigation={navigation} />,
-      headerStyle: {
-        backgroundColor: '#2e8ae6',
-      },
-      headerTintColor: '#fff',
-    }),
-  },
-})
-
-const AppStack = createDrawerNavigator({
-  Screen1: {
-    screen: DemoScreen1Navigator,
-    navigationOptions: {
-      drawerLabel: 'Demo Screen 1',
-    },
-  },
-  Screen2: {
-    screen: DemoScreen2Navigator,
-    navigationOptions: {
-      drawerLabel: 'Demo Screen 2',
-    },
-  }
-}, {
-  contentComponent: Sidebar,
-  drawerPosition: 'left',
-  edgeWidth: 60,
-  minSwipeDistance: 20
-})
-
-const AuthStack = createStackNavigator({
-  Login: LoginScreen
-}, {
-  headerMode: 'none'
-})
-
-export default createAppContainer(
-  createSwitchNavigator({
-    AuthLoading: AuthLoadingScreen,
-    App: AppStack,
-    Auth: AuthStack
-  }, {
-    initialRouteName: 'AuthLoading'
-  })
-)
+export default AppNavigation
