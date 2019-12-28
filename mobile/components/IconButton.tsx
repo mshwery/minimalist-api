@@ -10,7 +10,7 @@ interface Props {
 }
 
 const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> & Props> = ({
-  color = 'white',
+  color = '#242527',
   name,
   size,
   style = {},

@@ -31,8 +31,12 @@ const AppNavigation: React.FC<{}> = () => {
           marginTop: 0
         }
       }}
+      drawerStyle={{
+        width: '80%'
+      }}
       edgeWidth={60}
       minSwipeDistance={20}
+      unmountInactiveScreens
     >
       {loading || error ? (
         // We haven't finished fetching lists yet

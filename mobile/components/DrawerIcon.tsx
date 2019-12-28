@@ -13,7 +13,6 @@ export function createDefaultDrawerToggle(toggleDrawer) {
     <IconButton
       name='arrow-left'
       size={24}
-      color='#242527'
       onPress={toggleDrawer}
       style={{ marginLeft: 8 }}
     />
