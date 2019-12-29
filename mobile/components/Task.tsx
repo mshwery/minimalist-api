@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   TaskContent: {
     fontSize: 18,
     marginLeft: 12,
-    marginVertical: 10,
+    marginVertical: 9,
     lineHeight: 24,
     flex: 1,
   },
