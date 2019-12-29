@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableNativeFeedback } from 'react-native'
+import { View, Vibration, TouchableNativeFeedback } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
   name: string
   size: number
   style?: any
+  withHapticFeedback?: boolean
 }
 
 const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> & Props> = ({
@@ -14,6 +15,7 @@ const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> 
   name,
   size,
   style = {},
+  withHapticFeedback,
   ...props
 }) => {
   return (
@@ -21,6 +23,7 @@ const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> 
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Ripple('#a3cdf7', true)}
         {...props}
+        onPressIn={() => withHapticFeedback ? Vibration.vibrate(3) : undefined}
       >
         <View style={{ padding: Math.round(size * .4) }}>
           <Feather name={name} size={size} color={color} />

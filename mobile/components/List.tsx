@@ -1,8 +1,9 @@
 import React from 'react'
-import { StyleSheet, View, Text, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { StyleSheet, Text, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import IconButton from './IconButton'
+import Task from './Task'
+import { TaskType } from '../data/tasks'
 
 const styles = StyleSheet.create({
   MainContainer: {
@@ -11,19 +12,8 @@ const styles = StyleSheet.create({
   },
   ScrollView: {
     flex: 1,
-    paddingVertical: 16
+    paddingVertical: 8,
   },
-  Task: {
-    display: 'flex',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-  },
-  TaskContent: {
-    fontSize: 18,
-    marginLeft: 12,
-    marginTop: 7,
-    flex: 1,
-  }
 })
 
 const GetTasks = gql`
@@ -41,64 +31,9 @@ const GetTasks = gql`
   }
 `
 
-interface Task {
-  id: string
-  content: string
-  isCompleted: boolean
-  createdAt: string
-  updatedAt: string
-  completedAt?: string
-  sortOrder: number | null
-  listId?: string | null
-}
 
 interface GetTasksData {
-  tasks: Task[]
-}
-
-const CompleteTask = gql`
-  mutation CompleteTask($input: CompleteTaskInput!) {
-    completeTask(input: $input) {
-      task {
-        id
-        content
-        isCompleted
-        createdAt
-        updatedAt
-        completedAt
-        sortOrder
-        listId
-      }
-    }
-  }
-`
-
-interface CompleteTaskData {
-  completeTask: {
-    task: Task | null
-  }
-}
-
-const Task: React.FC<Task> = ({ id, content, isCompleted }) => {
-  const [markCompleted] = useMutation<CompleteTaskData>(CompleteTask, {
-    variables: {
-      input: {
-        id
-      }
-    }
-  })
-
-  return (
-    <View style={styles.Task}>
-      <IconButton
-        name={isCompleted ? 'check' : 'square'}
-        color={isCompleted ? '#2e8ae6' : '#787A87'}
-        size={22}
-        onPress={isCompleted ? undefined : () => markCompleted()}
-      />
-      <Text style={styles.TaskContent}>{content}</Text>
-    </View>
-  )
+  tasks: TaskType[]
 }
 
 interface Props {
@@ -117,19 +52,20 @@ const List: React.FC<Props> = ({
     fetchPolicy: 'cache-and-network'
   })
 
+  const mightHaveTasks = loading && data && data.tasks.length === 0
+  const hasTasks = data && data.tasks.length > 0
+
   return (
     <SafeAreaView style={styles.MainContainer}>
       <ScrollView
         contentContainerStyle={styles.ScrollView}
         refreshControl={<RefreshControl colors={['#2e8ae6']} tintColor='#2e8ae6' refreshing={loading} onRefresh={() => refetch()} />}
       >
-        {loading ? (
-          null
-        ) : error ? (
+        {error ? (
           <Text>There was an an error.</Text>
-        ) : !data || !Array.isArray(data.tasks) || data.tasks.length === 0 ? (
+        ) : !hasTasks && !mightHaveTasks ? (
           <Text>No tasks yet!</Text>
-        ) : data.tasks.map(task => (
+        ) : hasTasks && data.tasks.map(task => (
           <Task key={task.id} {...task} />
         ))}
       </ScrollView>
