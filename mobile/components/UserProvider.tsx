@@ -14,7 +14,7 @@ async function signIn() {
   console.log(`Redirect URL: ${redirectUrl}`)
 
   // Structure the auth parameters and URL
-  const origin = 'https://ffe6c808.ngrok.io'
+  const origin = 'https://5a1f9651.ngrok.io'
   const query = `redirect=${encodeURIComponent(redirectUrl)}`
   const authUrl = `${origin}/connect/google?${query}`
 
@@ -44,6 +44,13 @@ const GetCurrentUser = gql`
 
 const AuthStack = createStackNavigator()
 
+const clearAppKeys = async () => {
+  const keys = await AsyncStorage.getAllKeys()
+  if (keys.length > 0) {
+    await AsyncStorage.multiRemove(keys)
+  }
+}
+
 export const UserProvider: React.FC<{}> = ({ children }) => {
   const [context, setContext] = useState<Context>(defaultState)
   const { loading, data, error, refetch: refetchUser } = useQuery(GetCurrentUser)
@@ -54,7 +61,7 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
     if (jwtToken) {
       await AsyncStorage.setItem('jwtToken', jwtToken)
     } else {
-      await AsyncStorage.clear()
+      await clearAppKeys()
     }
 
     let user = null
@@ -72,7 +79,7 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
   }, [setContext, refetchUser])
 
   const logout = useCallback(async () => {
-    await AsyncStorage.clear()
+    await clearAppKeys()
     setContext({
       user: null,
       login,

@@ -2,7 +2,6 @@ import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import InboxScreen from './InboxScreen'
 import ListScreen from './ListScreen'
 import LoadingScreen from './LoadingScreen'
 import Sidebar from './Sidebar'
@@ -45,7 +44,7 @@ const AppNavigation: React.FC<{}> = () => {
         <>
           <Drawer.Screen
             name='Inbox'
-            component={InboxScreen}
+            component={ListScreen}
             options={{
               drawerIcon: createDrawerIcon('inbox')
             }}

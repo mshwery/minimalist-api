@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Vibration, TouchableNativeFeedback } from 'react-native'
+import { View, Vibration } from 'react-native'
+import Touchable from 'react-native-platform-touchable'
 import { Feather } from '@expo/vector-icons'
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   withHapticFeedback?: boolean
 }
 
-const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> & Props> = ({
+const IconButton: React.FC<React.ComponentProps<typeof Touchable> & Props> = ({
   color = '#242527',
   name,
   size,
@@ -20,15 +21,14 @@ const IconButton: React.FC<React.ComponentProps<typeof TouchableNativeFeedback> 
 }) => {
   return (
     <View style={[{ borderRadius: 999, overflow: 'hidden' }, style]}>
-      <TouchableNativeFeedback
-        background={TouchableNativeFeedback.Ripple('#a3cdf7', true)}
+      <Touchable
+        background={Touchable.Ripple('#a3cdf7', true)}
+        style={{ borderRadius: 999, padding: Math.round(size * .4) }}
         {...props}
         onPressIn={() => withHapticFeedback ? Vibration.vibrate(3) : undefined}
       >
-        <View style={{ padding: Math.round(size * .4) }}>
-          <Feather name={name} size={size} color={color} />
-        </View>
-      </TouchableNativeFeedback>
+        <Feather name={name} size={size} color={color} />
+      </Touchable>
     </View>
   )
 }
