@@ -1,9 +1,8 @@
-import React, { useRef, useCallback, useEffect } from 'react'
-import { Button, StyleSheet, Text, View, SafeAreaView, ScrollView, RefreshControl, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData, KeyboardAvoidingView, Platform } from 'react-native'
+import React, { useRef, useCallback } from 'react'
+import { Button, StyleSheet, Text, View, SafeAreaView, ScrollView, RefreshControl, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { TaskType } from '../data/tasks'
-import { useKeyboard } from '../hooks/useKeyboard'
 import BottomSheet, { BottomSheetRef } from './BottomSheet'
 import Task from './Task'
 
@@ -64,7 +63,6 @@ interface Props {
 const List: React.FC<Props> = ({
   listId,
 }) => {
-  const {isKeyboardClosing} = useKeyboard()
   const bottomSheet = useRef<BottomSheetRef>()
   const { loading, data, error, refetch, networkStatus } = useQuery<GetTasksData>(GetTasks, {
     variables: {
@@ -79,13 +77,6 @@ const List: React.FC<Props> = ({
   const createNewTask = useCallback((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     Keyboard.dismiss()
   }, [])
-
-  // When the keyboard gets dismissed, exit the modal
-  useEffect(() => {
-    if (isKeyboardClosing && bottomSheet.current) {
-      bottomSheet.current.close()
-    }
-  }, [bottomSheet.current, isKeyboardClosing])
 
   return (
     <SafeAreaView style={styles.MainContainer}>
@@ -120,9 +111,7 @@ const List: React.FC<Props> = ({
             }
           }}
         >
-          <KeyboardAvoidingView behavior='position' style={[{
-            flex: 1,
-          }, styles.EditModalContainer]}>
+          <View style={styles.EditModalContainer}>
             <TextInput
               autoCapitalize='sentences'
               autoCorrect
@@ -133,7 +122,7 @@ const List: React.FC<Props> = ({
               style={styles.TaskInput}
               onSubmitEditing={createNewTask}
             />
-          </KeyboardAvoidingView>
+          </View>
         </BottomSheet>
       </ScrollView>
     </SafeAreaView>

@@ -15,8 +15,9 @@ import {
   PanResponder,
   StyleSheet,
   TouchableOpacity,
-  View, ViewProps, ViewStyle
+  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView
 } from 'react-native'
+import { useSafeArea } from 'react-native-safe-area-context'
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -77,6 +78,7 @@ const BottomSheet: BottomSheetComponent = ({
   height = 260,
   onClose,
 }, ref) => {
+  const insets = useSafeArea()
   const [modalVisible, setModalVisibility] = useState(false)
   const [currentHeight, setCurrentHeight] = useState(height)
   const [pan] = useState(new Animated.ValueXY({
@@ -145,6 +147,12 @@ const BottomSheet: BottomSheetComponent = ({
     transform: pan.getTranslateTransform()
   }
 
+  const safeAreaStyles = {
+    paddingBottom: Platform.select({ ios: insets.bottom, android: 8 })
+  }
+
+  const KeyboardAvoidingComponent = Platform.select<typeof KeyboardAvoidingView | typeof View>({ ios: KeyboardAvoidingView, android: View })
+
   return (
     <Modal
       transparent
@@ -163,17 +171,20 @@ const BottomSheet: BottomSheetComponent = ({
           activeOpacity={1}
           onPress={() => (closeOnPressMask ? close() : {})}
         />
-        <View onLayout={handleChildrenLayout}>
-          <Animated.View
-            {...panResponder.panHandlers}
-            style={[
-              styles.container,
-              customStyles.container,
-              animatedViewStyles
-            ]}>
-            {children || <View />}
-          </Animated.View>
-        </View>
+        <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined})}>
+          <View onLayout={handleChildrenLayout}>
+            <Animated.View
+              {...panResponder.panHandlers}
+              style={[
+                styles.container,
+                customStyles.container,
+                safeAreaStyles,
+                animatedViewStyles
+              ]}>
+              {children || <View />}
+            </Animated.View>
+          </View>
+        </KeyboardAvoidingComponent>
       </View>
     </Modal>
   )
