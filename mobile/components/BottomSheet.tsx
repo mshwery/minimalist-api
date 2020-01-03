@@ -188,7 +188,6 @@ const BottomSheet: BottomSheetComponent = ({
             }
           }}
         />
-        <TextInput placeholder='another' />
         <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined})}>
           <View onLayout={handleChildrenLayout}>
             <Animated.View
