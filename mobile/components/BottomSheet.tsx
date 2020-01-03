@@ -15,9 +15,11 @@ import {
   PanResponder,
   StyleSheet,
   TouchableOpacity,
-  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView
+  ScrollView,
+  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView, Keyboard
 } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
+import { TextInput } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -51,6 +53,7 @@ interface BottomSheetProps {
   closeOnSwipeDown?: boolean
   closeOnPressMask?: boolean
   onClose?: () => void
+  onOpen?: () => void
   children?: ReactNode
   customStyles?: {
     wrapper?: ViewStyle
@@ -77,6 +80,7 @@ const BottomSheet: BottomSheetComponent = ({
   duration = 200,
   height = 260,
   onClose,
+  onOpen,
 }, ref) => {
   const insets = useSafeArea()
   const [modalVisible, setModalVisibility] = useState(false)
@@ -92,8 +96,13 @@ const BottomSheet: BottomSheetComponent = ({
       Animated.timing(pan, {
         toValue: { x: 0, y: 0 },
         duration,
-      }).start()
+      }).start(() => {
+        if (typeof onOpen === 'function') {
+          onOpen()
+        }
+      })
     } else {
+      Keyboard.dismiss()
       Animated.timing(pan, {
         toValue: { x: 0, y: currentHeight },
         duration
@@ -161,16 +170,25 @@ const BottomSheet: BottomSheetComponent = ({
       supportedOrientations={SUPPORTED_ORIENTATIONS}
       onRequestClose={() => setModalVisible(false)}
     >
-      <View
-        style={[
+      <ScrollView
+        contentContainerStyle={[
           styles.wrapper,
           customStyles.wrapper
-        ]}>
+        ]}
+        scrollEnabled={false}
+        keyboardShouldPersistTaps='handled'
+      >
         <TouchableOpacity
           style={styles.mask}
           activeOpacity={1}
-          onPress={() => (closeOnPressMask ? close() : {})}
+          onPress={() => {
+            console.log(`pressed`)
+            if (closeOnPressMask) {
+              close()
+            }
+          }}
         />
+        <TextInput placeholder='another' />
         <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined})}>
           <View onLayout={handleChildrenLayout}>
             <Animated.View
@@ -185,7 +203,7 @@ const BottomSheet: BottomSheetComponent = ({
             </Animated.View>
           </View>
         </KeyboardAvoidingComponent>
-      </View>
+      </ScrollView>
     </Modal>
   )
 }

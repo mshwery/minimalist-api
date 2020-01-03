@@ -64,6 +64,7 @@ const List: React.FC<Props> = ({
   listId,
 }) => {
   const bottomSheet = useRef<BottomSheetRef>()
+  const newTaskRef = useRef<TextInput>()
   const { loading, data, error, refetch, networkStatus } = useQuery<GetTasksData>(GetTasks, {
     variables: {
       listId
@@ -76,6 +77,13 @@ const List: React.FC<Props> = ({
 
   const createNewTask = useCallback((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     Keyboard.dismiss()
+  }, [])
+
+  // Hack because `autoFocus` in a `Modal` doesn't always work...
+  const onCreateTaskOpen = useCallback(() => {
+    if (newTaskRef.current) {
+      newTaskRef.current.focus()
+    }
   }, [])
 
   return (
@@ -101,26 +109,31 @@ const List: React.FC<Props> = ({
           }} />
         </View>
         <BottomSheet
-          ref={bottomSheet}
           animationType='fade'
-          duration={150}
+          closeOnSwipeDown
           customStyles={{
             container: {
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
             }
           }}
+          duration={150}
+          onOpen={onCreateTaskOpen}
+          ref={bottomSheet}
         >
           <View style={styles.EditModalContainer}>
             <TextInput
               autoCapitalize='sentences'
               autoCorrect
-              autoFocus
+              blurOnSubmit
+              enablesReturnKeyAutomatically
               multiline
+              onSubmitEditing={createNewTask}
               placeholder='Add a task'
               placeholderTextColor='#A6B1BB'
+              ref={newTaskRef}
+              returnKeyType='done'
               style={styles.TaskInput}
-              onSubmitEditing={createNewTask}
             />
           </View>
         </BottomSheet>
