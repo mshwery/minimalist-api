@@ -3,20 +3,25 @@
 // but using only translate animations instead of height
 
 import React, {
-  forwardRef, ReactNode,
-  RefForwardingComponent,
-  useImperativeHandle,
-  useState
+  ReactNode,
+  FunctionComponent,
+  useState,
+  useEffect
 } from 'react'
 import {
   Animated,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   ModalPropsIOS,
   PanResponder,
+  Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback
+  View,
+  ViewProps,
+  ViewStyle
 } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 
@@ -46,31 +51,22 @@ const SUPPORTED_ORIENTATIONS: ModalPropsIOS['supportedOrientations'] = [
 
 interface BottomSheetProps {
   animationType?: 'none' | 'fade' | 'slide'
-  height?: number
-  minClosingHeight?: number
-  duration?: number
+  children?: ReactNode
   closeOnSwipeDown?: boolean
   closeOnPressMask?: boolean
-  onClose?: () => void
-  onOpen?: () => void
-  children?: ReactNode
   customStyles?: {
     wrapper?: ViewStyle
     container?: ViewStyle
   }
+  duration?: number
+  height?: number
+  isVisible?: boolean
+  onClose?: () => void
+  onOpen?: () => void
+  onRequestClose?: () => void
 }
 
-export type BottomSheetRef = {
-  close: () => void,
-  open: () => void
-}
-
-export type BottomSheetComponent = RefForwardingComponent<
-  BottomSheetRef,
-  BottomSheetProps
->
-
-const BottomSheet: BottomSheetComponent = ({
+const BottomSheet: FunctionComponent<BottomSheetProps> = ({
   animationType = 'none',
   children,
   closeOnPressMask = true,
@@ -78,24 +74,33 @@ const BottomSheet: BottomSheetComponent = ({
   customStyles = {},
   duration = 200,
   height = 260,
+  isVisible = false,
   onClose,
   onOpen,
+  onRequestClose
 }, ref) => {
+  const [modalVisible, setModalVisibility] = useState(isVisible)
   const insets = useSafeArea()
-  const [modalVisible, setModalVisibility] = useState(false)
   const [currentHeight, setCurrentHeight] = useState(height)
   const [pan] = useState(new Animated.ValueXY({
     x: 0,
     y: currentHeight
   }))
 
-  const setModalVisible = (visible: boolean) => {
+  // Transition modal when visibility prop changes
+  useEffect(() => toggleModal(isVisible), [isVisible])
+
+  const toggleModal = (visible: boolean) => {
     if (visible) {
       setModalVisibility(true)
       Animated.timing(pan, {
         toValue: { x: 0, y: 0 },
         duration,
-      }).start()
+      }).start(() => {
+        if (typeof onOpen === 'function') {
+          onOpen()
+        }
+      })
     } else {
       Keyboard.dismiss()
       Animated.timing(pan, {
@@ -121,7 +126,7 @@ const BottomSheet: BottomSheetComponent = ({
       const distanceToClose = currentHeight * 0.5
 
       if (gestureState.dy > distanceToClose || gestureState.vy > 0.65) {
-        setModalVisible(false)
+        onRequestClose()
       } else {
         Animated.spring(pan, {
           toValue: { x: 0, y: 0 },
@@ -134,18 +139,6 @@ const BottomSheet: BottomSheetComponent = ({
   const handleChildrenLayout: ViewProps['onLayout'] = event => {
     setCurrentHeight(event.nativeEvent.layout.height)
   }
-
-  const open = () => {
-    setModalVisible(true)
-  }
-
-  const close = () => {
-    setModalVisible(false)
-  }
-
-  useImperativeHandle(ref, () => ({
-    close, open
-  }))
 
   const animatedViewStyles = {
     transform: pan.getTranslateTransform()
@@ -163,8 +156,8 @@ const BottomSheet: BottomSheetComponent = ({
       animationType={animationType}
       visible={modalVisible}
       supportedOrientations={SUPPORTED_ORIENTATIONS}
-      onRequestClose={() => setModalVisible(false)}
-      onShow={onOpen}
+      onRequestClose={onRequestClose}
+      onDismiss={() => console.log('dismissed')}
     >
       <ScrollView
         contentContainerStyle={[
@@ -176,11 +169,7 @@ const BottomSheet: BottomSheetComponent = ({
         <TouchableOpacity
           style={styles.mask}
           activeOpacity={1}
-          onPress={() => {
-            if (closeOnPressMask) {
-              close()
-            }
-          }}
+          onPress={closeOnPressMask ? onRequestClose : undefined}
         />
         <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined})}>
           <View onLayout={handleChildrenLayout}>
@@ -201,4 +190,4 @@ const BottomSheet: BottomSheetComponent = ({
   )
 }
 
-export default forwardRef(BottomSheet)
+export default BottomSheet
