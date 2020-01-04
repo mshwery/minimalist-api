@@ -16,10 +16,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView, Keyboard
+  View, ViewProps, ViewStyle, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback
 } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { TextInput } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -96,11 +95,7 @@ const BottomSheet: BottomSheetComponent = ({
       Animated.timing(pan, {
         toValue: { x: 0, y: 0 },
         duration,
-      }).start(() => {
-        if (typeof onOpen === 'function') {
-          onOpen()
-        }
-      })
+      }).start()
     } else {
       Keyboard.dismiss()
       Animated.timing(pan, {
@@ -169,20 +164,19 @@ const BottomSheet: BottomSheetComponent = ({
       visible={modalVisible}
       supportedOrientations={SUPPORTED_ORIENTATIONS}
       onRequestClose={() => setModalVisible(false)}
+      onShow={onOpen}
     >
       <ScrollView
         contentContainerStyle={[
           styles.wrapper,
           customStyles.wrapper
         ]}
-        scrollEnabled={false}
-        keyboardShouldPersistTaps='handled'
+        keyboardShouldPersistTaps={closeOnPressMask ? 'handled' : 'never'}
       >
         <TouchableOpacity
           style={styles.mask}
           activeOpacity={1}
           onPress={() => {
-            console.log(`pressed`)
             if (closeOnPressMask) {
               close()
             }

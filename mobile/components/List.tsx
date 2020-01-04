@@ -76,7 +76,7 @@ const List: React.FC<Props> = ({
   const hasTasks = data && data.tasks.length > 0
 
   const createNewTask = useCallback((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-    Keyboard.dismiss()
+    console.log(e.nativeEvent.text)
   }, [])
 
   // Hack because `autoFocus` in a `Modal` doesn't always work...
@@ -108,36 +108,36 @@ const List: React.FC<Props> = ({
             }
           }} />
         </View>
-        <BottomSheet
-          animationType='fade'
-          closeOnSwipeDown
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 12,
-              borderTopRightRadius: 12,
-            }
-          }}
-          duration={150}
-          onOpen={onCreateTaskOpen}
-          ref={bottomSheet}
-        >
-          <View style={styles.EditModalContainer}>
-            <TextInput
-              autoCapitalize='sentences'
-              autoCorrect
-              blurOnSubmit
-              enablesReturnKeyAutomatically
-              multiline
-              onSubmitEditing={createNewTask}
-              placeholder='Add a task'
-              placeholderTextColor='#A6B1BB'
-              ref={newTaskRef}
-              returnKeyType='done'
-              style={styles.TaskInput}
-            />
-          </View>
-        </BottomSheet>
       </ScrollView>
+      <BottomSheet
+        animationType='fade'
+        closeOnSwipeDown
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+          }
+        }}
+        duration={150}
+        onOpen={onCreateTaskOpen}
+        ref={bottomSheet}
+      >
+        <View style={styles.EditModalContainer}>
+          <TextInput
+            autoCapitalize='sentences'
+            autoCorrect
+            blurOnSubmit
+            enablesReturnKeyAutomatically
+            multiline
+            onSubmitEditing={createNewTask}
+            placeholder='Add a task'
+            placeholderTextColor='#A6B1BB'
+            ref={newTaskRef}
+            returnKeyType='done'
+            style={styles.TaskInput}
+          />
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   )
 }
