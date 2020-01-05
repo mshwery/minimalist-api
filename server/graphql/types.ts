@@ -13,3 +13,9 @@ export enum ListStatus {
   ACTIVE = 'ACTIVE',
   ALL = 'ALL'
 }
+
+export enum TaskStatus {
+  DONE = 'DONE',
+  REMAINING = 'REMAINING',
+  ALL = 'ALL'
+}

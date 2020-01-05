@@ -1,30 +1,35 @@
 import React, { useRef, useCallback } from 'react'
 import { StyleSheet, View, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
-import { useCreateTask } from '../data/tasks'
+import { useCreateTask, TaskType, useUpdateTask } from '../data/tasks'
 import BottomSheet from './BottomSheet'
 
 const styles = StyleSheet.create({
   ModalContent: {
-    paddingVertical: 12,
-    paddingHorizontal: 24
+    paddingTop: 12,
+    paddingBottom: 32,
+    paddingHorizontal: 24,
   },
   TaskInput: {
-    fontSize: 18,
+    fontSize: 16,
   }
 })
 
 interface Props {
+  existingContent?: string
   isVisible: boolean
   listId: string
+  task?: TaskType,
   onRequestClose: () => void
 }
 
-const CreateTaskModal: React.FC<Props> = ({
+const EditTaskModal: React.FC<Props> = ({
   isVisible,
   listId,
+  task,
   onRequestClose
 }) => {
   const newTaskRef = useRef<TextInput>()
+  const [updateTask, updateTaskData] = useUpdateTask(task, listId)
   const [createTask, createTaskData] = useCreateTask(listId)
 
   const onSubmitEditing = useCallback(async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
@@ -32,7 +37,18 @@ const CreateTaskModal: React.FC<Props> = ({
     onRequestClose()
 
     const content = e.nativeEvent.text.trim()
-    if (content) {
+    if (!content) {
+      return
+    }
+
+    if (task && task.id) {
+      await updateTask({ variables: {
+        input: {
+          id: task.id,
+          content
+        }
+      }})
+    } else {
       await createTask({ variables: {
         input: {
           listId: listId === 'inbox' ? null : listId,
@@ -40,7 +56,7 @@ const CreateTaskModal: React.FC<Props> = ({
         }
       }})
     }
-  }, [])
+  }, [updateTask, createTask, task, listId])
 
   // Hack because `autoFocus` in a `Modal` doesn't always work...
   const onCreateTaskOpen = useCallback(() => {
@@ -55,8 +71,8 @@ const CreateTaskModal: React.FC<Props> = ({
       closeOnSwipeDown
       customStyles={{
         container: {
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
         }
       }}
       duration={150}
@@ -71,8 +87,9 @@ const CreateTaskModal: React.FC<Props> = ({
           blurOnSubmit
           enablesReturnKeyAutomatically
           multiline
+          defaultValue={task ? task.content : undefined}
           onSubmitEditing={onSubmitEditing}
-          placeholder='Add a task'
+          placeholder={task && task.id ? 'Enter task' : 'Add a task'}
           placeholderTextColor='#A6B1BB'
           ref={newTaskRef}
           returnKeyType='done'
@@ -83,4 +100,4 @@ const CreateTaskModal: React.FC<Props> = ({
   )
 }
 
-export default CreateTaskModal
+export default EditTaskModal

@@ -1,48 +1,73 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import Touchable from 'react-native-platform-touchable'
 import IconButton from './IconButton'
 import { TaskType, useMarkComplete, useMarkIncomplete } from '../data/tasks'
 
 const styles = StyleSheet.create({
-  Task: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
+  container: {
     paddingVertical: 4,
+    paddingHorizontal: 16,
     borderBottomColor: '#e4e4e6',
     borderBottomWidth: 0.5,
     backgroundColor: 'white',
   },
-  TaskContent: {
+  task: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  content: {
     fontSize: 18,
     marginLeft: 12,
     marginVertical: 9,
     lineHeight: 24,
     flex: 1,
   },
-  CompletedTask: {
+  completed: {
     textDecorationLine: 'line-through',
     color: '#787A87'
   }
 })
 
-const Task: React.FC<TaskType> = (task) => {
+interface Props {
+  onRequestEdit?: (id: string) => void
+}
+
+const Task: React.FC<TaskType & Props> = ({ onRequestEdit, ...task }) => {
   const { content, isCompleted } = task
   const [markCompleted] = useMarkComplete(task)
   const [markIncomplete] = useMarkIncomplete(task)
 
+  const onPressContainer = useCallback(() => {
+    onRequestEdit(task.id)
+  }, [onRequestEdit])
+
+  const onPressCheckbox = useCallback(async () => {
+    if (isCompleted) {
+      await markIncomplete()
+    } else {
+      await markCompleted()
+    }
+  }, [isCompleted, markCompleted, markIncomplete])
+
   return (
-    <View style={styles.Task}>
-      <IconButton
-        size={24}
-        name={isCompleted ? 'check' : 'circle'}
-        color={isCompleted ? '#2e8ae6' : '#a7aaba'}
-        onPress={() => isCompleted ? markIncomplete() : markCompleted()}
-        withHapticFeedback
-      />
-      <Text style={[styles.TaskContent, isCompleted && styles.CompletedTask]}>{content}</Text>
-    </View>
+    <Touchable
+      style={styles.container}
+      onPress={onPressContainer}
+      delayPressOut={300}
+    >
+      <View style={styles.task}>
+        <IconButton
+          size={24}
+          name={isCompleted ? 'check' : 'circle'}
+          color={isCompleted ? '#2e8ae6' : '#a7aaba'}
+          onPress={onPressCheckbox}
+          withHapticFeedback
+        />
+        <Text style={[styles.content, isCompleted && styles.completed]}>{content}</Text>
+      </View>
+    </Touchable>
   )
 }
 

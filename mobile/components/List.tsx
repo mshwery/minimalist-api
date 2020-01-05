@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { Button, StyleSheet, Text, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
 import { useGetTasks } from '../data/tasks'
 import Task from './Task'
-import CreateTaskModal from './CreateTaskModal'
+import EditTaskModal from './EditTaskModal'
+import FloatingActionButton from './FloatingActionButton'
 
 const styles = StyleSheet.create({
   MainContainer: {
@@ -35,13 +36,26 @@ interface Props {
 const List: React.FC<Props> = ({
   listId,
 }) => {
-  const [isCreateModalVisible, setModalVisible] = useState(false)
+  const [selectedTask, setSelectedTask] = useState(null)
+  const [isEditModeVisible, setEditModeVisible] = useState(false)
   const { loading, data, error, refetch, networkStatus } = useGetTasks(listId)
   const mightHaveTasks = loading && data && data.tasks.length === 0
   const hasTasks = data && data.tasks.length > 0
 
-  const onRequestOpen = useCallback(() => setModalVisible(true), [setModalVisible])
-  const onRequestClose = useCallback(() => setModalVisible(false), [setModalVisible])
+  const onRequestCreate = useCallback(() => {
+    setSelectedTask(null)
+    setEditModeVisible(true)
+  }, [setEditModeVisible])
+
+  const onRequestClose = useCallback(() => {
+    setEditModeVisible(false)
+    setSelectedTask(null)
+  }, [setEditModeVisible])
+
+  const onRequestEdit = useCallback((id: string) => {
+    setSelectedTask(id)
+    setEditModeVisible(true)
+  }, [setEditModeVisible])
 
   return (
     <SafeAreaView style={styles.MainContainer}>
@@ -56,13 +70,20 @@ const List: React.FC<Props> = ({
             <Text style={styles.EmptyStateText}>No tasks yet</Text>
           </View>
         ) : hasTasks && data.tasks.map(task => (
-          <Task key={task.id} {...task} />
+          <Task key={task.id} {...task} onRequestEdit={onRequestEdit} />
         ))}
-        <View style={styles.AddTaskButton}>
-          <Button title='Open Bottom Sheet' onPress={onRequestOpen} />
-        </View>
       </ScrollView>
-      <CreateTaskModal listId={listId} isVisible={isCreateModalVisible} onRequestClose={onRequestClose} />
+      <FloatingActionButton
+        initiallyVisible
+        isVisible={!isEditModeVisible}
+        onPress={onRequestCreate}
+      />
+      <EditTaskModal
+        listId={listId}
+        task={selectedTask && hasTasks ? data.tasks.find(t => t.id === selectedTask) : undefined}
+        isVisible={isEditModeVisible}
+        onRequestClose={onRequestClose}
+      />
     </SafeAreaView>
   )
 }

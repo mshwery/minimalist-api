@@ -13,8 +13,8 @@ export interface TaskType {
 }
 
 const GetTasks = gql`
-  query GetTasks($listId: ID!) {
-    tasks(listId: $listId) {
+  query GetTasks($listId: ID!, $status: TaskStatus!) {
+    tasks(listId: $listId, status: $status) {
       id
       content
       isCompleted
@@ -34,7 +34,8 @@ interface GetTasksData {
 export function useGetTasks(listId: string) {
   return useQuery<GetTasksData>(GetTasks, {
     variables: {
-      listId
+      listId,
+      status: 'REMAINING'
     },
     fetchPolicy: 'cache-and-network'
   })
@@ -189,15 +190,67 @@ export function useCreateTask(listId: string) {
     }),
     refetchQueries: [{
       query: GetTasks,
-      variables: { listId }
+      variables: { listId, status: 'REMAINING' }
     }],
     update: (proxy, { data: { createTask } }) => {
       // Get the cached data
-      const data = proxy.readQuery<GetTasksData>({ query: GetTasks, variables: { listId } })
+      const data = proxy.readQuery<GetTasksData>({ query: GetTasks, variables: { listId, status: 'REMAINING' } })
       // Write data back to the cache
-      proxy.writeQuery({ query: GetTasks, data: {
-        tasks: [...data.tasks, createTask.task]
-      }})
+      proxy.writeQuery({
+        query: GetTasks,
+        variables: { listId, status: 'REMAINING' },
+        data: {
+          tasks: [...data.tasks, createTask.task]
+        }
+      })
     }
+  })
+}
+
+const UpdateTask = gql`
+  mutation UpdateTask($input: UpdateTaskInput!) {
+    updateTask(input: $input) {
+      task {
+        id
+        content
+        isCompleted
+        createdAt
+        updatedAt
+        completedAt
+        sortOrder
+        listId
+      }
+    }
+  }
+`
+
+interface UpdateTaskData {
+  __typename: 'Mutation',
+  updateTask: {
+    __typename: 'UpdateTaskResponse'
+    task: null | (TaskType & {
+      __typename: 'Task'
+    })
+  }
+}
+
+export function useUpdateTask(task: TaskType, listId: string) {
+  return useMutation<UpdateTaskData, { input: { id: string, content: string }}>(UpdateTask, {
+    optimisticResponse: ({ input }) => ({
+      __typename: 'Mutation',
+      updateTask: {
+        __typename: 'UpdateTaskResponse',
+        task: {
+          __typename: 'Task',
+          ...task,
+          ...input,
+          updatedAt: new Date().toISOString()
+        }
+      }
+    }),
+    refetchQueries: [{
+      query: GetTasks,
+      variables: { listId, status: 'REMAINING' }
+    }]
   })
 }

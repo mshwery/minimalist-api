@@ -78,7 +78,7 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
   onClose,
   onOpen,
   onRequestClose
-}, ref) => {
+}) => {
   const [modalVisible, setModalVisibility] = useState(isVisible)
   const insets = useSafeArea()
   const [currentHeight, setCurrentHeight] = useState(height)
@@ -157,7 +157,6 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
       visible={modalVisible}
       supportedOrientations={SUPPORTED_ORIENTATIONS}
       onRequestClose={onRequestClose}
-      onDismiss={() => console.log('dismissed')}
     >
       <ScrollView
         contentContainerStyle={[

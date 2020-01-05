@@ -6,6 +6,7 @@ import analytics from '../../lib/analytics'
 import { canEditList, ListModel } from '../list'
 import Task from './task.entity'
 import TaskRepository from './task.repository'
+import { TaskStatus } from '../../graphql/types'
 
 export { Task, TaskRepository }
 
@@ -78,24 +79,33 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null }): Promise<Task[]> {
+  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null, status?: TaskStatus }): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
     if (filters.listId === 'inbox' || filters.listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
-        listId: null
+        listId: null,
+        status: filters.status
       })
     }
 
     if (filters.listId === undefined) {
-      return getCustomRepository(TaskRepository).allByAuthor(viewer)
+      return getCustomRepository(TaskRepository).allByAuthor(viewer, filters)
     }
 
     // TODO: fetch the list via DataLoaders
     const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
-    return list ? list.tasks! : []
+    const tasks = list ? list.tasks! : []
+
+    if (filters.status === TaskStatus.DONE) {
+      return tasks.filter(t => t.isCompleted)
+    } else if (filters.status === TaskStatus.REMAINING) {
+      return tasks.filter(t => !t.isCompleted)
+    } else {
+      return tasks
+    }
   }
 
   /**
