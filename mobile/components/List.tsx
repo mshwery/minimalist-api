@@ -45,17 +45,20 @@ const List: React.FC<Props> = ({
   const onRequestCreate = useCallback(() => {
     setSelectedTask(null)
     setEditModeVisible(true)
-  }, [setEditModeVisible])
+  }, [setSelectedTask, setEditModeVisible])
 
   const onRequestClose = useCallback(() => {
     setEditModeVisible(false)
-    setSelectedTask(null)
   }, [setEditModeVisible])
+
+  const onCloseComplete = useCallback(() => {
+    setSelectedTask(null)
+  }, [setSelectedTask])
 
   const onRequestEdit = useCallback((id: string) => {
     setSelectedTask(id)
     setEditModeVisible(true)
-  }, [setEditModeVisible])
+  }, [setSelectedTask, setEditModeVisible])
 
   return (
     <SafeAreaView style={styles.MainContainer}>
@@ -83,6 +86,7 @@ const List: React.FC<Props> = ({
         task={selectedTask && hasTasks ? data.tasks.find(t => t.id === selectedTask) : undefined}
         isVisible={isEditModeVisible}
         onRequestClose={onRequestClose}
+        onClose={onCloseComplete}
       />
     </SafeAreaView>
   )

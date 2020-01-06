@@ -12,7 +12,7 @@ import logger from './logger'
 
 const secret = config.get('JWT_SECRET')
 const defaultOptions = {
-  expiresIn: '24hr',
+  expiresIn: '7 days',
   issuer: 'minimalist-api'
 }
 

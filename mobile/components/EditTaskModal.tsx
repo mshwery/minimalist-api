@@ -19,6 +19,7 @@ interface Props {
   isVisible: boolean
   listId: string
   task?: TaskType,
+  onClose?: () => void
   onRequestClose: () => void
 }
 
@@ -26,6 +27,7 @@ const EditTaskModal: React.FC<Props> = ({
   isVisible,
   listId,
   task,
+  onClose,
   onRequestClose
 }) => {
   const newTaskRef = useRef<TextInput>()
@@ -77,6 +79,7 @@ const EditTaskModal: React.FC<Props> = ({
       }}
       duration={150}
       isVisible={isVisible}
+      onClose={onClose}
       onOpen={onCreateTaskOpen}
       onRequestClose={onRequestClose}
     >
