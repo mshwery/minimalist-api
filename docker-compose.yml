@@ -4,6 +4,7 @@ db:
     - '5433:5432'
   environment:
     POSTGRES_DB: minimalist
+    POSTGRES_PASSWORD: password
 
 # test image, because typeorm migrations require the db to exist in order to work
 db_test:
@@ -12,3 +13,4 @@ db_test:
     - '5436:5432'
   environment:
     POSTGRES_DB: minimalist_test
+    POSTGRES_PASSWORD: password

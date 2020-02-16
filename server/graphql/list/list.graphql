@@ -41,7 +41,7 @@ type List implements Node {
   archivedAt: DateTime
 
   # The associated tasks
-  tasks: [Task!]!
+  tasks(status: TaskStatus): [Task!]!
 
   # The person who created the list (and owns it)
   creator: User!

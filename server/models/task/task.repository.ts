@@ -1,9 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm'
+import { EntityRepository, Repository, Not, IsNull, FindConditions } from 'typeorm'
 import Task from './task.entity'
 import { UUID } from '../../types'
+import { TaskStatus } from '../../graphql/types'
 
 interface TaskFilters {
   listId?: UUID | null
+  status?: TaskStatus
 }
 
 @EntityRepository(Task)
@@ -13,7 +15,7 @@ export default class TaskRepository extends Repository<Task> {
    * TODO: pagination?
    */
   public allByAuthor(viewer: UUID, filters: TaskFilters = {}): Promise<Task[]> {
-    const attrs: Partial<Task> = {
+    const attrs: FindConditions<Task> = {
       createdBy: viewer
     }
 
@@ -21,9 +23,15 @@ export default class TaskRepository extends Repository<Task> {
       attrs.listId = filters.listId
     }
 
-    return this.createQueryBuilder('task')
-      .where(attrs)
-      .getMany()
+    if (filters.status === TaskStatus.DONE) {
+      attrs.completedAt = Not(IsNull())
+    }
+
+    if (filters.status === TaskStatus.REMAINING) {
+      attrs.completedAt = IsNull()
+    }
+
+    return this.find(attrs)
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {

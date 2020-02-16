@@ -1,6 +1,6 @@
 extend type Query {
   # Get tasks with optional filters: by listId
-  tasks(listId: ID): [Task]!
+  tasks(listId: ID, status: TaskStatus): [Task]!
 }
 
 extend type Mutation {
@@ -133,4 +133,10 @@ input MoveTaskInput {
 type MoveTaskResponse {
   # The moved task
   task: Task
+}
+
+enum TaskStatus {
+  DONE
+  REMAINING
+  ALL
 }

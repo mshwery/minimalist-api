@@ -13,7 +13,9 @@ jobs:
       - image: circleci/node:10.13
       - image: circleci/postgres:11
         environment:
-          POSTGRES_DB=minimalist_test
+          POSTGRES_DB: minimalist_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
     steps:
       - checkout
       # Download and cache dependencies
