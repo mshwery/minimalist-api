@@ -49,7 +49,7 @@ function getDynamicCallbackURL(redirect?: string) {
 
 const router = express.Router()
 router.get('/connect/google', (req: Request, res: Response, next: NextFunction) => {
-  res.cookie('redirectTo', req.query.redirect, {
+  res.cookie('redirectTo', req.query.redirect || '/', {
     httpOnly: true,
     secure: config.get('ENV') === 'production',
     expires: addMinutes(new Date(), 10)
@@ -90,6 +90,7 @@ router.get(
     if (req.query.redirect) {
       redirect = decodeURIComponent(req.query.redirect) + `?token=${token}`
     } else if (req.cookies.redirectTo) {
+      res.clearCookie('redirectTo')
       redirect = req.cookies.redirectTo + `?token=${token}`
     }
 
