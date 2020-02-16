@@ -14,7 +14,7 @@ jobs:
       - image: circleci/postgres:11
         environment:
           POSTGRES_DB=minimalist_test
-          POSTGRES_USER=username
+          POSTGRES_USER=postgres
           POSTGRES_PASSWORD=password
     steps:
       - checkout
