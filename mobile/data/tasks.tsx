@@ -254,3 +254,49 @@ export function useUpdateTask(task: TaskType, listId: string) {
     }]
   })
 }
+
+const DeleteTask = gql`
+  mutation DeleteTask($input: DeleteTaskInput!) {
+    deleteTask(input: $input) {
+      id
+    }
+  }
+`
+
+interface DeleteTaskData {
+  __typename: 'Mutation',
+  deleteTask: {
+    __typename: 'DeleteTaskResponse'
+    id: null | string
+  }
+}
+
+export function useDeleteTask(listId: string) {
+  return useMutation<DeleteTaskData, { input: { id: string }}>(DeleteTask, {
+    optimisticResponse: ({ input }) => ({
+      __typename: 'Mutation',
+      deleteTask: {
+        __typename: 'DeleteTaskResponse',
+        id: input.id
+      }
+    }),
+    refetchQueries: [{
+      query: GetTasks,
+      variables: { listId, status: 'REMAINING' }
+    }],
+    update: (proxy, { data: { deleteTask } }) => {
+      // tslint:disable-next-line: no-console
+      console.log(deleteTask)
+      // Get the cached data
+      const data = proxy.readQuery<GetTasksData>({ query: GetTasks, variables: { listId, status: 'REMAINING' } })
+      // Write data back to the cache
+      proxy.writeQuery({
+        query: GetTasks,
+        variables: { listId, status: 'REMAINING' },
+        data: {
+          tasks: data.tasks.filter(t => t.id !== deleteTask.id)
+        }
+      })
+    }
+  })
+}
