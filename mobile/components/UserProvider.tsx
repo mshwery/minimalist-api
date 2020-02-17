@@ -4,9 +4,10 @@ import { AsyncStorage } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import { Context, defaultState, UserContext } from '../context/UserContext'
+import { API_URL } from '../config'
 import LoadingScreen from './LoadingScreen'
 import LoginScreen from './LoginScreen'
-import { Context, defaultState, UserContext } from '../context/UserContext'
 
 async function signIn() {
   // Retrieve the redirect URL (should be in the allowed callback urls list)
@@ -14,9 +15,8 @@ async function signIn() {
   console.log(`Redirect URL: ${redirectUrl}`)
 
   // Structure the auth parameters and URL
-  const origin = 'https://5a1f9651.ngrok.io'
   const query = `redirect=${encodeURIComponent(redirectUrl)}`
-  const authUrl = `${origin}/connect/google?${query}`
+  const authUrl = `${API_URL}/connect/google?${query}`
 
   // Perform the authentication
   const response = await AuthSession.startAsync({ authUrl })

@@ -1,8 +1,9 @@
 import ApolloClient from 'apollo-boost'
 import { AsyncStorage } from 'react-native'
+import { API_URL } from '../config'
 
 export const client = new ApolloClient({
-  uri: 'https://5a1f9651.ngrok.io/graphql',
+  uri: `${API_URL}/graphql`,
   request: async (operation) => {
     const token = await AsyncStorage.getItem('jwtToken')
     operation.setContext({
