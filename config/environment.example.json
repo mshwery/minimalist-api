@@ -3,7 +3,7 @@
   "ENV": "local",
   "JWT_SECRET": "sekret",
   "NODE_ENV": "development",
-  "PGUSER": "username",
+  "PGUSER": "postgres",
   "PGPASSWORD": "password",
   "PGDATABASE": "minimalist",
   "PGHOST": "localhost",

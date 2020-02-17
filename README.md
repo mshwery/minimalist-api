@@ -8,7 +8,7 @@ An api for managing tasks and lists of tasks.
 
 - Node >= 10.13
 - Yarn >= 1.15
-- Postgresql 9.6
+- Postgresql 11.6
 
 ## Getting Started
 

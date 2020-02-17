@@ -1,16 +1,26 @@
 import React, { useRef, useCallback } from 'react'
-import { StyleSheet, View, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
-import { useCreateTask, TaskType, useUpdateTask } from '../data/tasks'
+import { Alert, StyleSheet, Text, View, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
+import Touchable from 'react-native-platform-touchable'
+import { useCreateTask, TaskType, useUpdateTask, useDeleteTask } from '../data/tasks'
 import BottomSheet from './BottomSheet'
+import IconButton from './IconButton'
 
 const styles = StyleSheet.create({
   ModalContent: {
     paddingTop: 12,
-    paddingBottom: 32,
-    paddingHorizontal: 24,
+    paddingBottom: 6,
+    paddingLeft: 24,
+    paddingRight: 12
   },
   TaskInput: {
     fontSize: 16,
+  },
+  ActionTray: {
+    justifyContent: 'space-between',
+    minHeight: 24
+  },
+  DeleteButton: {
+    marginLeft: 'auto'
   }
 })
 
@@ -33,6 +43,27 @@ const EditTaskModal: React.FC<Props> = ({
   const newTaskRef = useRef<TextInput>()
   const [updateTask, updateTaskData] = useUpdateTask(task, listId)
   const [createTask, createTaskData] = useCreateTask(listId)
+  const [deleteTask] = useDeleteTask(listId)
+
+  const onDeleteTask = useCallback(async () => {
+    onRequestClose()
+    await deleteTask({ variables: {
+      input: {
+        id: task.id
+      }
+    }})
+  }, [deleteTask, task, listId])
+
+  const onRequestDelete = useCallback(() => {
+    Alert.alert(
+      'Are you sure?',
+      `"${task.content.length > 10 ? task.content.slice(0, 8) + '...' : task.content}" will be permanently deleted.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: onDeleteTask }
+      ]
+    )
+  }, [deleteTask, task, listId])
 
   const onSubmitEditing = useCallback(async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     Keyboard.dismiss()
@@ -98,6 +129,18 @@ const EditTaskModal: React.FC<Props> = ({
           returnKeyType='done'
           style={styles.TaskInput}
         />
+        <View style={styles.ActionTray}>
+          {task && task.id && (
+            <IconButton
+              size={20}
+              name='trash-2'
+              color='#E44343'
+              onPress={onRequestDelete}
+              style={styles.DeleteButton}
+              withHapticFeedback
+            />
+          )}
+        </View>
       </View>
     </BottomSheet>
   )
