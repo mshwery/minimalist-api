@@ -6,6 +6,23 @@ import { UserRepository } from '../user'
 
 @EntityRepository(List)
 export default class ListRepository extends Repository<List> {
+  public async findWithTasks(id: string): Promise<List | undefined> {
+    /**
+     * had to sort manually because `relations` doesn't respect the default entity sort
+     * @see {@link https://github.com/typeorm/typeorm/issues/2620}
+     */
+    return this.createQueryBuilder('list')
+      .select('list')
+      .leftJoinAndSelect('list.tasks', 'task')
+      .leftJoinAndSelect('list.users', 'user')
+      .where('list.id = :id', { id })
+      .orderBy({
+        'task.sortOrder': { order: 'ASC', nulls: 'NULLS LAST' },
+        'task.createdAt': 'ASC'
+      })
+      .getOne()
+  }
+
   /**
    * Get all lists for given user id
    * TODO: pagination?
