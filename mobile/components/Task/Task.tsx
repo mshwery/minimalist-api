@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import Touchable from 'react-native-platform-touchable'
-import IconButton from './IconButton'
-import { TaskType, useMarkComplete, useMarkIncomplete } from '../data/tasks'
+import IconButton from '../IconButton'
 
 const styles = StyleSheet.create({
   container: {
@@ -31,26 +30,18 @@ const styles = StyleSheet.create({
 })
 
 interface Props {
-  onRequestEdit?: (id: string) => void
+  content: string
+  isComplete: boolean
+  onPressCheckbox: () => void
+  onPressContainer: () => void
 }
 
-const Task: React.FC<TaskType & Props> = ({ onRequestEdit, ...task }) => {
-  const { content, isCompleted } = task
-  const [markCompleted] = useMarkComplete(task)
-  const [markIncomplete] = useMarkIncomplete(task)
-
-  const onPressContainer = useCallback(() => {
-    onRequestEdit(task.id)
-  }, [onRequestEdit])
-
-  const onPressCheckbox = useCallback(async () => {
-    if (isCompleted) {
-      await markIncomplete()
-    } else {
-      await markCompleted()
-    }
-  }, [isCompleted, markCompleted, markIncomplete])
-
+export const Task: React.FC<Props> = ({
+  content,
+  isComplete,
+  onPressCheckbox,
+  onPressContainer
+}) => {
   return (
     <Touchable
       style={styles.container}
@@ -60,15 +51,13 @@ const Task: React.FC<TaskType & Props> = ({ onRequestEdit, ...task }) => {
       <View style={styles.task}>
         <IconButton
           size={24}
-          name={isCompleted ? 'check' : 'circle'}
-          color={isCompleted ? '#2e8ae6' : '#a7aaba'}
+          name={isComplete ? 'check' : 'circle'}
+          color={isComplete ? '#2e8ae6' : '#a7aaba'}
           onPress={onPressCheckbox}
           withHapticFeedback
         />
-        <Text style={[styles.content, isCompleted && styles.completed]}>{content}</Text>
+        <Text style={[styles.content, isComplete && styles.completed]}>{content}</Text>
       </View>
     </Touchable>
   )
 }
-
-export default Task

@@ -1,6 +1,6 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { get } from 'lodash'
-import { getCustomRepository, FindOneOptions } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import config from '../../../config'
 import analytics from '../../lib/analytics'
 import { isEmail } from '../../lib/is-email'
@@ -45,15 +45,10 @@ export class ListModel {
       return null
     }
 
-    const findOptions: FindOneOptions = {
-      relations: ['users']
-    }
+    const list = get(options, 'withTasks')
+      ? await getCustomRepository(ListRepository).findWithTasks(id)
+      : await getCustomRepository(ListRepository).findOne(id, { relations: ['users'] })
 
-    if (get(options, 'withTasks')) {
-      findOptions.relations!.push('tasks')
-    }
-
-    const list = await getCustomRepository(ListRepository).findOne(id, findOptions)
     if (!list) {
       return null
     }
