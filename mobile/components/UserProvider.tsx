@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { AuthSession } from 'expo'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, Alert } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { Context, defaultState, UserContext } from '../context/UserContext'
+import { Context, UserContext } from '../context/UserContext'
 import { API_URL } from '../config'
 import LoadingScreen from './LoadingScreen'
 import LoginScreen from './LoginScreen'
@@ -52,7 +52,7 @@ const clearAppKeys = async () => {
 }
 
 export const UserProvider: React.FC<{}> = ({ children }) => {
-  const [context, setContext] = useState<Context>(defaultState)
+  const [user, setUser] = useState<Context['user']>(null)
   const { loading, data, error, refetch: refetchUser } = useQuery(GetCurrentUser)
 
   const login = useCallback(async () => {
@@ -74,18 +74,25 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
       // TODO: handle error
     }
 
-    setContext({ user, login, logout })
+    setUser(user)
     return user
-  }, [setContext, refetchUser])
+  }, [setUser, refetchUser])
 
   const logout = useCallback(async () => {
     await clearAppKeys()
-    setContext({
-      user: null,
-      login,
-      logout
-    })
-  }, [setContext])
+    setUser(null)
+  }, [setUser])
+
+  const requestLogout = useCallback(() => {
+    Alert.alert(
+      '',
+      'Log out of minimalist?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Log out', style: 'destructive', onPress: () => logout() }
+      ]
+    )
+  }, [logout])
 
   // anytime the user query changes, reset the state
   useEffect(
@@ -97,13 +104,15 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
       }
 
       if (error) {
-        void logout()
+        void logout() // directly logout (no prompt)
       } else {
-        setContext({ user, login, logout })
+        setUser(user)
       }
     },
     [loading, data, error]
   )
+
+  const context: Context = useMemo(() => ({ user, login, logout: requestLogout }), [user, login, requestLogout])
 
   return (
     <UserContext.Provider value={context}>

@@ -72,7 +72,7 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
   closeOnPressMask = true,
   closeOnSwipeDown = false,
   customStyles = {},
-  duration = 200,
+  duration = 100,
   height = 260,
   isVisible = false,
   onClose,

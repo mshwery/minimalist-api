@@ -1,6 +1,5 @@
 import React, { useRef, useCallback } from 'react'
-import { Alert, StyleSheet, Text, View, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
-import Touchable from 'react-native-platform-touchable'
+import { Alert, StyleSheet, View, TextInput, Keyboard, NativeSyntheticEvent, TextInputSubmitEditingEventData } from 'react-native'
 import { useCreateTask, TaskType, useUpdateTask, useDeleteTask } from '../data/tasks'
 import BottomSheet from './BottomSheet'
 import IconButton from './IconButton'
@@ -108,7 +107,6 @@ const EditTaskModal: React.FC<Props> = ({
           borderTopRightRadius: 10,
         }
       }}
-      duration={150}
       isVisible={isVisible}
       onClose={onClose}
       onOpen={onCreateTaskOpen}

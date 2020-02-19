@@ -9,13 +9,13 @@ export interface CurrentUser {
 
 export interface Context {
   login: () => Promise<null | CurrentUser>
-  logout: () => Promise<any>
+  logout: () => Promise<void> | void
   user: null | CurrentUser
 }
 
 export const defaultState = {
   login: async () => null,
-  logout: async () => {},
+  logout: () => {},
   user: null
 }
 
