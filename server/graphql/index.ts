@@ -3,6 +3,7 @@ import { Express } from 'express'
 import schema from './schema'
 import formatError from './formatError'
 import requireAuthentication from '../middleware/require-authentication'
+import config from '../../config'
 
 function context({ req }) {
   return {
@@ -16,7 +17,15 @@ const server = new ApolloServer({
   context,
   formatError,
   // enable introspection (in production mode, too)
-  introspection: true
+  introspection: true,
+  tracing: true,
+  engine:
+    config.get('NODE_ENV') === 'production'
+      ? {
+          graphVariant: 'current',
+          reportSchema: true
+        }
+      : undefined
 })
 
 export default function applyGraphQLMiddleware(app: Express): void {

@@ -66,7 +66,7 @@ router.get('/connect/google', (req: Request, res: Response, next: NextFunction) 
 router.get(
   '/connect/google/callback',
   (req: Request, res: Response, next: NextFunction) => {
-    const redirect = req.query.redirect ? decodeURIComponent(req.query.redirect) : '/'
+    const redirect = req.query.redirect ? decodeURIComponent(req.query.redirect as string) : '/'
     // @ts-ignore
     passport.authenticate('google', {
       failureRedirect: redirect,
@@ -88,7 +88,7 @@ router.get(
 
     let redirect = '/'
     if (req.query.redirect) {
-      redirect = decodeURIComponent(req.query.redirect) + `?token=${token}`
+      redirect = decodeURIComponent(req.query.redirect as string) + `?token=${token}`
     } else if (req.cookies.redirectTo) {
       res.clearCookie('redirectTo')
       redirect = req.cookies.redirectTo + `?token=${token}`
