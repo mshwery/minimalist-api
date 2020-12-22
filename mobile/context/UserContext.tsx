@@ -16,7 +16,7 @@ export interface Context {
 export const defaultState = {
   login: async () => null,
   logout: () => {},
-  user: null
+  user: null,
 }
 
 export const UserContext = React.createContext<Context>(defaultState)

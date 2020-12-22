@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm'
 const sortOrderColumn = new TableColumn({
   name: 'sortOrder',
   type: 'integer',
-  isNullable: true
+  isNullable: true,
 })
 
 export class AddSortOrderToTask1548647682319 implements MigrationInterface {

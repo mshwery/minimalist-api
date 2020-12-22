@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm'
 const googleIdColumn = new TableColumn({
   name: 'googleId',
   type: 'text',
-  isNullable: true
+  isNullable: true,
 })
 
 export class AddGoogleIdToUsers1555823291713 implements MigrationInterface {

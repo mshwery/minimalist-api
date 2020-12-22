@@ -21,6 +21,7 @@ Once you've got Node/yarn installed you can run `yarn install` to install app de
 This project uses Docker for local development, and the Dockerfile can also be used for production. `docker-compose` provides a clean interface for doing local development and overriding production defaults.
 
 #### Requirements to run via Docker
+
 - `Docker` must be installed
 - Have postgres configured in `environment.json`. If you don't want to locally install postgres but would rather connect to a remote instance you will need to change the `PGHOST` environment variable specified in `docker-compose`
 

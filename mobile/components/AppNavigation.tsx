@@ -24,14 +24,16 @@ const AppNavigation: React.FC<{}> = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <Sidebar drawerProps={props} isLoading={loading} error={error} refetchLists={refetch} />}
+      drawerContent={(props) => (
+        <Sidebar drawerProps={props} isLoading={loading} error={error} refetchLists={refetch} />
+      )}
       drawerContentOptions={{
         itemStyle: {
-          marginTop: 0
-        }
+          marginTop: 0,
+        },
       }}
       drawerStyle={{
-        width: '80%'
+        width: '80%',
       }}
       edgeWidth={60}
       minSwipeDistance={20}
@@ -39,31 +41,31 @@ const AppNavigation: React.FC<{}> = () => {
     >
       {loading || error ? (
         // We haven't finished fetching lists yet
-        <Drawer.Screen name='Splash' component={LoadingScreen} />
+        <Drawer.Screen name="Splash" component={LoadingScreen} />
       ) : (
         <>
           <Drawer.Screen
-            name='Inbox'
+            name="Inbox"
             component={ListScreen}
             options={{
-              drawerIcon: createDrawerIcon('inbox')
+              drawerIcon: createDrawerIcon('inbox'),
             }}
             initialParams={{
               id: 'inbox',
-              name: 'Inbox'
+              name: 'Inbox',
             }}
           />
-          {data.lists.map(list => (
+          {data.lists.map((list) => (
             <Drawer.Screen
               key={list.id}
               name={list.name}
               component={ListScreen}
               options={{
-                drawerIcon: createDrawerIcon('menu')
+                drawerIcon: createDrawerIcon('menu'),
               }}
               initialParams={{
                 id: list.id,
-                name: list.name
+                name: list.name,
               }}
             />
           ))}

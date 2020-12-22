@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     textAlign: 'center',
     fontSize: 18,
-    lineHeight: lineHeight(18, 1.4)
-  }
+    lineHeight: lineHeight(18, 1.4),
+  },
 })
 
 interface Props {
@@ -33,15 +33,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LogoMark />
-      <Text style={styles.description}>
-        The simplest way to keep track of the stuff you want to do.
-      </Text>
-      <Button title='Sign in with Google' onPress={async () => {
-        const user = await login()
-        if (user) {
-          navigation.navigate('App')
-        }
-      }} />
+      <Text style={styles.description}>The simplest way to keep track of the stuff you want to do.</Text>
+      <Button
+        title="Sign in with Google"
+        onPress={async () => {
+          const user = await login()
+          if (user) {
+            navigation.navigate('App')
+          }
+        }}
+      />
     </View>
   )
 }

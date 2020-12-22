@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm'
 const dueColumn = new TableColumn({
   name: 'due',
   type: 'timestamp with time zone',
-  isNullable: true
+  isNullable: true,
 })
 
 export class AddDueDateToTasks1575482104279 implements MigrationInterface {

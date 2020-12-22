@@ -7,33 +7,33 @@ const ListsUsers = new Table({
       name: 'listId',
       type: 'uuid',
       isNullable: false,
-      isPrimary: true
+      isPrimary: true,
     },
     {
       name: 'userId',
       type: 'uuid',
       isNullable: false,
-      isPrimary: true
-    }
+      isPrimary: true,
+    },
   ],
   foreignKeys: [
     new TableForeignKey({
       columnNames: ['listId'],
       referencedColumnNames: ['id'],
-      referencedTableName: 'lists'
+      referencedTableName: 'lists',
     }),
     new TableForeignKey({
       columnNames: ['userId'],
       referencedColumnNames: ['id'],
-      referencedTableName: 'users'
-    })
+      referencedTableName: 'users',
+    }),
   ],
   indices: [
     {
       columnNames: ['listId', 'userId'],
-      isUnique: true
-    }
-  ]
+      isUnique: true,
+    },
+  ],
 })
 
 export class CreateListsUsersTable1573521910560 implements MigrationInterface {

@@ -84,48 +84,41 @@ export const UserProvider: React.FC<{}> = ({ children }) => {
   }, [setUser])
 
   const requestLogout = useCallback(() => {
-    Alert.alert(
-      '',
-      'Log out of minimalist?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Log out', style: 'destructive', onPress: () => logout() }
-      ]
-    )
+    Alert.alert('', 'Log out of minimalist?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Log out', style: 'destructive', onPress: () => logout() },
+    ])
   }, [logout])
 
   // anytime the user query changes, reset the state
-  useEffect(
-    () => {
-      let user = null
+  useEffect(() => {
+    let user = null
 
-      if (data) {
-        user = data.me
-      }
+    if (data) {
+      user = data.me
+    }
 
-      if (error) {
-        void logout() // directly logout (no prompt)
-      } else {
-        setUser(user)
-      }
-    },
-    [loading, data, error]
-  )
+    if (error) {
+      void logout() // directly logout (no prompt)
+    } else {
+      setUser(user)
+    }
+  }, [loading, data, error])
 
   const context: Context = useMemo(() => ({ user, login, logout: requestLogout }), [user, login, requestLogout])
 
   return (
     <UserContext.Provider value={context}>
-      <AuthStack.Navigator headerMode='none'>
+      <AuthStack.Navigator headerMode="none">
         {loading ? (
           // We haven't finished checking for the token yet
-          <AuthStack.Screen name='Splash' component={LoadingScreen} />
+          <AuthStack.Screen name="Splash" component={LoadingScreen} />
         ) : context.user === null ? (
           // User isn't signed in
-          <AuthStack.Screen name='Log In' component={LoginScreen} />
+          <AuthStack.Screen name="Log In" component={LoginScreen} />
         ) : (
           // User is signed in, so return child routes/components
-          <AuthStack.Screen name='App' component={() => <>{children}</>} />
+          <AuthStack.Screen name="App" component={() => <>{children}</>} />
         )}
       </AuthStack.Navigator>
     </UserContext.Provider>

@@ -35,9 +35,9 @@ export function useGetTasks(listId: string) {
   return useQuery<GetTasksData>(GetTasks, {
     variables: {
       listId,
-      status: 'REMAINING'
+      status: 'REMAINING',
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   })
 }
 
@@ -59,12 +59,14 @@ const CompleteTask = gql`
 `
 
 interface CompleteTaskData {
-  __typename: 'Mutation',
+  __typename: 'Mutation'
   completeTask: {
     __typename: 'CompleteTaskResponse'
-    task: null | (TaskType & {
-      __typename: 'Task'
-    })
+    task:
+      | null
+      | (TaskType & {
+          __typename: 'Task'
+        })
   }
 }
 
@@ -72,8 +74,8 @@ export function useMarkComplete(task: TaskType) {
   return useMutation<CompleteTaskData>(CompleteTask, {
     variables: {
       input: {
-        id: task.id
-      }
+        id: task.id,
+      },
     },
     optimisticResponse: {
       __typename: 'Mutation',
@@ -85,10 +87,10 @@ export function useMarkComplete(task: TaskType) {
           id: task.id,
           isCompleted: true,
           updatedAt: new Date().toISOString(),
-          completedAt: new Date().toISOString()
-        }
-      }
-    }
+          completedAt: new Date().toISOString(),
+        },
+      },
+    },
   })
 }
 
@@ -110,12 +112,14 @@ const ReopenTask = gql`
 `
 
 interface ReopenTaskData {
-  __typename: 'Mutation',
+  __typename: 'Mutation'
   reopenTask: {
     __typename: 'ReopenTaskResponse'
-    task: null | (TaskType & {
-      __typename: 'Task'
-    })
+    task:
+      | null
+      | (TaskType & {
+          __typename: 'Task'
+        })
   }
 }
 
@@ -123,8 +127,8 @@ export function useMarkIncomplete(task: TaskType) {
   return useMutation<ReopenTaskData>(ReopenTask, {
     variables: {
       input: {
-        id: task.id
-      }
+        id: task.id,
+      },
     },
     optimisticResponse: {
       __typename: 'Mutation',
@@ -136,10 +140,10 @@ export function useMarkIncomplete(task: TaskType) {
           id: task.id,
           isCompleted: false,
           updatedAt: new Date().toISOString(),
-          completedAt: null
-        }
-      }
-    }
+          completedAt: null,
+        },
+      },
+    },
   })
 }
 
@@ -161,17 +165,19 @@ const CreateTask = gql`
 `
 
 interface CreateTaskData {
-  __typename: 'Mutation',
+  __typename: 'Mutation'
   createTask: {
     __typename: 'CreateTaskResponse'
-    task: null | (TaskType & {
-      __typename: 'Task'
-    })
+    task:
+      | null
+      | (TaskType & {
+          __typename: 'Task'
+        })
   }
 }
 
 export function useCreateTask(listId: string) {
-  return useMutation<CreateTaskData, { input: { listId?: string, content: string }}>(CreateTask, {
+  return useMutation<CreateTaskData, { input: { listId?: string; content: string } }>(CreateTask, {
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       createTask: {
@@ -184,14 +190,16 @@ export function useCreateTask(listId: string) {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           completedAt: null,
-          sortOrder: null
-        }
-      }
+          sortOrder: null,
+        },
+      },
     }),
-    refetchQueries: [{
-      query: GetTasks,
-      variables: { listId, status: 'REMAINING' }
-    }],
+    refetchQueries: [
+      {
+        query: GetTasks,
+        variables: { listId, status: 'REMAINING' },
+      },
+    ],
     update: (proxy, { data: { createTask } }) => {
       // Get the cached data
       const data = proxy.readQuery<GetTasksData>({ query: GetTasks, variables: { listId, status: 'REMAINING' } })
@@ -200,10 +208,10 @@ export function useCreateTask(listId: string) {
         query: GetTasks,
         variables: { listId, status: 'REMAINING' },
         data: {
-          tasks: [...data.tasks, createTask.task]
-        }
+          tasks: [...data.tasks, createTask.task],
+        },
       })
-    }
+    },
   })
 }
 
@@ -225,17 +233,19 @@ const UpdateTask = gql`
 `
 
 interface UpdateTaskData {
-  __typename: 'Mutation',
+  __typename: 'Mutation'
   updateTask: {
     __typename: 'UpdateTaskResponse'
-    task: null | (TaskType & {
-      __typename: 'Task'
-    })
+    task:
+      | null
+      | (TaskType & {
+          __typename: 'Task'
+        })
   }
 }
 
 export function useUpdateTask(task: TaskType, listId: string) {
-  return useMutation<UpdateTaskData, { input: { id: string, content: string }}>(UpdateTask, {
+  return useMutation<UpdateTaskData, { input: { id: string; content: string } }>(UpdateTask, {
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       updateTask: {
@@ -244,14 +254,16 @@ export function useUpdateTask(task: TaskType, listId: string) {
           __typename: 'Task',
           ...task,
           ...input,
-          updatedAt: new Date().toISOString()
-        }
-      }
+          updatedAt: new Date().toISOString(),
+        },
+      },
     }),
-    refetchQueries: [{
-      query: GetTasks,
-      variables: { listId, status: 'REMAINING' }
-    }]
+    refetchQueries: [
+      {
+        query: GetTasks,
+        variables: { listId, status: 'REMAINING' },
+      },
+    ],
   })
 }
 
@@ -264,7 +276,7 @@ const DeleteTask = gql`
 `
 
 interface DeleteTaskData {
-  __typename: 'Mutation',
+  __typename: 'Mutation'
   deleteTask: {
     __typename: 'DeleteTaskResponse'
     id: null | string
@@ -272,18 +284,20 @@ interface DeleteTaskData {
 }
 
 export function useDeleteTask(listId: string) {
-  return useMutation<DeleteTaskData, { input: { id: string }}>(DeleteTask, {
+  return useMutation<DeleteTaskData, { input: { id: string } }>(DeleteTask, {
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       deleteTask: {
         __typename: 'DeleteTaskResponse',
-        id: input.id
-      }
+        id: input.id,
+      },
     }),
-    refetchQueries: [{
-      query: GetTasks,
-      variables: { listId, status: 'REMAINING' }
-    }],
+    refetchQueries: [
+      {
+        query: GetTasks,
+        variables: { listId, status: 'REMAINING' },
+      },
+    ],
     update: (proxy, { data: { deleteTask } }) => {
       // Get the cached data
       const data = proxy.readQuery<GetTasksData>({ query: GetTasks, variables: { listId, status: 'REMAINING' } })
@@ -292,9 +306,9 @@ export function useDeleteTask(listId: string) {
         query: GetTasks,
         variables: { listId, status: 'REMAINING' },
         data: {
-          tasks: data.tasks.filter(t => t.id !== deleteTask.id)
-        }
+          tasks: data.tasks.filter((t) => t.id !== deleteTask.id),
+        },
       })
-    }
+    },
   })
 }

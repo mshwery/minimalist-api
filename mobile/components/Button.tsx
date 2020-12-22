@@ -6,7 +6,7 @@ import { pickBy, omitBy } from 'lodash'
 
 const styles = StyleSheet.create({
   Container: {
-    borderRadius: 8
+    borderRadius: 8,
   },
   Inner: {
     flexGrow: 1,
@@ -20,11 +20,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e8ae6',
     color: 'white',
     fontSize: 15,
-    minHeight: 32
+    minHeight: 32,
   },
   Disabled: {
-    backgroundColor: '#A6B1BB'
-  }
+    backgroundColor: '#A6B1BB',
+  },
 })
 
 interface Props {
@@ -58,7 +58,7 @@ const Button: React.FC<React.ComponentProps<typeof Touchable> & Props> = ({
         style={[styles.Container, styles.Button, innerStyles, disabled && styles.Disabled]}
         {...props}
         onPress={disabled ? undefined : onPress}
-        onPressIn={() => withHapticFeedback ? Vibration.vibrate(3) : undefined}
+        onPressIn={() => (withHapticFeedback ? Vibration.vibrate(3) : undefined)}
       >
         <View style={styles.Inner}>
           {iconBefore && <Feather name={iconBefore} size={iconSize} color={color} style={{ marginRight: 12 }} />}

@@ -2,12 +2,7 @@
 // https://github.com/nysamnang/react-native-raw-bottom-sheet
 // but using only translate animations instead of height
 
-import React, {
-  ReactNode,
-  FunctionComponent,
-  useState,
-  useEffect
-} from 'react'
+import React, { ReactNode, FunctionComponent, useState, useEffect } from 'react'
 import {
   Animated,
   Keyboard,
@@ -21,24 +16,24 @@ import {
   TouchableOpacity,
   View,
   ViewProps,
-  ViewStyle
+  ViewStyle,
 } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: '#00000077'
+    backgroundColor: '#00000077',
   },
   mask: {
     flex: 1,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   container: {
     backgroundColor: '#fff',
     width: '100%',
-    overflow: 'hidden'
-  }
+    overflow: 'hidden',
+  },
 })
 
 const SUPPORTED_ORIENTATIONS: ModalPropsIOS['supportedOrientations'] = [
@@ -46,7 +41,7 @@ const SUPPORTED_ORIENTATIONS: ModalPropsIOS['supportedOrientations'] = [
   'portrait-upside-down',
   'landscape',
   'landscape-left',
-  'landscape-right'
+  'landscape-right',
 ]
 
 interface BottomSheetProps {
@@ -77,15 +72,17 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
   isVisible = false,
   onClose,
   onOpen,
-  onRequestClose
+  onRequestClose,
 }) => {
   const [modalVisible, setModalVisibility] = useState(isVisible)
   const insets = useSafeArea()
   const [currentHeight, setCurrentHeight] = useState(height)
-  const [pan] = useState(new Animated.ValueXY({
-    x: 0,
-    y: currentHeight
-  }))
+  const [pan] = useState(
+    new Animated.ValueXY({
+      x: 0,
+      y: currentHeight,
+    })
+  )
 
   // Transition modal when visibility prop changes
   useEffect(() => toggleModal(isVisible), [isVisible])
@@ -105,7 +102,7 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
       Keyboard.dismiss()
       Animated.timing(pan, {
         toValue: { x: 0, y: currentHeight },
-        duration
+        duration,
       }).start(() => {
         setModalVisibility(false)
         if (typeof onClose === 'function') {
@@ -133,22 +130,25 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
           bounciness: 0,
         }).start()
       }
-    }
+    },
   })
 
-  const handleChildrenLayout: ViewProps['onLayout'] = event => {
+  const handleChildrenLayout: ViewProps['onLayout'] = (event) => {
     setCurrentHeight(event.nativeEvent.layout.height)
   }
 
   const animatedViewStyles = {
-    transform: pan.getTranslateTransform()
+    transform: pan.getTranslateTransform(),
   }
 
   const safeAreaStyles = {
-    paddingBottom: Platform.select({ ios: insets.bottom, android: 8 })
+    paddingBottom: Platform.select({ ios: insets.bottom, android: 8 }),
   }
 
-  const KeyboardAvoidingComponent = Platform.select<typeof KeyboardAvoidingView | typeof View>({ ios: KeyboardAvoidingView, android: View })
+  const KeyboardAvoidingComponent = Platform.select<typeof KeyboardAvoidingView | typeof View>({
+    ios: KeyboardAvoidingView,
+    android: View,
+  })
 
   return (
     <Modal
@@ -159,10 +159,7 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
       onRequestClose={onRequestClose}
     >
       <ScrollView
-        contentContainerStyle={[
-          styles.wrapper,
-          customStyles.wrapper
-        ]}
+        contentContainerStyle={[styles.wrapper, customStyles.wrapper]}
         keyboardShouldPersistTaps={closeOnPressMask ? 'handled' : 'never'}
       >
         <TouchableOpacity
@@ -170,16 +167,12 @@ const BottomSheet: FunctionComponent<BottomSheetProps> = ({
           activeOpacity={1}
           onPress={closeOnPressMask ? onRequestClose : undefined}
         />
-        <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined})}>
+        <KeyboardAvoidingComponent behavior={Platform.select({ ios: 'padding', android: undefined })}>
           <View onLayout={handleChildrenLayout}>
             <Animated.View
               {...panResponder.panHandlers}
-              style={[
-                styles.container,
-                customStyles.container,
-                safeAreaStyles,
-                animatedViewStyles
-              ]}>
+              style={[styles.container, customStyles.container, safeAreaStyles, animatedViewStyles]}
+            >
               {children || <View />}
             </Animated.View>
           </View>

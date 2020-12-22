@@ -15,6 +15,6 @@ module.exports = {
   migrations: ['dist/migrations/*.js'],
   cli: {
     // where migrations get created from the cli
-    migrationsDir: 'migrations'
-  }
+    migrationsDir: 'migrations',
+  },
 }

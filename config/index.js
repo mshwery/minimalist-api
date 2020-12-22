@@ -11,9 +11,6 @@ const config = nconf
   .file(path.resolve(__dirname, 'environment.json'))
 
 /** required environment variables */
-config.required([
-  'JWT_SECRET',
-  'PGDATABASE'
-])
+config.required(['JWT_SECRET', 'PGDATABASE'])
 
 module.exports = config
