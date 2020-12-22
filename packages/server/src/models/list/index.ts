@@ -133,7 +133,7 @@ export class ListModel {
       .then((l) => {
         analytics.track({
           event: 'List Archived',
-          userId: viewer,
+          userId: viewer!,
           properties: {
             listId: l.id,
           },
@@ -157,7 +157,7 @@ export class ListModel {
       .then((l) => {
         analytics.track({
           event: 'List Unarchived',
-          userId: viewer,
+          userId: viewer!,
           properties: {
             listId: l.id,
           },
@@ -273,7 +273,7 @@ export class ListModel {
 
       analytics.track({
         event: 'Removed User From List',
-        userId: viewer,
+        userId: viewer!,
         properties: {
           listId: list.id,
           uninvited: email,
@@ -302,7 +302,7 @@ export class ListModel {
 
     analytics.track({
       event: 'Left List',
-      userId: viewer,
+      userId: viewer!,
       properties: {
         listId: list.id,
       },

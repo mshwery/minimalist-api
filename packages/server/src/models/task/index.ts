@@ -183,7 +183,7 @@ export class TaskModel {
       .then((t) => {
         analytics.track({
           event: 'Task Updated',
-          userId: viewer,
+          userId: viewer!,
           properties: {
             listId: t.listId,
             taskId: t.id,
@@ -232,7 +232,7 @@ export class TaskModel {
 
     analytics.track({
       event: 'Task Deleted',
-      userId: viewer,
+      userId: viewer!,
       properties: {
         listId: task.listId,
         taskId: task.id,

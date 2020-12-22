@@ -17,7 +17,7 @@
     "esModuleInterop": true,
     "lib": ["esnext"]
   },
-  "exclude": ["node_modules", "./dist"],
-  "include": ["./server/**/*.ts", "./migrations/*.ts", "./config/environment.json"],
-  "files": ["./server/index.ts"]
+  "exclude": ["node_modules", "dist"],
+  "include": ["src/**/*.ts", "migrations/**/*.ts", "config/environment.json"],
+  "files": ["src/index.ts"]
 }

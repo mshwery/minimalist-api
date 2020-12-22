@@ -1,6 +1,6 @@
 import path from 'path'
 import { ConnectionOptions, Connection } from 'typeorm'
-import initConnection from '../server/lib/database'
+import initConnection from '../src/lib/database'
 import config from '../config'
 
 const options: Partial<ConnectionOptions> = {
