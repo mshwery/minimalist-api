@@ -321,10 +321,9 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             <InlineEdit
               flex='1 0 auto'
               overflow='hidden'
-              startInEditMode
               editView={(
                 <Input
-                  innerRef={this.nameRef}
+                  ref={this.nameRef}
                   defaultValue={name}
                   placeholder={placeholder}
                   autoFocus
@@ -336,7 +335,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                   fontFamily='inherit'
                   lineHeight='inherit'
                   color='inherit'
-                  style={{ outline: 'none' }}
+                  outline='none'
                 />
               )}
               readView={(

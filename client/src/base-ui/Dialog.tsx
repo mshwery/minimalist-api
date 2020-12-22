@@ -58,7 +58,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
     <Portal>
       <Overlay>
         <Box
-          innerRef={ref}
+          ref={ref}
           role='dialog'
           aria-modal
           tabIndex={-1}

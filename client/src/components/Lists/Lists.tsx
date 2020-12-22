@@ -17,7 +17,7 @@ interface Props {
 
 const Lists: React.FunctionComponent<Props> = (props) => {
   const { pathname } = useLocation()
-  const nameRef = useRef<HTMLInputElement>()
+  const nameRef = useRef<HTMLInputElement>(null)
   const [isDialogShown, setIsDialogShown] = useState(false)
 
   return (
@@ -51,7 +51,7 @@ const Lists: React.FunctionComponent<Props> = (props) => {
             <Input
               autoFocus
               placeholder='Name'
-              innerRef={nameRef}
+              ref={nameRef}
               width='100%'
             />
           </Pane>

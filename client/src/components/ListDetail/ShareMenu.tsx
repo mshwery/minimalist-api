@@ -35,7 +35,7 @@ interface Props {
 
 export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) => {
   const [isDialogShown, setIsDialogShown] = useState(false)
-  const emailRef = useRef<HTMLInputElement>()
+  const emailRef = useRef<HTMLInputElement>(null)
   const history = useHistory()
   const userContext = useCurrentUser()
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
@@ -106,7 +106,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
             <Input
               autoFocus
               placeholder='Enter an email address and press enter to send an invite'
-              innerRef={emailRef}
+              ref={emailRef}
               type='email'
               width='100%'
               disabled={isUpdating}
