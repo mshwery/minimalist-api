@@ -17,9 +17,8 @@ export const MenuItem: React.FunctionComponent<MenuStateReturn & React.Component
     fontWeight={400}
     cursor='pointer'
     color={colors.text.default}
+    outline='none'
     className={cx(props.className, css`
-      outline: none;
-
       &:hover,
       &:focus {
         background-color: ${colors.fill.secondary}30;
@@ -39,7 +38,7 @@ export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProp
       overflow='auto'
       paddingY={scale(0.5)}
       marginTop={scale(0.5)}
-      className={css`outline: none;`}
+      outline='none'
     />
   )
 }

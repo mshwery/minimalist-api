@@ -39,9 +39,9 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       role='tab'
       cursor='pointer'
       color={colors.text.default}
+      outline='none'
+      fontWeight={isSelected ? 500 : 'normal'}
       className={css`
-        font-weight: ${isSelected ? 500 : 'normal'};
-        outline: none;
         background-color: ${isSelected ? `${colors.fill.primary}30` : 'transparent'};
 
         &:hover {

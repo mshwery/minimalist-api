@@ -22,7 +22,7 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({ email = '', i
         alignItems='center'
         marginBottom={marginBottom}
         cursor='pointer'
-        className={css`outline: none;`}
+        outline='none'
       >
         {image && <Avatar src={image} size={scale(5)} marginRight={scale(2)} />}
         <Pane flex='1' display='flex' flexDirection='column' overflow='hidden' marginRight={scale(1)}>

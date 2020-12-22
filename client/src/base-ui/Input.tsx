@@ -17,9 +17,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typ
       borderRadius={3}
       appearance='none'
       border={`1px solid ${colors.fill.muted}`}
+      outline='none'
       className={css`
-        outline: none;
-
         &:focus {
           border-color: ${colors.fill.primary};
         }
