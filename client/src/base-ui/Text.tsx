@@ -51,7 +51,7 @@ export const Text = React.forwardRef<HTMLSpanElement, TextProps & BaseUIProps>((
   return (
     <Box
       is='span'
-      innerRef={ref}
+      ref={ref}
       fontSize={fontSize}
       color={textColor}
       {...props}

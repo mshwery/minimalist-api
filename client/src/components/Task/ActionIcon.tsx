@@ -10,7 +10,6 @@ export const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Ico
     outline='none'
     tabIndex={0}
     className={cx(className, css`
-      outline: none;
       height: 30px;
 
       &:focus {

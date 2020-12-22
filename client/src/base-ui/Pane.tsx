@@ -37,7 +37,7 @@ export const Pane = React.forwardRef<HTMLElement, PaneProps & BaseUIProps>(({
   return (
     <Box
       {...getElevationStyle(elevation)}
-      innerRef={ref}
+      ref={ref}
       {...props}
     />
   )

@@ -10877,10 +10877,10 @@ uglify-js@^3.1.4:
     commander "~2.20.3"
     source-map "~0.6.1"
 
-ui-box@^3.0.1:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/ui-box/-/ui-box-3.0.2.tgz#5bd2ddc17386aeae3ef9547a81133f95368dfc1e"
-  integrity sha512-sYLqAGkylBPIhY1/AqLAdUKXdN1M3fpCcvZsIKn15Faiu7lqd0MkKlaRp/m89h8j0SM4OBUVF05T8pATljWnpg==
+ui-box@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ui-box/-/ui-box-4.1.0.tgz#b262e2060c72e93938062ef9e7399e3acc4a9414"
+  integrity sha512-nwMlFcNus6m/Id0rSlznIsvrEnTdUbgn+aLipoTGqRzsjpm55KOvl/9Z0ta+632WwQ76mOhOuk75bovI1VLqfw==
   dependencies:
     "@emotion/hash" "^0.7.1"
     inline-style-prefixer "^5.0.4"
