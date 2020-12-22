@@ -43,18 +43,12 @@ function getTextColor(color?: Color) {
   return colors[color] || color
 }
 
-export const Text = React.forwardRef<HTMLSpanElement, TextProps & BaseUIProps>(({ size = 400, color, ...props }, ref) => {
-  const fontSize = getFontSize(size)
-  const textColor = getTextColor(color)
+export const Text = React.forwardRef<HTMLSpanElement, TextProps & BaseUIProps>(
+  ({ size = 400, color, ...props }, ref) => {
+    const fontSize = getFontSize(size)
+    const textColor = getTextColor(color)
 
-  // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
-  return (
-    <Box
-      is='span'
-      ref={ref}
-      fontSize={fontSize}
-      color={textColor}
-      {...props}
-    />
-  )
-})
+    // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
+    return <Box is="span" ref={ref} fontSize={fontSize} color={textColor} {...props} />
+  }
+)

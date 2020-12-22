@@ -18,9 +18,9 @@ const App: React.FunctionComponent<{}> = () => (
       <main>
         <Switch>
           {/* Temporarily redirect while we have no landing page */}
-          <Redirect from='/' to='/lists/inbox' exact />
-          <Route path='/login' component={LoginPage} />
-          <PrivateRoute path='/lists' component={ListsPage} />
+          <Redirect from="/" to="/lists/inbox" exact />
+          <Route path="/login" component={LoginPage} />
+          <PrivateRoute path="/lists" component={ListsPage} />
         </Switch>
       </main>
     </Router>

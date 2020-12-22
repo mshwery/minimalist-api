@@ -32,7 +32,6 @@ function getFontSize(size?: number) {
   return fontSizes[size]
 }
 
-
 function getTextColor(color?: Color) {
   return color
 }
@@ -46,7 +45,7 @@ export class Heading extends PureComponent<HeadingProps & BaseUIProps> {
     // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
     return (
       <Box
-        is='h1'
+        is="h1"
         color={textColor}
         fontSize={fontSize}
         fontWeight={500}

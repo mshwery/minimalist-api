@@ -36,9 +36,9 @@ export const CreateNewTask: React.FunctionComponent<Props> = ({ onDoneEditing })
 
   return (
     <TextButton
-      color='muted'
-      width='100%'
-      justifyContent='flex-start'
+      color="muted"
+      width="100%"
+      justifyContent="flex-start"
       onClick={() => toggleEditMode(true)}
       className={css`
         min-height: 30px;

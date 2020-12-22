@@ -101,9 +101,7 @@ export class Task extends React.Component<Props, State> {
     const isOptimisticallyCompleted = event.target.checked
     this.setState({ optimisticChecked: isOptimisticallyCompleted })
 
-    const callback = isOptimisticallyCompleted
-      ? this.props.onMarkComplete
-      : this.props.onMarkIncomplete
+    const callback = isOptimisticallyCompleted ? this.props.onMarkComplete : this.props.onMarkIncomplete
 
     if (typeof callback === 'function') {
       callback(event)
@@ -128,8 +126,8 @@ export class Task extends React.Component<Props, State> {
 
     return (
       <Pane
-        display='flex'
-        alignItems='flex-start'
+        display="flex"
+        alignItems="flex-start"
         marginLeft={scale(-3)}
         marginRight={scale(-1)}
         paddingRight={scale(1)}

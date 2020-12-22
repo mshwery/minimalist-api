@@ -14,23 +14,15 @@ export const Sidebar: React.FunctionComponent<Props> = ({ children, isOpen, requ
   return (
     <>
       {isTabletOrMobile && isOpen && (
-        <Pane
-          position='fixed'
-          left={0}
-          top={0}
-          right={0}
-          bottom={0}
-          zIndex={2}
-          onClick={requestSideBarClose}
-        />
+        <Pane position="fixed" left={0} top={0} right={0} bottom={0} zIndex={2} onClick={requestSideBarClose} />
       )}
       <Pane
-        position='relative'
+        position="relative"
         backgroundColor={colors.fill.background}
-        flex='none'
+        flex="none"
         width={scale(35)}
-        minHeight='100vh'
-        overflowY='auto'
+        minHeight="100vh"
+        overflowY="auto"
         padding={scale(3)}
         className={css`
           z-index: 2;

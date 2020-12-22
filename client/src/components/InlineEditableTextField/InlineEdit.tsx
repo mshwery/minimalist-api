@@ -2,11 +2,7 @@ import React, { useState } from 'react'
 import InlineEditUncontrolled, { InlineEditProps } from './InlineEditUncontrolled'
 import { BaseUIProps } from '../../base-ui/types'
 
-type Props = Omit<InlineEditProps,
-  | 'onCancel'
-  | 'isEditing'
-  | 'onEditRequested'
-> & {
+type Props = Omit<InlineEditProps, 'onCancel' | 'isEditing' | 'onEditRequested'> & {
   startInEditMode?: boolean
 }
 

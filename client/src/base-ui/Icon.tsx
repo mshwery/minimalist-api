@@ -9,10 +9,20 @@ interface Props {
   size?: string | number
 }
 
-export const Icon = React.forwardRef<HTMLElement, Props & BaseUIProps>(({ icon: IconComponent, color, size = scale(2.5), ...props }, ref) => {
-  return (
-    <Box cursor='pointer' display='inline-flex' flex='none' alignItems='center' justifyContent='center' ref={ref} {...props}>
-      <IconComponent color={color} size={size} />
-    </Box>
-  )
-})
+export const Icon = React.forwardRef<HTMLElement, Props & BaseUIProps>(
+  ({ icon: IconComponent, color, size = scale(2.5), ...props }, ref) => {
+    return (
+      <Box
+        cursor="pointer"
+        display="inline-flex"
+        flex="none"
+        alignItems="center"
+        justifyContent="center"
+        ref={ref}
+        {...props}
+      >
+        <IconComponent color={color} size={size} />
+      </Box>
+    )
+  }
+)

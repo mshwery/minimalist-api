@@ -28,14 +28,14 @@ import { CreateNewTask } from './CreateNewTask'
 import { ListMenu } from './ListMenu'
 import { ShareMenu } from './ShareMenu'
 
-const Container: React.FunctionComponent<any> = (props) => (
+const Container: React.FunctionComponent<any> = props => (
   <Pane
     {...props}
-    flex='none'
-    width='100%'
+    flex="none"
+    width="100%"
     maxWidth={scale(90)}
     minWidth={scale(40)}
-    minHeight='100vh'
+    minHeight="100vh"
     className={css`
       padding: ${scale(4)}px ${scale(6)}px;
 
@@ -300,16 +300,21 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
     return (
       <Container onClick={this.props.requestSideBarClose}>
-        <Heading display='flex' paddingBottom={scale(2)} alignItems='center'>
-          <Pane display='inline-flex' marginRight={scale(1)} flex='none' className={css`
-            @media (min-width: 1224px) {
-              display: none;
-            }
-          `}>
+        <Heading display="flex" paddingBottom={scale(2)} alignItems="center">
+          <Pane
+            display="inline-flex"
+            marginRight={scale(1)}
+            flex="none"
+            className={css`
+              @media (min-width: 1224px) {
+                display: none;
+              }
+            `}
+          >
             <SidebarIcon
               color={colors.fill.muted}
               size={scale(2.5)}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation()
                 if (typeof this.props.requestSideBar === 'function') {
                   this.props.requestSideBar()
@@ -319,28 +324,26 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           </Pane>
           {this.props.canEditList ? (
             <InlineEdit
-              flex='1 0 auto'
-              overflow='hidden'
-              editView={(
+              flex="1 0 auto"
+              overflow="hidden"
+              editView={
                 <Input
                   ref={this.nameRef}
                   defaultValue={name}
                   placeholder={placeholder}
                   autoFocus
-                  flex='1 1 auto'
+                  flex="1 1 auto"
                   padding={0}
-                  border='none'
-                  fontSize='inherit'
-                  fontWeight='inherit'
-                  fontFamily='inherit'
-                  lineHeight='inherit'
-                  color='inherit'
-                  outline='none'
+                  border="none"
+                  fontSize="inherit"
+                  fontWeight="inherit"
+                  fontFamily="inherit"
+                  lineHeight="inherit"
+                  color="inherit"
+                  outline="none"
                 />
-              )}
-              readView={(
-                <Pane>{name || placeholder}</Pane>
-              )}
+              }
+              readView={<Pane>{name || placeholder}</Pane>}
               onConfirm={this.handleNameChange}
             />
           ) : (
@@ -370,10 +373,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                 {remainingTasks.map((task, index) => (
                   <Draggable key={task.id} draggableId={task.id} index={index}>
                     {(dragProvided, dragSnapshot) => (
-                      <div
-                        ref={dragProvided.innerRef}
-                        {...dragProvided.draggableProps}
-                      >
+                      <div ref={dragProvided.innerRef} {...dragProvided.draggableProps}>
                         <Task
                           {...task}
                           key={task.id}
@@ -407,42 +407,36 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
         <CreateNewTask onDoneEditing={this.createNewTask} />
 
         {completedTasks.length > 0 && (
-          <Pane
-            marginTop={scale(4)}
-            borderTop={`1px solid ${colors.fill.muted}`}
-          >
+          <Pane marginTop={scale(4)} borderTop={`1px solid ${colors.fill.muted}`}>
             <Pane
-              display='flex'
-              alignItems='center'
-              justifyContent='space-between'
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
               onClick={this.toggleDisplayCompleted}
               paddingY={scale(2)}
-              cursor='pointer'
+              cursor="pointer"
             >
               <Text color={colors.text.muted}>Completed ({completedTasks.length})</Text>
-              <Icon
-                icon={showCompletedTasks ? ChevronUp : ChevronDown}
-                color={colors.fill.secondary}
-                size={scale(2)}
-              />
+              <Icon icon={showCompletedTasks ? ChevronUp : ChevronDown} color={colors.fill.secondary} size={scale(2)} />
             </Pane>
-            {showCompletedTasks && completedTasks.map((task, index) => (
-              <Task
-                {...task}
-                key={task.id}
-                autoFocus={autoFocusId === task.id}
-                canDelete={Boolean(task.id)}
-                onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
-                onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
-                onRequestDelete={() => this.deleteTask(task.id)}
-                onDoneEditing={(_event, content) => {
-                  // Only update if there's an actual change.
-                  if (content !== task.content) {
-                    void this.updateTaskContent(task.id, content)
-                  }
-                }}
-              />
-            ))}
+            {showCompletedTasks &&
+              completedTasks.map((task, index) => (
+                <Task
+                  {...task}
+                  key={task.id}
+                  autoFocus={autoFocusId === task.id}
+                  canDelete={Boolean(task.id)}
+                  onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
+                  onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
+                  onRequestDelete={() => this.deleteTask(task.id)}
+                  onDoneEditing={(_event, content) => {
+                    // Only update if there's an actual change.
+                    if (content !== task.content) {
+                      void this.updateTaskContent(task.id, content)
+                    }
+                  }}
+                />
+              ))}
           </Pane>
         )}
       </Container>

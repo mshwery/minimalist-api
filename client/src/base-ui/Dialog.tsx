@@ -10,12 +10,12 @@ import { BaseUIProps } from './types'
 import { Icon } from './Icon'
 import { colors } from './colors'
 
-const Overlay: React.FunctionComponent<{ onClick?: (event: React.SyntheticEvent) => void }> = (props) => {
+const Overlay: React.FunctionComponent<{ onClick?: (event: React.SyntheticEvent) => void }> = props => {
   return (
     <Box
       {...props}
-      backgroundColor='rgba(0, 0, 0, 0.5)'
-      position='fixed'
+      backgroundColor="rgba(0, 0, 0, 0.5)"
+      position="fixed"
       top={0}
       right={0}
       bottom={0}
@@ -59,25 +59,25 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
       <Overlay>
         <Box
           ref={ref}
-          role='dialog'
+          role="dialog"
           aria-modal
           tabIndex={-1}
           padding={scale(3)}
-          backgroundColor='white'
+          backgroundColor="white"
           borderRadius={4}
-          maxHeight='calc(100vh - 24vmin)'
-          maxWidth='calc(100vw - 32px)'
-          marginX='auto'
-          marginTop='12vmin'
-          position='relative'
-          overflowY='auto'
+          maxHeight="calc(100vh - 24vmin)"
+          maxWidth="calc(100vw - 32px)"
+          marginX="auto"
+          marginTop="12vmin"
+          position="relative"
+          overflowY="auto"
           {...props}
         >
           <Icon
             icon={X}
-            position='absolute'
+            position="absolute"
             color={colors.fill.secondary}
-            cursor='pointer'
+            cursor="pointer"
             right={scale(2)}
             top={scale(2)}
             onClick={requestClose}

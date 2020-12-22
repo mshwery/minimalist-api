@@ -15,7 +15,7 @@ interface Props {
   onCreateList: (name: string) => Promise<void>
 }
 
-const Lists: React.FunctionComponent<Props> = (props) => {
+const Lists: React.FunctionComponent<Props> = props => {
   const { pathname } = useLocation()
   const nameRef = useRef<HTMLInputElement>(null)
   const [isDialogShown, setIsDialogShown] = useState(false)
@@ -23,11 +23,17 @@ const Lists: React.FunctionComponent<Props> = (props) => {
   return (
     <Pane>
       <SidebarList>
-        <SidebarItem icon={InboxIcon} is={RouterLink} to='/lists/inbox' isSelected={pathname === '/lists/inbox'}>
+        <SidebarItem icon={InboxIcon} is={RouterLink} to="/lists/inbox" isSelected={pathname === '/lists/inbox'}>
           Inbox
         </SidebarItem>
         {props.lists.map(list => (
-          <SidebarItem icon={ListIcon} key={list.id} is={RouterLink} to={`/lists/${list.id}`} isSelected={pathname === `/lists/${list.id}`}>
+          <SidebarItem
+            icon={ListIcon}
+            key={list.id}
+            is={RouterLink}
+            to={`/lists/${list.id}`}
+            isSelected={pathname === `/lists/${list.id}`}
+          >
             {list.name}
           </SidebarItem>
         ))}
@@ -37,27 +43,26 @@ const Lists: React.FunctionComponent<Props> = (props) => {
       </SidebarList>
 
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
-        <form onSubmit={async (event) => {
-          event.preventDefault()
+        <form
+          onSubmit={async event => {
+            event.preventDefault()
 
-          if (nameRef.current && nameRef.current.value) {
-            await props.onCreateList(nameRef.current.value)
-            // TODO handle errors
-            setIsDialogShown(false)
-          }
-        }}>
+            if (nameRef.current && nameRef.current.value) {
+              await props.onCreateList(nameRef.current.value)
+              // TODO handle errors
+              setIsDialogShown(false)
+            }
+          }}
+        >
           <Heading size={300}>Create a list</Heading>
           <Pane marginTop={scale(4)}>
-            <Input
-              autoFocus
-              placeholder='Name'
-              ref={nameRef}
-              width='100%'
-            />
+            <Input autoFocus placeholder="Name" ref={nameRef} width="100%" />
           </Pane>
-          <Pane display='flex' justifyContent='flex-end' alignItems='center' marginTop={scale(2)}>
-            <Button onClick={() => setIsDialogShown(false)} variant='minimal' marginRight={scale(1)}>Cancel</Button>
-            <Button type='submit' isLoading={props.isCreatingList}>
+          <Pane display="flex" justifyContent="flex-end" alignItems="center" marginTop={scale(2)}>
+            <Button onClick={() => setIsDialogShown(false)} variant="minimal" marginRight={scale(1)}>
+              Cancel
+            </Button>
+            <Button type="submit" isLoading={props.isCreatingList}>
               Create list
             </Button>
           </Pane>

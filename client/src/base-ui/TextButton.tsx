@@ -20,23 +20,23 @@ export const TextButton: React.FunctionComponent<TextButtonProps & React.Compone
 }) => {
   return (
     <Text
-      is='button'
-      alignItems='center'
-      appearance='none'
-      background='transparent'
-      border='none'
-      boxSizing='border-box'
-      color='currentColor'
-      cursor='pointer'
-      display='inline-flex'
-      fontSize='inherit'
+      is="button"
+      alignItems="center"
+      appearance="none"
+      background="transparent"
+      border="none"
+      boxSizing="border-box"
+      color="currentColor"
+      cursor="pointer"
+      display="inline-flex"
+      fontSize="inherit"
       fontWeight={400}
-      justifyContent='center'
+      justifyContent="center"
       padding={0}
-      textDecoration='none'
-      userSelect='none'
+      textDecoration="none"
+      userSelect="none"
       disabled={isLoading || disabled}
-      {...((isLoading || disabled) ? disabledStyles : {})}
+      {...(isLoading || disabled ? disabledStyles : {})}
       {...props}
     />
   )

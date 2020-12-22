@@ -31,13 +31,7 @@ const ListsView: React.FunctionComponent = () => {
     return null
   }
 
-  return (
-    <Lists
-      lists={lists}
-      onCreateList={handleCreateList}
-      isCreatingList={isCreatingList}
-    />
-  )
+  return <Lists lists={lists} onCreateList={handleCreateList} isCreatingList={isCreatingList} />
 }
 
 export default React.memo(ListsView)

@@ -12,16 +12,8 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
 
   return (
     <>
-      <MenuDisclosure
-        {...menu}
-        as={Icon}
-        icon={MoreVertical}
-        color={colors.fill.secondary}
-      />
-      <Menu
-        {...menu}
-        aria-label='List Settings'
-      >
+      <MenuDisclosure {...menu} as={Icon} icon={MoreVertical} color={colors.fill.secondary} />
+      <Menu {...menu} aria-label="List Settings">
         <MenuItem
           {...menu}
           onClick={() => {
@@ -30,7 +22,7 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
           }}
         >
           <Icon icon={Archive} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
-          <Text fontSize='inherit'>Archive List</Text>
+          <Text fontSize="inherit">Archive List</Text>
         </MenuItem>
         <MenuItem
           {...menu}
@@ -40,7 +32,7 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
           }}
         >
           <Icon icon={Trash2} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
-          <Text fontSize='inherit'>Delete List</Text>
+          <Text fontSize="inherit">Delete List</Text>
         </MenuItem>
       </Menu>
     </>

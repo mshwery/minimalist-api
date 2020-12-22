@@ -7,7 +7,13 @@ interface Props {
   isSelected?: boolean
 }
 
-export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({ children, icon, isSelected, onClick, ...props }) => {
+export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<typeof Card>> = ({
+  children,
+  icon,
+  isSelected,
+  onClick,
+  ...props
+}) => {
   const onKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
       if (typeof onClick !== 'function') {
@@ -25,21 +31,21 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
     <Card
       onKeyPress={onKeyPress}
       onClick={onClick}
-      display='flex'
-      justifyContent='auto'
-      alignItems='center'
-      textDecoration='none'
-      width='100%'
+      display="flex"
+      justifyContent="auto"
+      alignItems="center"
+      textDecoration="none"
+      width="100%"
       lineHeight={2}
       paddingX={scale(1)}
       marginX={0}
       marginBottom={scale(0.5)}
       tabIndex={0}
       aria-selected={isSelected}
-      role='tab'
-      cursor='pointer'
+      role="tab"
+      cursor="pointer"
       color={colors.text.default}
-      outline='none'
+      outline="none"
       fontWeight={isSelected ? 500 : 'normal'}
       className={css`
         background-color: ${isSelected ? `${colors.fill.primary}30` : 'transparent'};

@@ -6,8 +6,7 @@ import { BaseUIProps } from './types'
 import { scale } from './scale'
 import { colors } from './colors'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
-}
+interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 
 export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
   id,
@@ -21,38 +20,38 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
   const cursor = disabled ? 'not-allowed' : 'pointer'
   return (
     <Box
-      is='label'
+      is="label"
       cursor={cursor}
-      position='relative'
-      display='flex'
-      alignItems='center'
-      justifyContent='center'
-      flex='none'
+      position="relative"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      flex="none"
       {...props}
     >
       <Box
-        is='input'
+        is="input"
         id={id}
-        type='checkbox'
+        type="checkbox"
         name={name}
-        cursor='inherit'
+        cursor="inherit"
         value={value}
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        border='none'
-        height='100%'
-        width='100%'
+        border="none"
+        height="100%"
+        width="100%"
         top={0}
         right={0}
         bottom={0}
         left={0}
-        overflow='hidden'
+        overflow="hidden"
         margin={0}
         padding={0}
         opacity={0}
-        position='absolute'
-        whiteSpace='nowrap'
+        position="absolute"
+        whiteSpace="nowrap"
         zIndex={1}
         className={css`
           &:focus + svg {
@@ -60,10 +59,11 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
           }
         `}
       />
-      {checked
-        ? <Check size={scale(2.5)} color={colors.fill.primary} />
-        : <Square size={scale(2.5)} color={colors.fill.secondary} />
-      }
+      {checked ? (
+        <Check size={scale(2.5)} color={colors.fill.primary} />
+      ) : (
+        <Square size={scale(2.5)} color={colors.fill.secondary} />
+      )}
     </Box>
   )
 }

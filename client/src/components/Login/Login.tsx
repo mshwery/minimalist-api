@@ -7,28 +7,28 @@ interface LoginProps {
   googleAuthUrl: string
 }
 
-export const Login: React.FunctionComponent<LoginProps> = (props) => {
+export const Login: React.FunctionComponent<LoginProps> = props => {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
     <Pane
-      height='100vh'
-      width='100vw'
-      display='flex'
-      alignItems='center'
-      justifyContent='center'
+      height="100vh"
+      width="100vw"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
       backgroundColor={colors.fill.background}
     >
       <Card
         elevation={2}
         maxWidth={scale(100)}
-        width='90%'
-        textAlign='center'
+        width="90%"
+        textAlign="center"
         paddingY={scale(10)}
         paddingX={scale(5)}
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
         className={css`
           justify-content: center;
 
@@ -40,16 +40,16 @@ export const Login: React.FunctionComponent<LoginProps> = (props) => {
         `}
       >
         <Logo />
-        <Paragraph maxWidth={scale(38)} marginY={scale(2)} marginX='auto'>
+        <Paragraph maxWidth={scale(38)} marginY={scale(2)} marginX="auto">
           The simplest way to keep track of the stuff you want to do.
         </Paragraph>
         <Button
-          is='a'
+          is="a"
           href={props.googleAuthUrl}
-          variant='minimal'
+          variant="minimal"
           width={scale(38)}
-          maxWidth='100%'
-          lineHeight='2.5'
+          maxWidth="100%"
+          lineHeight="2.5"
           marginY={scale(2)}
           onClick={() => setIsLoading(true)}
           isLoading={isLoading}

@@ -30,15 +30,6 @@ function getElevationStyle(elevation?: Elevation) {
   }
 }
 
-export const Pane = React.forwardRef<HTMLElement, PaneProps & BaseUIProps>(({
-  elevation,
-  ...props
-}, ref) => {
-  return (
-    <Box
-      {...getElevationStyle(elevation)}
-      ref={ref}
-      {...props}
-    />
-  )
+export const Pane = React.forwardRef<HTMLElement, PaneProps & BaseUIProps>(({ elevation, ...props }, ref) => {
+  return <Box {...getElevationStyle(elevation)} ref={ref} {...props} />
 })

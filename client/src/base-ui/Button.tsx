@@ -54,9 +54,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Whether or not the button should be disabled */
   disabled?: boolean
   /** An (optional) icon to place after the text */
-  iconAfter?: React.ReactNode,
+  iconAfter?: React.ReactNode
   /** An (optional) icon to place before the text */
-  iconBefore?: React.ReactNode,
+  iconBefore?: React.ReactNode
   /** Whether or not the button should display a loading indicator (it will become disabled unless otherwise specified) */
   isLoading?: boolean
   /** The button style to apply */
@@ -83,27 +83,35 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
 
     return (
       <Box
-        is='button'
-        type='button'
-        alignItems='center'
-        appearance='none'
+        is="button"
+        type="button"
+        alignItems="center"
+        appearance="none"
         borderRadius={3}
-        boxSizing='border-box'
-        cursor='pointer'
-        display='inline-flex'
+        boxSizing="border-box"
+        cursor="pointer"
+        display="inline-flex"
         fontWeight={400}
-        justifyContent='center'
-        textDecoration='none'
-        userSelect='none'
+        justifyContent="center"
+        textDecoration="none"
+        userSelect="none"
         disabled={isLoading || disabled}
         {...sizeProps}
         {...variantProps}
-        {...((isLoading || disabled) ? disabledStyles : {})}
+        {...(isLoading || disabled ? disabledStyles : {})}
         {...props}
       >
-        {iconBefore && <Box display='inline-flex' marginRight={scale(1)}>{iconBefore}</Box>}
+        {iconBefore && (
+          <Box display="inline-flex" marginRight={scale(1)}>
+            {iconBefore}
+          </Box>
+        )}
         {children}
-        {iconAfter && <Box display='inline-flex' marginLeft={scale(1)}>{iconAfter}</Box>}
+        {iconAfter && (
+          <Box display="inline-flex" marginLeft={scale(1)}>
+            {iconAfter}
+          </Box>
+        )}
       </Box>
     )
   }

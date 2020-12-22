@@ -12,7 +12,10 @@ interface Props {
   onKeyDown?: (event: React.KeyboardEvent, value: string) => void
 }
 
-type MostTextProps = Omit<React.ComponentProps<typeof Text>, 'onChange' | 'onInput' | 'onKeyDown' | 'onKeyPress' | 'onKeyUp' | 'onPaste'>
+type MostTextProps = Omit<
+  React.ComponentProps<typeof Text>,
+  'onChange' | 'onInput' | 'onKeyDown' | 'onKeyPress' | 'onKeyUp' | 'onPaste'
+>
 
 export class ContentEditableText extends React.Component<Props & MostTextProps> {
   elementRef = React.createRef<HTMLSpanElement>()
@@ -46,11 +49,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     const hasPropChanges = Object.entries(props).some(([key, value]) => {
       return props[key] !== this.props[key]
     })
-    return (
-      !this.elementRef.current ||
-      hasPropChanges ||
-      nextProps.content !== this.elementRef.current.innerText
-    )
+    return !this.elementRef.current || hasPropChanges || nextProps.content !== this.elementRef.current.innerText
   }
 
   onBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
@@ -105,17 +104,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   render() {
-    const {
-      content = '',
-      disabled,
-      onBlur,
-      onChange,
-      onKeyPress,
-      onKeyUp,
-      onKeyDown,
-      onPaste,
-      ...props
-    } = this.props
+    const { content = '', disabled, onBlur, onChange, onKeyPress, onKeyUp, onKeyDown, onPaste, ...props } = this.props
 
     return (
       <Text

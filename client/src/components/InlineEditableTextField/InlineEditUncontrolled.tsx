@@ -42,22 +42,11 @@ export default class InlineEditUncontrolled extends React.Component<InlineEditPr
   }
 
   render() {
-    const {
-      editView,
-      readView,
-      isEditing,
-      onCancel,
-      onConfirm,
-      onEditRequested,
-      ...props
-    } = this.props
+    const { editView, readView, isEditing, onCancel, onConfirm, onEditRequested, ...props } = this.props
 
     return (
       <Box onBlur={this.onWrapperBlur} onFocus={this.onWrapperFocus} {...props}>
-        {isEditing
-          ? editView
-          : <Box onClick={this.onWrapperClick}>{readView}</Box>
-        }
+        {isEditing ? editView : <Box onClick={this.onWrapperClick}>{readView}</Box>}
       </Box>
     )
   }

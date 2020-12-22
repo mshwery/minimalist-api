@@ -12,29 +12,30 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
   const [isOpen, setIsOpen] = useState(false)
 
   // anytime the location changes, reset the sidebar
-  useEffect(
-    () => {
-      setIsOpen(false)
-    },
-    [location, setIsOpen]
-  )
+  useEffect(() => {
+    setIsOpen(false)
+  }, [location, setIsOpen])
 
   return (
-    <Pane display='flex' maxWidth='100vw' maxHeight='100vh' overflow='hidden'>
+    <Pane display="flex" maxWidth="100vw" maxHeight="100vh" overflow="hidden">
       <Sidebar isOpen={isOpen} requestSideBarClose={() => setIsOpen(false)}>
         <UserMenu {...user!} marginBottom={scale(4)} />
         <Lists />
       </Sidebar>
-      <Pane flex='1' maxHeight='100%' overflowY='auto' overflowX='hidden'>
+      <Pane flex="1" maxHeight="100%" overflowY="auto" overflowX="hidden">
         <Switch>
-          <Redirect from='/lists' to='/lists/inbox' exact />
-          <Route exact path='/lists/:listId' render={routeProps => (
-            <ListPage
-              {...routeProps}
-              requestSideBar={() => setIsOpen(true)}
-              requestSideBarClose={() => setIsOpen(false)}
-            />
-          )} />
+          <Redirect from="/lists" to="/lists/inbox" exact />
+          <Route
+            exact
+            path="/lists/:listId"
+            render={routeProps => (
+              <ListPage
+                {...routeProps}
+                requestSideBar={() => setIsOpen(true)}
+                requestSideBarClose={() => setIsOpen(false)}
+              />
+            )}
+          />
         </Switch>
       </Pane>
     </Pane>
