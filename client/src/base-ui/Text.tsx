@@ -20,7 +20,7 @@ const fontSizes: { [key: string]: number } = {
   '300': scale(1.75),
   '400': scale(2),
   '500': scale(2.25),
-  '600': scale(2.5)
+  '600': scale(2.5),
 }
 
 function getFontSize(size?: number) {
@@ -32,7 +32,7 @@ function getFontSize(size?: number) {
 }
 
 const colors: { [key: string]: string } = {
-  muted: theme.text.muted
+  muted: theme.text.muted,
 }
 
 function getTextColor(color?: Color) {

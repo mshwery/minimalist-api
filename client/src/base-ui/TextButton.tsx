@@ -3,7 +3,7 @@ import { Text } from './Text'
 
 const disabledStyles = {
   opacity: 0.5,
-  cursor: 'not-allowed'
+  cursor: 'not-allowed',
 }
 
 interface TextButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

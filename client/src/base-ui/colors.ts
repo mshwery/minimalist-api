@@ -8,12 +8,12 @@ export const colors = {
     muted: GRAY,
     secondary: '#A6B1BB',
     primary: BLUE,
-    danger: RED
+    danger: RED,
   },
   text: {
     action: BLUE,
     placeholder: GRAY,
     muted: '#787A87',
-    default: '#242527'
-  }
+    default: '#242527',
+  },
 }

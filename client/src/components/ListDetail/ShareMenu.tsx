@@ -12,7 +12,7 @@ const MAX_AVATARS_SHOWN = 4
 const Names: React.FC<{ primary: string; secondary?: string; isOwner: boolean }> = ({
   primary,
   secondary,
-  isOwner
+  isOwner,
 }) => {
   return (
     <>
@@ -45,7 +45,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
 
   const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators)
   const [addCollaborator, { isLoading: isUpdating }] = useMutation(shareList, {
-    refetchQueries: [['collaborators', { id: listId }]]
+    refetchQueries: [['collaborators', { id: listId }]],
   })
 
   const refetchQueries: Array<string | [string, any]> = [['collaborators', { id: listId }]]
@@ -108,7 +108,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
       </Pane>
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
         <form
-          onSubmit={async event => {
+          onSubmit={async (event) => {
             event.preventDefault()
 
             if (!emailRef.current) {
@@ -139,7 +139,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
           </Pane>
           <Pane marginTop={scale(2)}>
             {Array.isArray(collaborators) &&
-              collaborators.map(user => (
+              collaborators.map((user) => (
                 <Pane key={user.id} display="flex" alignItems="center" paddingY={scale(1)}>
                   <Avatar src={user.image} size={scale(5)} marginRight={scale(1.5)} />
                   <Pane flex="1" display="flex" flexDirection="column" overflow="hidden" marginRight={scale(1)}>

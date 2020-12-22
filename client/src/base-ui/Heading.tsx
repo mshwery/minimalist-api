@@ -21,7 +21,7 @@ const fontSizes: { [key: string]: number } = {
   '400': scale(3),
   '500': scale(3.5),
   '600': scale(4),
-  '700': scale(5)
+  '700': scale(5),
 }
 
 function getFontSize(size?: number) {

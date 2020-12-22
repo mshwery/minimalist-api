@@ -10,11 +10,11 @@ export const LISTS_QUERY = 'lists'
 const ListsView: React.FunctionComponent = () => {
   const { data: lists, isLoading } = useQuery(LISTS_QUERY, getLists, {
     // No need to refetch this so often...
-    staleTime: ms('5m')
+    staleTime: ms('5m'),
   })
 
   const [mutate, { isLoading: isCreatingList }] = useMutation(createList, {
-    refetchQueries: [LISTS_QUERY]
+    refetchQueries: [LISTS_QUERY],
   })
 
   const history = useHistory()

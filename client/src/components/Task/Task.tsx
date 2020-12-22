@@ -36,7 +36,7 @@ export class Task extends React.Component<Props, State> {
     content: this.props.content,
     hasFocus: false,
     hasHover: false,
-    optimisticChecked: this.props.isCompleted || false
+    optimisticChecked: this.props.isCompleted || false,
   }
 
   emitDoneEditing = (event: React.SyntheticEvent<Element>, value: string) => {
@@ -117,7 +117,7 @@ export class Task extends React.Component<Props, State> {
       isDragging,
       onKeyDown,
       onKeyUp,
-      onRequestDelete
+      onRequestDelete,
     } = this.props
 
     const { content, hasFocus, hasHover, optimisticChecked } = this.state

@@ -40,8 +40,8 @@ export default class UserProvider extends Component<{}, UserProviderState> {
     isLoading: true,
     context: {
       user: null,
-      refetchUser: this.fetchUser
-    }
+      refetchUser: this.fetchUser,
+    },
   }
 
   componentDidMount() {
@@ -53,13 +53,13 @@ export default class UserProvider extends Component<{}, UserProviderState> {
       const { me: user } = await client.request<Data>(getCurrentUserQuery)
       const context = {
         user,
-        refetchUser: this.fetchUser
+        refetchUser: this.fetchUser,
       }
 
       if (user) {
         identify(user.id, {
           email: user.email,
-          name: user.name
+          name: user.name,
         })
       }
 
@@ -68,7 +68,7 @@ export default class UserProvider extends Component<{}, UserProviderState> {
       // TODO add frontend Segment + error tracking
       const context = {
         user: null,
-        refetchUser: this.fetchUser
+        refetchUser: this.fetchUser,
       }
       this.setState({ context })
     } finally {

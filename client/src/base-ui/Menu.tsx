@@ -5,7 +5,7 @@ import { scale, colors, Card, Text } from '../base-ui'
 
 export { MenuDisclosure, useMenuState }
 
-export const MenuItem: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Text>> = props => (
+export const MenuItem: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Text>> = (props) => (
   <ReakitMenuItem
     {...props}
     as={Text}
@@ -30,7 +30,7 @@ export const MenuItem: React.FunctionComponent<MenuStateReturn & React.Component
   />
 )
 
-export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Card>> = props => {
+export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Card>> = (props) => {
   return (
     <ReakitMenu
       {...props}

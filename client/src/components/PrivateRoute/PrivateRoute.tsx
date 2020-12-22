@@ -12,7 +12,7 @@ export const PrivateRoute: React.FunctionComponent<RouteProps> = ({ component: C
   return (
     <Route
       {...routeProps}
-      render={props =>
+      render={(props) =>
         context.user ? (
           <Component {...context} {...props} />
         ) : (
@@ -20,8 +20,8 @@ export const PrivateRoute: React.FunctionComponent<RouteProps> = ({ component: C
             to={{
               pathname: '/login',
               state: {
-                from: props.location
-              }
+                from: props.location,
+              },
             }}
           />
         )

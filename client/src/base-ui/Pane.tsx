@@ -16,7 +16,7 @@ const elevationStyles = [
   `0 0 1px ${shadowLiningColor}, 0 2px 4px -2px ${blurryShadowColor}`,
   `0 0 1px ${shadowLiningColor}, 0 5px 8px -4px ${blurryShadowColor}`,
   `0 0 1px ${shadowLiningColor}, 0 8px 10px -4px ${blurryShadowColor}`,
-  `0 0 1px ${shadowLiningColor}, 0 16px 24px -8px ${blurryShadowColor}`
+  `0 0 1px ${shadowLiningColor}, 0 16px 24px -8px ${blurryShadowColor}`,
 ]
 
 // TODO get from a theme
@@ -26,7 +26,7 @@ function getElevationStyle(elevation?: Elevation) {
   }
 
   return {
-    boxShadow: elevationStyles[elevation]
+    boxShadow: elevationStyles[elevation],
   }
 }
 

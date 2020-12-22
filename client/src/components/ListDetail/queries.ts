@@ -99,7 +99,7 @@ export async function renameList(id: string, name: string) {
   setQueryData(
     LISTS_QUERY,
     (lists: List[]) =>
-      lists.map(list => {
+      lists.map((list) => {
         if (list.id === id) {
           return { ...list, name }
         }
@@ -112,8 +112,8 @@ export async function renameList(id: string, name: string) {
   const result = await client.request<RenameListData>(renameListMutation, {
     input: {
       id,
-      name
-    }
+      name,
+    },
   })
 
   return result.renameList
@@ -138,12 +138,12 @@ export const archiveListMutation = `
 
 export async function archiveList(id: string) {
   // Optimistic update
-  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter(l => l.id !== id), { shouldRefetch: false })
+  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
 
   const result = await client.request<ArchiveListData>(archiveListMutation, {
     input: {
-      id
-    }
+      id,
+    },
   })
 
   return result.archiveList
@@ -165,12 +165,12 @@ export const deleteListMutation = `
 
 export async function deleteList(id: string) {
   // Optimistic update
-  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter(l => l.id !== id), { shouldRefetch: false })
+  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
 
   const result = await client.request<DeleteListData>(deleteListMutation, {
     input: {
-      id
-    }
+      id,
+    },
   })
 
   return result.deleteList.id
@@ -212,8 +212,8 @@ export async function createTask({ id, content, position, listId }: CreateTaskAr
       id,
       content,
       insertAt: position,
-      listId
-    }
+      listId,
+    },
   })
 
   return result.createTask
@@ -272,7 +272,7 @@ export const moveTaskMutation = `
 
 export async function moveTask(args: { id: string; listId: string; insertBefore: number }) {
   const result = await client.request<MoveTaskData>(moveTaskMutation, {
-    input: args
+    input: args,
   })
 
   return result.moveTask
@@ -385,7 +385,7 @@ const getCollaboratorsQuery = `
 export async function getCollaborators(input: { id: string }) {
   const result = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, input)
   const list = result.list!
-  const collaborators = list.collaborators!.map(user => ({ ...user, isOwner: false }))
+  const collaborators = list.collaborators!.map((user) => ({ ...user, isOwner: false }))
   const creator = Object.assign(list.creator, { isOwner: true })
   return [creator, ...collaborators]
 }

@@ -28,7 +28,7 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
           <Route
             exact
             path="/lists/:listId"
-            render={routeProps => (
+            render={(routeProps) => (
               <ListPage
                 {...routeProps}
                 requestSideBar={() => setIsOpen(true)}
