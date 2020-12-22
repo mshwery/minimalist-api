@@ -8,9 +8,6 @@ node_modules
 config/environment.json
 .env
 
-# nvm bits
-.nvmrc
-
 # compiled output
 dist
 
