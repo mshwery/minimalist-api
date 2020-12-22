@@ -6,12 +6,12 @@ import User from '../models/user/user.entity'
 
 const defaultOptions: ConnectionOptions = {
   ...(ormConfig as ConnectionOptions),
-  entities: [List, Task, User]
+  entities: [List, Task, User],
 }
 
 export default function initConnection(options: Partial<ConnectionOptions> = {}): Promise<Connection> {
   return createConnection({
     ...defaultOptions,
-    ...options
+    ...options,
   } as ConnectionOptions)
 }

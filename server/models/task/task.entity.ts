@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   BeforeInsert,
-  BeforeUpdate
+  BeforeUpdate,
 } from 'typeorm'
 import { validate as validateEntity, IsDate, ValidateNested, IsUUID, IsDefined } from 'class-validator'
 import List from '../list/list.entity'
@@ -17,9 +17,9 @@ import ValidationError from '../ValidationError'
 
 @Entity('tasks', {
   orderBy: {
-    sortOrder: { order: 'ASC', nulls: 'NULLS LAST'},
-    createdAt: 'ASC'
-  }
+    sortOrder: { order: 'ASC', nulls: 'NULLS LAST' },
+    createdAt: 'ASC',
+  },
 })
 export default class Task {
   @PrimaryGeneratedColumn('uuid')
@@ -32,7 +32,7 @@ export default class Task {
   @Column({ nullable: true })
   listId?: UUID | null
 
-  @ManyToOne(_type => List, list => list.tasks, { nullable: true, primary: true, onDelete: 'CASCADE' })
+  @ManyToOne((_type) => List, (list) => list.tasks, { nullable: true, primary: true, onDelete: 'CASCADE' })
   @ValidateNested()
   list?: List
 
@@ -53,7 +53,7 @@ export default class Task {
   createdBy: UUID
 
   // @todo test what happens when we delete a user after they've created a list...
-  @ManyToOne(_type => User, { nullable: false })
+  @ManyToOne((_type) => User, { nullable: false })
   @JoinColumn({ name: 'createdBy' })
   @ValidateNested()
   creator?: User

@@ -8,31 +8,28 @@ import List from './List'
 const Stack = createStackNavigator()
 
 interface ListScreenProps {
-  route: RouteProp<{ List: { id: string, name: string }}, 'List'>
+  route: RouteProp<{ List: { id: string; name: string } }, 'List'>
   navigation: StackNavigationProp<ParamListBase>
 }
 
 const ListScreen: React.FC<ListScreenProps> = ({ route }) => {
-  return (
-    <List
-      listId={route.params.id}
-      listName={route.params.name}
-    />
-  )
+  return <List listId={route.params.id} listName={route.params.name} />
 }
 
 interface ListStackProps {
-  route: RouteProp<{ ListStack: { id: string, name: string }}, 'ListStack'>
+  route: RouteProp<{ ListStack: { id: string; name: string } }, 'ListStack'>
   navigation: DrawerNavigationProp<ParamListBase>
 }
 
 const ListStack: React.FC<ListStackProps> = ({ route, navigation }) => {
   return (
-    <Stack.Navigator screenOptions={{
-      headerLeft: createDefaultDrawerToggle(navigation.toggleDrawer),
-      title: route.name,
-    }}>
-      <Stack.Screen name='List' component={ListScreen} initialParams={route.params} />
+    <Stack.Navigator
+      screenOptions={{
+        headerLeft: createDefaultDrawerToggle(navigation.toggleDrawer),
+        title: route.name,
+      }}
+    >
+      <Stack.Screen name="List" component={ListScreen} initialParams={route.params} />
     </Stack.Navigator>
   )
 }

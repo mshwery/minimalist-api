@@ -15,7 +15,7 @@ interface Props {
   onCreateList: (name: string) => Promise<void>
 }
 
-const Lists: React.FunctionComponent<Props> = props => {
+const Lists: React.FunctionComponent<Props> = (props) => {
   const { pathname } = useLocation()
   const nameRef = useRef<HTMLInputElement>(null)
   const [isDialogShown, setIsDialogShown] = useState(false)
@@ -26,7 +26,7 @@ const Lists: React.FunctionComponent<Props> = props => {
         <SidebarItem icon={InboxIcon} is={RouterLink} to="/lists/inbox" isSelected={pathname === '/lists/inbox'}>
           Inbox
         </SidebarItem>
-        {props.lists.map(list => (
+        {props.lists.map((list) => (
           <SidebarItem
             icon={ListIcon}
             key={list.id}
@@ -44,7 +44,7 @@ const Lists: React.FunctionComponent<Props> = props => {
 
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
         <form
-          onSubmit={async event => {
+          onSubmit={async (event) => {
             event.preventDefault()
 
             if (nameRef.current && nameRef.current.value) {

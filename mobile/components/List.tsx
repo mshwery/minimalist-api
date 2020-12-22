@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     color: '#787A87',
   },
   AddTaskButton: {
-    margin: 16
-  }
+    margin: 16,
+  },
 })
 
 interface Props {
@@ -33,9 +33,7 @@ interface Props {
   listName?: string
 }
 
-const List: React.FC<Props> = ({
-  listId,
-}) => {
+const List: React.FC<Props> = ({ listId }) => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [isEditModeVisible, setEditModeVisible] = useState(false)
   const { loading, data, error, refetch, networkStatus } = useGetTasks(listId)
@@ -55,16 +53,26 @@ const List: React.FC<Props> = ({
     setSelectedTask(null)
   }, [setSelectedTask])
 
-  const onRequestEdit = useCallback((id: string) => {
-    setSelectedTask(id)
-    setEditModeVisible(true)
-  }, [setSelectedTask, setEditModeVisible])
+  const onRequestEdit = useCallback(
+    (id: string) => {
+      setSelectedTask(id)
+      setEditModeVisible(true)
+    },
+    [setSelectedTask, setEditModeVisible]
+  )
 
   return (
     <SafeAreaView style={styles.MainContainer}>
       <ScrollView
         contentContainerStyle={styles.ScrollView}
-        refreshControl={<RefreshControl colors={['#2e8ae6']} tintColor='#2e8ae6' refreshing={networkStatus === 4} onRefresh={() => refetch()} />}
+        refreshControl={
+          <RefreshControl
+            colors={['#2e8ae6']}
+            tintColor="#2e8ae6"
+            refreshing={networkStatus === 4}
+            onRefresh={() => refetch()}
+          />
+        }
       >
         {error ? (
           <Text>There was an an error.</Text>
@@ -72,18 +80,14 @@ const List: React.FC<Props> = ({
           <View style={styles.EmptyStateContainer}>
             <Text style={styles.EmptyStateText}>No tasks yet</Text>
           </View>
-        ) : hasTasks && data.tasks.map(task => (
-          <Task key={task.id} {...task} onRequestEdit={onRequestEdit} />
-        ))}
+        ) : (
+          hasTasks && data.tasks.map((task) => <Task key={task.id} {...task} onRequestEdit={onRequestEdit} />)
+        )}
       </ScrollView>
-      <FloatingActionButton
-        initiallyVisible
-        isVisible={!isEditModeVisible}
-        onPress={onRequestCreate}
-      />
+      <FloatingActionButton initiallyVisible isVisible={!isEditModeVisible} onPress={onRequestCreate} />
       <EditTaskModal
         listId={listId}
-        task={selectedTask && hasTasks ? data.tasks.find(t => t.id === selectedTask) : undefined}
+        task={selectedTask && hasTasks ? data.tasks.find((t) => t.id === selectedTask) : undefined}
         isVisible={isEditModeVisible}
         onRequestClose={onRequestClose}
         onClose={onCloseComplete}

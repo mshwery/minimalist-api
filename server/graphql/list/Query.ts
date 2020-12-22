@@ -8,5 +8,5 @@ export default {
 
   async lists(_root, args: { status?: ListStatus }, ctx: Context): Promise<List[]> {
     return ListModel.fetchAllByViewer(ctx.viewer, args)
-  }
+  },
 }

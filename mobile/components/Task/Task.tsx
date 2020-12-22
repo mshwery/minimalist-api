@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
   },
   completed: {
     textDecorationLine: 'line-through',
-    color: '#787A87'
-  }
+    color: '#787A87',
+  },
 })
 
 interface Props {
@@ -36,18 +36,9 @@ interface Props {
   onPressContainer: () => void
 }
 
-export const Task: React.FC<Props> = ({
-  content,
-  isComplete,
-  onPressCheckbox,
-  onPressContainer
-}) => {
+export const Task: React.FC<Props> = ({ content, isComplete, onPressCheckbox, onPressContainer }) => {
   return (
-    <Touchable
-      style={styles.container}
-      onPress={onPressContainer}
-      delayPressOut={300}
-    >
+    <Touchable style={styles.container} onPress={onPressContainer} delayPressOut={300}>
       <View style={styles.task}>
         <IconButton
           size={24}

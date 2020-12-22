@@ -4,7 +4,7 @@ export interface Analytics {
   track(message: { userId?: string; event: string; properties?: object }): void
 }
 
-export const track: Analytics['track'] = args => {
+export const track: Analytics['track'] = (args) => {
   if (window.analytics) {
     window.analytics.track(args)
   }

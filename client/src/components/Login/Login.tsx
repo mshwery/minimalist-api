@@ -7,7 +7,7 @@ interface LoginProps {
   googleAuthUrl: string
 }
 
-export const Login: React.FunctionComponent<LoginProps> = props => {
+export const Login: React.FunctionComponent<LoginProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false)
 
   return (

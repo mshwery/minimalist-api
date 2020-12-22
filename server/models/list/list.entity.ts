@@ -10,7 +10,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
   ManyToMany,
-  JoinTable
+  JoinTable,
 } from 'typeorm'
 import { validate as validateEntity, IsDate, Length, ValidateNested, IsUUID } from 'class-validator'
 import Task from '../task/task.entity'
@@ -27,15 +27,15 @@ export default class List {
   @Length(1, 21)
   name: string
 
-  @OneToMany(_type => Task, task => task.list)
+  @OneToMany((_type) => Task, (task) => task.list)
   @ValidateNested()
   tasks?: Task[]
 
-  @ManyToMany(_type => User, user => user.lists, { cascade: true })
+  @ManyToMany((_type) => User, (user) => user.lists, { cascade: true })
   @JoinTable({
     name: 'lists_users',
     joinColumn: { name: 'listId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' }
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
   })
   users: User[]
 
@@ -47,7 +47,7 @@ export default class List {
   @IsUUID()
   createdBy: UUID
 
-  @ManyToOne(_type => User, { nullable: false })
+  @ManyToOne((_type) => User, { nullable: false })
   @JoinColumn({ name: 'createdBy' })
   @ValidateNested()
   creator?: User

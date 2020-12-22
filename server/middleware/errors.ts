@@ -32,8 +32,8 @@ export default function handleErrorResponse(error: HttpError, _req: Request, res
     json() {
       res.send({
         error: message,
-        id: res.sentry
+        id: res.sentry,
       })
-    }
+    },
   })
 }

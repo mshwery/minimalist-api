@@ -10,7 +10,7 @@ import { BaseUIProps } from './types'
 import { Icon } from './Icon'
 import { colors } from './colors'
 
-const Overlay: React.FunctionComponent<{ onClick?: (event: React.SyntheticEvent) => void }> = props => {
+const Overlay: React.FunctionComponent<{ onClick?: (event: React.SyntheticEvent) => void }> = (props) => {
   return (
     <Box
       {...props}
@@ -45,7 +45,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
   const { ref } = useFocusTrap(isShown, {
     onDeactivate: requestClose,
     clickOutsideDeactivates: hideOnClickOutside,
-    escapeDeactivates: hideOnEsc
+    escapeDeactivates: hideOnEsc,
   })
 
   useLockBodyScroll(preventBodyScroll && isShown)

@@ -6,20 +6,20 @@ import { colors } from './colors'
 
 const disabledStyles = {
   opacity: 0.5,
-  cursor: 'not-allowed'
+  cursor: 'not-allowed',
 }
 
 const variants = {
   minimal: {
     background: 'white',
     border: `1px solid ${colors.fill.muted}`,
-    color: 'inherit'
+    color: 'inherit',
   },
   default: {
     background: colors.fill.primary,
     border: `1px solid ${colors.fill.primary}`,
-    color: 'white'
-  }
+    color: 'white',
+  },
 }
 
 function getVariantProps(variant: 'minimal' | 'default'): object {
@@ -30,20 +30,20 @@ const sizes = {
   compact: {
     fontSize: '12px',
     lineHeight: 1.6,
-    paddingX: scale(2)
+    paddingX: scale(2),
   },
   default: {
     fontSize: '14px',
     lineHeight: 2,
     paddingX: scale(2),
-    minWidth: scale(10)
+    minWidth: scale(10),
   },
   large: {
     fontSize: '16px',
     lineHeight: 2.5,
     paddingX: scale(2),
-    minWidth: scale(10)
-  }
+    minWidth: scale(10),
+  },
 }
 
 function getSizeProps(size: 'compact' | 'default' | 'large'): object {

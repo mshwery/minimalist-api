@@ -6,7 +6,7 @@ import config from '../config'
 const options: Partial<ConnectionOptions> = {
   migrations: [path.resolve(__dirname, `../migrations/*.ts`)],
   port: Number(config.get('TEST_PGPORT') || 5436),
-  database: 'minimalist_test'
+  database: 'minimalist_test',
 }
 
 /**

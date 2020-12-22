@@ -37,5 +37,5 @@ export function useKeyboard() {
     }
   }, [])
 
-  return {isKeyboardVisible, isKeyboardOpening, isKeyboardClosing}
+  return { isKeyboardVisible, isKeyboardOpening, isKeyboardClosing }
 }

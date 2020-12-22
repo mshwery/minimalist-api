@@ -13,7 +13,7 @@ import logger from './logger'
 const secret = config.get('JWT_SECRET')
 const defaultOptions = {
   expiresIn: '7 days',
-  issuer: 'minimalist-api'
+  issuer: 'minimalist-api',
 }
 
 export const SESSION_COOKIE = 'session_token'
@@ -68,7 +68,7 @@ export const verifyJwtMiddleware = expressJwt({
     }
 
     return null
-  }
+  },
 })
 
 function getTokenFromHeader(authorization: string): string | null {

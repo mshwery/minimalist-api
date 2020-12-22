@@ -9,12 +9,12 @@ const emailTemplate = new EmailTemplate({ message: {} })
 
 const defaultFrom = {
   email: 'no-reply@getminimalist.com',
-  name: 'minimalist'
+  name: 'minimalist',
 }
 
 export const categories = {
   account: 12767,
-  collaboration: 12768
+  collaboration: 12768,
 }
 
 interface SendEmailOptions {
@@ -43,16 +43,16 @@ export async function sendEmail({ category, to, from = defaultFrom, replyTo, tem
     templateId: 'd-49c3d73ce4794fea8bed08e1382514b3',
     dynamicTemplateData: {
       subject,
-      content: html
+      content: html,
     },
     asm: {
-      groupId: categories[category] || categories.account
+      groupId: categories[category] || categories.account,
     },
     mailSettings: {
       sandboxMode: {
-        enable: config.get('SENDGRID_SANDBOX_MODE') === true
-      }
-    }
+        enable: config.get('SENDGRID_SANDBOX_MODE') === true,
+      },
+    },
   })
 }
 

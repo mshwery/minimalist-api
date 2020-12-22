@@ -47,7 +47,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       httpOnly: true,
       secure: config.get('ENV') === 'production',
       // TODO: set `domain = '.getminimalist.com'`
-      expires
+      expires,
     })
 
     res.status(200).json(result)

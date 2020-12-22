@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     borderRadius: 56 / 2,
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
 })
 
 interface Props extends TouchableWithoutFeedbackProps {
@@ -32,10 +32,12 @@ const FloatingActionButton: React.FC<Props> = ({
   style,
   ...props
 }) => {
-  const [pan] = useState(new Animated.ValueXY({
-    x: 0,
-    y: initiallyVisible ? 0 : 100
-  }))
+  const [pan] = useState(
+    new Animated.ValueXY({
+      x: 0,
+      y: initiallyVisible ? 0 : 100,
+    })
+  )
 
   useEffect(() => {
     if (isVisible) {
@@ -52,17 +54,15 @@ const FloatingActionButton: React.FC<Props> = ({
   }, [isVisible])
 
   const animatedButtonStyles = {
-    transform: pan.getTranslateTransform()
+    transform: pan.getTranslateTransform(),
   }
 
-  const positionStyles = position === 'center'
-    ? { alignSelf: 'center' }
-    : { right: 24 }
+  const positionStyles = position === 'center' ? { alignSelf: 'center' } : { right: 24 }
 
   return (
     <TouchableWithoutFeedback {...props}>
       <Animated.View style={[styles.button, style, animatedButtonStyles, positionStyles]}>
-        <Feather name='plus' size={size} color='#ffffff' />
+        <Feather name="plus" size={size} color="#ffffff" />
       </Animated.View>
     </TouchableWithoutFeedback>
   )

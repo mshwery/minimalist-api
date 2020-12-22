@@ -8,8 +8,8 @@ export const client = new ApolloClient({
     const token = await AsyncStorage.getItem('jwtToken')
     operation.setContext({
       headers: {
-        Authorization: token ? `Bearer ${token}` : ''
-      }
+        Authorization: token ? `Bearer ${token}` : '',
+      },
     })
   },
   onError: ({ networkError }) => {
@@ -17,5 +17,5 @@ export const client = new ApolloClient({
       // @ts-ignore
       networkError.message = networkError.bodyText
     }
-  }
+  },
 })

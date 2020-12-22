@@ -5,14 +5,14 @@ import Button from './Button'
 
 const styles = StyleSheet.create({
   ModalContent: {
-    padding: 24
+    padding: 24,
   },
   Button: {
     marginVertical: 24,
     height: 48,
   },
   Label: {
-    fontSize: 18
+    fontSize: 18,
   },
   NameInput: {
     fontSize: 16,
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     borderColor: '#e4e4e6',
     borderWidth: 1,
     borderRadius: 8,
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 })
 
 interface Props {
@@ -30,10 +30,7 @@ interface Props {
   onRequestClose: () => void
 }
 
-const CreateListModal: React.FC<Props> = ({
-  isVisible,
-  onRequestClose
-}) => {
+const CreateListModal: React.FC<Props> = ({ isVisible, onRequestClose }) => {
   const inputRef = useRef<TextInput>()
 
   // Hack because `autoFocus` in a `Modal` doesn't always work...
@@ -45,14 +42,14 @@ const CreateListModal: React.FC<Props> = ({
 
   return (
     <BottomSheet
-      animationType='fade'
+      animationType="fade"
       closeOnSwipeDown
       customStyles={{
         container: {
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
-          height: 260
-        }
+          height: 260,
+        },
       }}
       isVisible={isVisible}
       onOpen={onModalOpen}
@@ -61,26 +58,18 @@ const CreateListModal: React.FC<Props> = ({
       <View style={styles.ModalContent}>
         <Text style={styles.Label}>Create a list</Text>
         <TextInput
-          autoCapitalize='sentences'
+          autoCapitalize="sentences"
           autoCorrect
           blurOnSubmit
           // onSubmitEditing={onSubmitEditing}
           placeholder={'Name your list'}
-          placeholderTextColor='#A6B1BB'
+          placeholderTextColor="#A6B1BB"
           ref={inputRef}
-          returnKeyType='go'
+          returnKeyType="go"
           style={styles.NameInput}
         />
-        <Button
-          iconBefore='plus'
-          text='Create List'
-          style={styles.Button}
-        />
-        <Button
-          text='Cancel'
-          style={{ backgroundColor: 'transparent', color: 'gray' }}
-          onPress={onRequestClose}
-        />
+        <Button iconBefore="plus" text="Create List" style={styles.Button} />
+        <Button text="Cancel" style={{ backgroundColor: 'transparent', color: 'gray' }} onPress={onRequestClose} />
       </View>
     </BottomSheet>
   )

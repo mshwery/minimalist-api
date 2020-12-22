@@ -13,7 +13,7 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({
   email = '',
   image = '',
   name = '',
-  marginBottom
+  marginBottom,
 }) => {
   const menu = useMenuState({ placement: 'top-end' })
 

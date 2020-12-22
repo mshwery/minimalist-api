@@ -25,13 +25,13 @@ describe('ListModel', () => {
       UserModel.create(viewer, {
         id: viewer,
         email: chance.email({ domain: 'example.com' }),
-        password: chance.string({ length: 8 })
+        password: chance.string({ length: 8 }),
       }),
       UserModel.create(viewer, {
         id: nonViewer,
         email: chance.email({ domain: 'example.com' }),
-        password: chance.string({ length: 8 })
-      })
+        password: chance.string({ length: 8 }),
+      }),
     ])
   })
 
@@ -60,7 +60,7 @@ describe('ListModel', () => {
     it('should return null when the provided viewer doesnt have access to the list', async () => {
       const { id } = await createList({
         name: 'someone elses list',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       const list = await ListModel.fetch(viewer, id!)
@@ -70,7 +70,7 @@ describe('ListModel', () => {
     it('should return the list if the user created the list', async () => {
       const ogList = await createList({
         name: 'Test list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const list = await ListModel.fetch(viewer, ogList.id!)
@@ -80,7 +80,7 @@ describe('ListModel', () => {
     it('should return the list if the list is shared with the user', async () => {
       const ogList = await createList({
         name: 'Shared list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const { email } = (await UserModel.fetchByViewer(nonViewer))!
@@ -93,7 +93,7 @@ describe('ListModel', () => {
     it('should return tasks when asked to', async () => {
       const ogList = await createList({
         name: 'List with tasks',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const list = await ListModel.fetch(viewer, ogList.id!, { withTasks: true })
@@ -117,7 +117,7 @@ describe('ListModel', () => {
     it('should update the name of a list', async () => {
       const ogList = await createList({
         name: 'Test list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       await ListModel.update(viewer, ogList.id!, { name: 'Renamed list' })
@@ -132,7 +132,7 @@ describe('ListModel', () => {
     it('should delete a list if the viewer has access', async () => {
       const ogList = await createList({
         name: 'Delete Test List',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const list = await ListModel.fetch(viewer, ogList.id!)
@@ -147,7 +147,7 @@ describe('ListModel', () => {
     it('should throw if the viewer does not have access', async () => {
       const list = await createList({
         name: 'Delete Test List',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       await expect(ListModel.delete(viewer, list.id!)).rejects.toThrow(
@@ -160,7 +160,7 @@ describe('ListModel', () => {
     it('should throw if no valid email is provided', async () => {
       const list = await createList({
         name: 'addUser test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       await expect(ListModel.addUser(viewer, list.id!, '')).rejects.toThrow(/Valid email is required./)
@@ -176,7 +176,7 @@ describe('ListModel', () => {
     it('should throw if you arent the list owner', async () => {
       const list = await createList({
         name: 'addUser test',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       // Have to share the list in order for us to get to this error
@@ -191,14 +191,14 @@ describe('ListModel', () => {
     it('should send an email to the invited user', async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       // Have to share the list in order for us to get to this error
       await ListModel.addUser(viewer, list.id!, 'me@example.com')
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
-          to: 'me@example.com'
+          to: 'me@example.com',
         })
       )
     })
@@ -215,7 +215,7 @@ describe('ListModel', () => {
     it('should throw if you try to remove the list owner', async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const { email } = (await UserModel.fetchByViewer(viewer))!
@@ -228,7 +228,7 @@ describe('ListModel', () => {
     it('should throw if non-owners try to remove other users', async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       // Must share the list for this error to happen
@@ -238,7 +238,7 @@ describe('ListModel', () => {
       // Removed user must exist to encounter this error, so let's create it first
       await UserModel.create(viewer, {
         email: 'rando@example.com',
-        password: chance.string({ length: 8 })
+        password: chance.string({ length: 8 }),
       })
 
       await expect(ListModel.removeUser(otherUser.id, list.id!, 'rando@example.com')).rejects.toThrow(
@@ -249,7 +249,7 @@ describe('ListModel', () => {
     it("should remove the user's access to the list", async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       // Share the list first
@@ -276,7 +276,7 @@ describe('ListModel', () => {
     it("should throw if the user doesn't have access to the list", async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       await expect(ListModel.leaveList(viewer, list.id!)).rejects.toThrow(/No list found with id/)
@@ -285,7 +285,7 @@ describe('ListModel', () => {
     it('should throw if the user is trying to leave a list they created', async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       await expect(ListModel.leaveList(viewer, list.id!)).rejects.toThrow(/You cannot leave a list you own./)
@@ -294,7 +294,7 @@ describe('ListModel', () => {
     it("should remove the user's access to the list", async () => {
       const list = await createList({
         name: 'Email test',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       // Share the list first

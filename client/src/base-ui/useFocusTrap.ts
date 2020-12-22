@@ -14,7 +14,7 @@ export function useFocusTrap(isShown: boolean, options: Options = {}) {
       escapeDeactivates: true,
       clickOutsideDeactivates: false,
       fallbackFocus: '[tabindex="-1"]',
-      ...options
+      ...options,
     })
 
     trapRef.current = trap
@@ -38,6 +38,6 @@ export function useFocusTrap(isShown: boolean, options: Options = {}) {
   }, [isShown]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
-    ref: elementRef
+    ref: elementRef,
   }
 }

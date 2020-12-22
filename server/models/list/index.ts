@@ -24,7 +24,7 @@ export function canViewList(viewer: Viewer, list: List): boolean {
   }
 
   // List is shared with the user
-  if (Array.isArray(list.users) && list.users.find(u => u.id === viewer)) {
+  if (Array.isArray(list.users) && list.users.find((u) => u.id === viewer)) {
     return true
   }
 
@@ -86,7 +86,7 @@ export class ListModel {
     const repo = getCustomRepository(ListRepository)
     const list = repo.create({
       name: attrs.name,
-      createdBy: viewer
+      createdBy: viewer,
     })
 
     const newList = await repo.save(list)
@@ -96,8 +96,8 @@ export class ListModel {
       userId: viewer,
       properties: {
         listId: newList.id,
-        createdBy: viewer
-      }
+        createdBy: viewer,
+      },
     })
 
     return newList
@@ -130,13 +130,13 @@ export class ListModel {
 
     return getCustomRepository(ListRepository)
       .archive(list)
-      .then(l => {
+      .then((l) => {
         analytics.track({
           event: 'List Archived',
           userId: viewer,
           properties: {
-            listId: l.id
-          }
+            listId: l.id,
+          },
         })
 
         return l
@@ -154,13 +154,13 @@ export class ListModel {
 
     return getCustomRepository(ListRepository)
       .unarchive(list)
-      .then(l => {
+      .then((l) => {
         analytics.track({
           event: 'List Unarchived',
           userId: viewer,
           properties: {
-            listId: l.id
-          }
+            listId: l.id,
+          },
         })
 
         return l
@@ -184,8 +184,8 @@ export class ListModel {
       event: 'List Deleted',
       userId: viewer,
       properties: {
-        listId: list.id
-      }
+        listId: list.id,
+      },
     })
   }
 
@@ -217,7 +217,7 @@ export class ListModel {
         to: email,
         replyTo: {
           email: owner.email,
-          name: owner.name
+          name: owner.name,
         },
         category: 'collaboration',
         template: 'invite-to-list',
@@ -225,8 +225,8 @@ export class ListModel {
           invitedBy: owner.name || owner.email,
           invitedByImage: owner.image,
           listName: list.name,
-          listLink: `${config.get('APP_DOMAIN')}/lists/${list.id}`
-        }
+          listLink: `${config.get('APP_DOMAIN')}/lists/${list.id}`,
+        },
       })
 
       analytics.track({
@@ -234,8 +234,8 @@ export class ListModel {
         userId: viewer,
         properties: {
           listId: list.id,
-          invited: email
-        }
+          invited: email,
+        },
       })
     }
 
@@ -276,8 +276,8 @@ export class ListModel {
         userId: viewer,
         properties: {
           listId: list.id,
-          uninvited: email
-        }
+          uninvited: email,
+        },
       })
     }
 
@@ -304,8 +304,8 @@ export class ListModel {
       event: 'Left List',
       userId: viewer,
       properties: {
-        listId: list.id
-      }
+        listId: list.id,
+      },
     })
 
     return list

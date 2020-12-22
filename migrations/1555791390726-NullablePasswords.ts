@@ -3,13 +3,13 @@ import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm'
 const newPasswordColumn = new TableColumn({
   name: 'password',
   type: 'text',
-  isNullable: true
+  isNullable: true,
 })
 
 const oldPasswordColumn = new TableColumn({
   name: 'password',
   type: 'text',
-  isNullable: false
+  isNullable: false,
 })
 
 export class NullablePasswords1555791390726 implements MigrationInterface {

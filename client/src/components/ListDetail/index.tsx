@@ -20,7 +20,7 @@ import {
   deleteTask,
   moveTask,
   archiveList,
-  deleteList
+  deleteList,
 } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
@@ -28,7 +28,7 @@ import { CreateNewTask } from './CreateNewTask'
 import { ListMenu } from './ListMenu'
 import { ShareMenu } from './ShareMenu'
 
-const Container: React.FunctionComponent<any> = props => (
+const Container: React.FunctionComponent<any> = (props) => (
   <Pane
     {...props}
     flex="none"
@@ -75,7 +75,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     name: '',
     error: null,
     isLoading: true,
-    showCompletedTasks: false
+    showCompletedTasks: false,
   }
 
   async componentDidMount() {
@@ -140,7 +140,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       isCompleted: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sortOrder: position !== undefined ? position : this.state.tasks.length + 1
+      sortOrder: position !== undefined ? position : this.state.tasks.length + 1,
     }
 
     const optimisticTasks: TaskType[] = Array.from(this.state.tasks)
@@ -152,7 +152,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
     this.setState({
       autoFocusId: position !== undefined ? optimisticTask.id : null,
-      tasks: optimisticTasks
+      tasks: optimisticTasks,
     })
 
     void createTask({ id, content, position, listId })
@@ -183,14 +183,14 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   updateTaskInState = (task: Maybe<Partial<TaskType>>) => {
     if (task && this.state.tasks) {
       // Update task in set
-      this.setState(prevState => ({
-        tasks: prevState.tasks.map(t => {
+      this.setState((prevState) => ({
+        tasks: prevState.tasks.map((t) => {
           if (t.id === task.id) {
             return Object.assign({}, t, task)
           }
 
           return t
-        })
+        }),
       }))
     }
   }
@@ -209,8 +209,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
 
   deleteTask = async (id: string) => {
     // Optimistic update
-    this.setState(prevState => ({
-      tasks: prevState.tasks.filter(t => t.id !== id)
+    this.setState((prevState) => ({
+      tasks: prevState.tasks.filter((t) => t.id !== id),
     }))
 
     // TODO handle error
@@ -218,10 +218,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   handleDragEnd = async (result: DropResult, provided: ResponderProvided) => {
-    const task = this.state.tasks.find(t => t.id === result.draggableId)
+    const task = this.state.tasks.find((t) => t.id === result.draggableId)
     if (task && result.destination) {
       // find the sortOrder in the full list (for now, since completed tasks are excluded in this `destination.index`)
-      const taskAtIndex = this.state.tasks.filter(t => !t.isCompleted)[result.destination.index]
+      const taskAtIndex = this.state.tasks.filter((t) => !t.isCompleted)[result.destination.index]
       const trueDestinationIndex = this.state.tasks.indexOf(taskAtIndex)
       const trueSourceIndex = this.state.tasks.indexOf(task)
       const sortOrder = trueDestinationIndex + 1
@@ -229,7 +229,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       // Reorder the tasks and update their `sortOrder`
       const resortedTasks = move(this.state.tasks, trueSourceIndex, trueDestinationIndex).map((t, i) => ({
         ...t,
-        sortOrder: i + 1
+        sortOrder: i + 1,
       }))
 
       // Synchronously update the state before persisting async
@@ -238,7 +238,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       const moveTaskInput = {
         id: task.id,
         listId: this.props.listId,
-        insertBefore: sortOrder
+        insertBefore: sortOrder,
       }
 
       // Update async
@@ -282,8 +282,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   toggleDisplayCompleted = () => {
-    this.setState(prevState => ({
-      showCompletedTasks: !prevState.showCompletedTasks
+    this.setState((prevState) => ({
+      showCompletedTasks: !prevState.showCompletedTasks,
     }))
   }
 
@@ -295,8 +295,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     }
 
     const placeholder = 'Untitled'
-    const completedTasks = tasks.filter(t => t.isCompleted)
-    const remainingTasks = tasks.filter(t => !t.isCompleted)
+    const completedTasks = tasks.filter((t) => t.isCompleted)
+    const remainingTasks = tasks.filter((t) => !t.isCompleted)
 
     return (
       <Container onClick={this.props.requestSideBarClose}>
@@ -314,7 +314,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
             <SidebarIcon
               color={colors.fill.muted}
               size={scale(2.5)}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation()
                 if (typeof this.props.requestSideBar === 'function') {
                   this.props.requestSideBar()

@@ -12,7 +12,7 @@ describe('UserModel', () => {
     await UserModel.create(viewer, {
       id: viewer,
       email,
-      password
+      password,
     })
   })
 
@@ -37,7 +37,7 @@ describe('UserModel', () => {
       expect(user).toEqual(
         expect.objectContaining({
           id: viewer,
-          email
+          email,
         })
       )
     })
@@ -47,7 +47,7 @@ describe('UserModel', () => {
     it('should create a user', async () => {
       const attrs = {
         email: chance.email({ domain: 'example.com' }),
-        password
+        password,
       }
 
       await expect(UserModel.create(viewer, attrs)).resolves.not.toThrow()
@@ -56,7 +56,7 @@ describe('UserModel', () => {
     it('should throw if a user with the same email address already exists', async () => {
       const existingAttrs = {
         email,
-        password
+        password,
       }
 
       await expect(UserModel.create(viewer, existingAttrs)).rejects.toThrow(
@@ -69,7 +69,7 @@ describe('UserModel', () => {
     it('should allow the viewer to delete their own user', async () => {
       const user = await UserModel.create(undefined, {
         email: chance.email({ domain: 'example.com' }),
-        password
+        password,
       })
       await expect(UserModel.delete(user.id, user.id!)).resolves.not.toThrow()
     })
