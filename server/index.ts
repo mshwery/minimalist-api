@@ -109,13 +109,7 @@ initConnection()
   .then(conn => {
     connection = conn
 
-    // @ts-ignore
-    app.listen(port, err => {
-      if (err) {
-        logger.error(err)
-        return
-      }
-
+    app.listen(port, () => {
       logger.info(`🚀 Server ready at http://localhost:${port}`)
     })
   })
