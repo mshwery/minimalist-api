@@ -62,7 +62,7 @@
     "printWidth": 120
   },
   "lint-staged": {
-    "*.ts": [
+    "*.{ts,tsx}": [
       "tslint --fix",
       "prettier --write"
     ],
