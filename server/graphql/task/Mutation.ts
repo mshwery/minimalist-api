@@ -45,7 +45,7 @@ export default {
     const task = await TaskModel.moveTask(ctx.viewer, args.input)
 
     return {
-      task
+      task,
     }
-  }
+  },
 }

@@ -8,7 +8,7 @@ import {
   AfterLoad,
   BeforeUpdate,
   BeforeInsert,
-  ManyToMany
+  ManyToMany,
 } from 'typeorm'
 import { validate as validateEntity, Length, IsEmail, IsDate } from 'class-validator'
 import { hashPassword } from '../../lib/auth'
@@ -31,7 +31,7 @@ export default class User {
   @Length(8, 20)
   password: string | null
 
-  @ManyToMany(_type => List, list => list.users)
+  @ManyToMany((_type) => List, (list) => list.users)
   lists: List[]
 
   @Column({ type: 'text', nullable: true })

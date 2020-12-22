@@ -68,16 +68,16 @@ export class UserModel {
       userId: user.id,
       traits: {
         email,
-        connectedToGoogle: true
-      }
+        connectedToGoogle: true,
+      },
     })
 
     analytics.track({
       event: 'Logged In',
       userId: user.id,
       properties: {
-        loginMethod: 'google'
-      }
+        loginMethod: 'google',
+      },
     })
 
     // Update props from google
@@ -108,13 +108,13 @@ export class UserModel {
       userId: user.id,
       traits: {
         email: user.email,
-        connectedToGoogle: false
-      }
+        connectedToGoogle: false,
+      },
     })
 
     analytics.track({
       event: 'User Created',
-      userId: user.id
+      userId: user.id,
     })
 
     return user
@@ -133,7 +133,7 @@ export class UserModel {
 
     analytics.track({
       event: 'User Deleted',
-      userId: id
+      userId: id,
     })
   }
 

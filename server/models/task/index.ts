@@ -63,7 +63,7 @@ export class TaskModel {
 
     if (listId === 'inbox' || listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
-        listId: null
+        listId: null,
       })
     }
 
@@ -79,7 +79,7 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null, status?: TaskStatus }): Promise<Task[]> {
+  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null; status?: TaskStatus }): Promise<Task[]> {
     if (!viewer) {
       return []
     }
@@ -87,7 +87,7 @@ export class TaskModel {
     if (filters.listId === 'inbox' || filters.listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         listId: null,
-        status: filters.status
+        status: filters.status,
       })
     }
 
@@ -100,9 +100,9 @@ export class TaskModel {
     const tasks = list ? list.tasks! : []
 
     if (filters.status === TaskStatus.DONE) {
-      return tasks.filter(t => t.isCompleted)
+      return tasks.filter((t) => t.isCompleted)
     } else if (filters.status === TaskStatus.REMAINING) {
-      return tasks.filter(t => !t.isCompleted)
+      return tasks.filter((t) => !t.isCompleted)
     } else {
       return tasks
     }
@@ -145,7 +145,7 @@ export class TaskModel {
 
     const task = await getCustomRepository(TaskRepository).apply(new Task(), {
       ...attrs,
-      createdBy: viewer
+      createdBy: viewer,
     })
 
     analytics.track({
@@ -153,8 +153,8 @@ export class TaskModel {
       userId: viewer,
       properties: {
         listId: attrs.listId,
-        taskId: task.id
-      }
+        taskId: task.id,
+      },
     })
 
     if (!insertAt) {
@@ -164,7 +164,7 @@ export class TaskModel {
     return TaskModel.moveTask(viewer, {
       id: task.id!,
       listId: attrs.listId || 'inbox',
-      insertBefore: insertAt + 1
+      insertBefore: insertAt + 1,
     })
   }
 
@@ -180,14 +180,14 @@ export class TaskModel {
 
     return getCustomRepository(TaskRepository)
       .apply(task, attrs)
-      .then(t => {
+      .then((t) => {
         analytics.track({
           event: 'Task Updated',
           userId: viewer,
           properties: {
             listId: t.listId,
-            taskId: t.id
-          }
+            taskId: t.id,
+          },
         })
 
         return t
@@ -235,8 +235,8 @@ export class TaskModel {
       userId: viewer,
       properties: {
         listId: task.listId,
-        taskId: task.id
-      }
+        taskId: task.id,
+      },
     })
   }
 
@@ -248,7 +248,7 @@ export class TaskModel {
     const tasks = await TaskModel.fetchAllByList(viewer, args.listId)
 
     // Find the task we need to move
-    const task = tasks.find(t => t.id === args.id)
+    const task = tasks.find((t) => t.id === args.id)
 
     if (!task) {
       throw new NotFound(`No task found with id "${args.id}"`)

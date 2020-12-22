@@ -16,6 +16,6 @@ export const resolvers = {
   Node: {
     __resolveType() {
       return null
-    }
-  }
+    },
+  },
 }

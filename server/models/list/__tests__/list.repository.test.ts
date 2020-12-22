@@ -31,12 +31,12 @@ describe('ListRepository', () => {
     const author = repo.create({
       id: authorId,
       email: chance.email({ domain: 'example.com' }),
-      password: chance.string({ length: 8 })
+      password: chance.string({ length: 8 }),
     })
     const other = repo.create({
       id: otherPersonId,
       email: chance.email({ domain: 'example.com' }),
-      password: chance.string({ length: 8 })
+      password: chance.string({ length: 8 }),
     })
 
     await repo.save([author, other])
@@ -52,7 +52,7 @@ describe('ListRepository', () => {
 
       await Promise.all([
         createList({ name: 'author list', createdBy: authorId }),
-        createList({ name: 'other person list', createdBy: otherPersonId })
+        createList({ name: 'other person list', createdBy: otherPersonId }),
       ])
 
       const lists = await repo.allByViewer(authorId)
@@ -68,7 +68,7 @@ describe('ListRepository', () => {
 
       const [list1, list2] = await Promise.all([
         createList({ name: 'author list', createdBy: authorId }),
-        createList({ name: 'other person list', createdBy: otherPersonId })
+        createList({ name: 'other person list', createdBy: otherPersonId }),
       ])
 
       // Add the user to the list
@@ -77,7 +77,7 @@ describe('ListRepository', () => {
       const lists = await repo.allByViewer(authorId)
 
       expect(lists.length).toBe(2)
-      expect(lists.map(l => l.name)).toEqual(expect.arrayContaining([list1.name, list2.name]))
+      expect(lists.map((l) => l.name)).toEqual(expect.arrayContaining([list1.name, list2.name]))
     })
   })
 
@@ -139,18 +139,18 @@ describe('ListRepository', () => {
 
       const user = await userRepo.findOneOrFail(
         {
-          email: 'shared@example.com'
+          email: 'shared@example.com',
         },
         {
-          relations: ['lists']
+          relations: ['lists'],
         }
       )
 
       expect(user.lists).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            id: list.id
-          })
+            id: list.id,
+          }),
         ])
       )
     })
@@ -167,7 +167,7 @@ describe('ListRepository', () => {
       let user = await userRepo.findOneOrFail(
         { email: 'shared@example.com' },
         {
-          relations: ['lists']
+          relations: ['lists'],
         }
       )
 
@@ -175,8 +175,8 @@ describe('ListRepository', () => {
       expect(user.lists).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            id: list.id
-          })
+            id: list.id,
+          }),
         ])
       )
 

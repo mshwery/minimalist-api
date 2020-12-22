@@ -16,7 +16,7 @@ export default class TaskRepository extends Repository<Task> {
    */
   public allByAuthor(viewer: UUID, filters: TaskFilters = {}): Promise<Task[]> {
     const attrs: FindConditions<Task> = {
-      createdBy: viewer
+      createdBy: viewer,
     }
 
     if (filters.listId !== undefined) {

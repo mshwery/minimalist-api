@@ -23,7 +23,7 @@ passport.use(
     {
       clientID: config.get('GOOGLE_CLIENT_ID'),
       clientSecret: config.get('GOOGLE_CLIENT_SECRET'),
-      callbackURL: '/connect/google/callback'
+      callbackURL: '/connect/google/callback',
     },
     async (_accessToken, _refreshToken, profile, done) => {
       try {
@@ -52,14 +52,14 @@ router.get('/connect/google', (req: Request, res: Response, next: NextFunction) 
   res.cookie('redirectTo', req.query.redirect || '/', {
     httpOnly: true,
     secure: config.get('ENV') === 'production',
-    expires: addMinutes(new Date(), 10)
+    expires: addMinutes(new Date(), 10),
   })
 
   // @ts-ignore
   passport.authenticate('google', {
     scope: ['profile', 'email'],
     prompt: 'select_account',
-    callbackURL: getDynamicCallbackURL('') // req.query.redirect)
+    callbackURL: getDynamicCallbackURL(''), // req.query.redirect)
   })(req, res, next)
 })
 
@@ -70,7 +70,7 @@ router.get(
     // @ts-ignore
     passport.authenticate('google', {
       failureRedirect: redirect,
-      callbackURL: getDynamicCallbackURL('') // req.query.redirect)
+      callbackURL: getDynamicCallbackURL(''), // req.query.redirect)
     })(req, res, next)
   },
   (req: express.Request, res: express.Response) => {
@@ -83,7 +83,7 @@ router.get(
       httpOnly: true,
       secure: config.get('ENV') === 'production',
       // TODO: set `domain = '.getminimalist.com'`
-      expires
+      expires,
     })
 
     let redirect = '/'

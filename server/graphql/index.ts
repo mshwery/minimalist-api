@@ -8,7 +8,7 @@ import config from '../../config'
 function context({ req }) {
   return {
     // TODO: enrich with other user data
-    viewer: req.jwt ? req.jwt.sub : undefined
+    viewer: req.jwt ? req.jwt.sub : undefined,
   }
 }
 
@@ -23,9 +23,9 @@ const server = new ApolloServer({
     config.get('NODE_ENV') === 'production'
       ? {
           graphVariant: 'current',
-          reportSchema: true
+          reportSchema: true,
         }
-      : undefined
+      : undefined,
 })
 
 export default function applyGraphQLMiddleware(app: Express): void {
@@ -34,6 +34,6 @@ export default function applyGraphQLMiddleware(app: Express): void {
   server.applyMiddleware({
     app,
     cors: true,
-    path: '/graphql'
+    path: '/graphql',
   })
 }

@@ -11,11 +11,11 @@ export interface MutationInput<T> {
 export enum ListStatus {
   ARCHIVED = 'ARCHIVED',
   ACTIVE = 'ACTIVE',
-  ALL = 'ALL'
+  ALL = 'ALL',
 }
 
 export enum TaskStatus {
   DONE = 'DONE',
   REMAINING = 'REMAINING',
-  ALL = 'ALL'
+  ALL = 'ALL',
 }

@@ -9,5 +9,5 @@ export const typeDef = fs.readFileSync(path.join(__dirname, './list.graphql'), '
 export const resolvers = {
   Query,
   Mutation,
-  List
+  List,
 }

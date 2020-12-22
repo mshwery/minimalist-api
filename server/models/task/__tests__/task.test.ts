@@ -32,13 +32,13 @@ describe('TaskModel', () => {
       UserModel.create(viewer, {
         id: viewer,
         email: chance.email({ domain: 'example.com' }),
-        password: chance.string({ length: 8 })
+        password: chance.string({ length: 8 }),
       }),
       UserModel.create(viewer, {
         id: nonViewer,
         email: chance.email({ domain: 'example.com' }),
-        password: chance.string({ length: 8 })
-      })
+        password: chance.string({ length: 8 }),
+      }),
     ])
   })
 
@@ -71,7 +71,7 @@ describe('TaskModel', () => {
     it('should return null when the provided viewer doesnt have access to the task and it is not associated with a list', async () => {
       const { id } = await createTask({
         content: 'task with no list association',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       const task = await TaskModel.fetch(viewer, id!)
@@ -81,13 +81,13 @@ describe('TaskModel', () => {
     it('should return null when the provided viewer doesnt have access to the tasks associated list', async () => {
       const list = await createList({
         name: 'Test list',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       const ogTask = await createTask({
         content: 'task with no list association',
         createdBy: nonViewer,
-        list
+        list,
       })
 
       const task = await TaskModel.fetch(viewer, ogTask.id!)
@@ -97,7 +97,7 @@ describe('TaskModel', () => {
     it('should return the task if the user has access', async () => {
       let ogTask = await createTask({
         content: 'test task',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       let task = await TaskModel.fetch(viewer, ogTask.id!)
@@ -105,13 +105,13 @@ describe('TaskModel', () => {
 
       const list = await createList({
         name: 'Test list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       ogTask = await createTask({
         content: 'task with list association',
         createdBy: nonViewer,
-        list
+        list,
       })
 
       task = await TaskModel.fetch(viewer, ogTask.id!)
@@ -128,18 +128,18 @@ describe('TaskModel', () => {
     it('should return only non-list tasks they created when fetching the "inbox"', async () => {
       const task = await createTask({
         content: 'test task',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const list = await createList({
         name: 'Test list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const task2 = await createTask({
         content: 'list task',
         createdBy: viewer,
-        listId: list.id
+        listId: list.id,
       })
 
       const tasks = await TaskModel.fetchAllBy(viewer, { listId: 'inbox' })
@@ -151,18 +151,18 @@ describe('TaskModel', () => {
     it('should return tasks for a given list, when provided a listId', async () => {
       const task = await createTask({
         content: 'test task',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const list = await createList({
         name: 'Test list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const task2 = await createTask({
         content: 'list task',
         createdBy: viewer,
-        listId: list.id
+        listId: list.id,
       })
 
       const tasks = await TaskModel.fetchAllBy(viewer, { listId: list.id })
@@ -174,24 +174,24 @@ describe('TaskModel', () => {
     it('should return tasks for lists created by others, when shared with the viewer', async () => {
       const list = await createList({
         name: 'Test list',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       const [task1, task2, task3] = await Promise.all([
         createTask({
           content: 'test task',
           createdBy: nonViewer,
-          listId: list.id
+          listId: list.id,
         }),
         createTask({
           content: 'test task 2',
           createdBy: viewer,
-          listId: list.id
+          listId: list.id,
         }),
         createTask({
           content: 'unrelated',
-          createdBy: viewer
-        })
+          createdBy: viewer,
+        }),
       ])
 
       // Grant access
@@ -210,7 +210,7 @@ describe('TaskModel', () => {
       const args = {
         id: chance.guid({ version: 4 }),
         listId: chance.guid({ version: 4 }),
-        insertBefore: 10
+        insertBefore: 10,
       }
 
       await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No list found with id/)
@@ -219,19 +219,19 @@ describe('TaskModel', () => {
     it('should throw if the associated list cannot be access by the viewer', async () => {
       const list = await createList({
         name: 'moveTask list',
-        createdBy: nonViewer
+        createdBy: nonViewer,
       })
 
       const task = await createTask({
         content: 'moveTask test',
         createdBy: nonViewer,
-        list
+        list,
       })
 
       const args = {
         id: task.id!,
         listId: task.listId!,
-        insertBefore: 10
+        insertBefore: 10,
       }
 
       await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No list found with id/)
@@ -240,13 +240,13 @@ describe('TaskModel', () => {
     it('should throw if the task cannot be found', async () => {
       const list = await createList({
         name: 'moveTask list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const args = {
         id: chance.guid({ version: 4 }),
         listId: list.id!,
-        insertBefore: 10
+        insertBefore: 10,
       }
 
       await expect(TaskModel.moveTask(viewer, args)).rejects.toThrowError(/No task found with id/)
@@ -255,7 +255,7 @@ describe('TaskModel', () => {
     it('should not change the order if the item is already in the position', async () => {
       const list = await createList({
         name: 'moveTask list',
-        createdBy: viewer
+        createdBy: viewer,
       })
 
       const [task1, task2] = await Promise.all([
@@ -263,14 +263,14 @@ describe('TaskModel', () => {
           content: 'moveTask test1',
           createdBy: viewer,
           sortOrder: 1,
-          list
+          list,
         }),
         createTask({
           content: 'moveTask test2',
           createdBy: viewer,
           sortOrder: 2,
-          list
-        })
+          list,
+        }),
       ])
 
       expect(task1.sortOrder).toEqual(1)
@@ -280,7 +280,7 @@ describe('TaskModel', () => {
       await TaskModel.moveTask(viewer, {
         id: task1.id!,
         listId: list.id!,
-        insertBefore: 1
+        insertBefore: 1,
       })
 
       const tasks = await TaskModel.fetchAllByList(viewer, list.id!)

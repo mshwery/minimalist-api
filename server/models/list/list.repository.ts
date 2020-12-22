@@ -18,7 +18,7 @@ export default class ListRepository extends Repository<List> {
       .where('list.id = :id', { id })
       .orderBy({
         'task.sortOrder': { order: 'ASC', nulls: 'NULLS LAST' },
-        'task.createdAt': 'ASC'
+        'task.createdAt': 'ASC',
       })
       .getOne()
   }
@@ -31,7 +31,7 @@ export default class ListRepository extends Repository<List> {
     let query = this.createQueryBuilder('list')
       .leftJoin('list.users', 'user', 'user.id = :viewer', { viewer })
       .where(
-        new Brackets(qb => {
+        new Brackets((qb) => {
           qb.where('list.createdBy = :viewer', { viewer }).orWhere('user.id = :viewer', { viewer })
         })
       )
@@ -60,7 +60,7 @@ export default class ListRepository extends Repository<List> {
     const user = await getCustomRepository(UserRepository).findOrCreate({ email })
 
     // already has access!
-    if (list.users.find(u => u.id === user.id)) {
+    if (list.users.find((u) => u.id === user.id)) {
       return false
     }
 
@@ -72,7 +72,7 @@ export default class ListRepository extends Repository<List> {
 
   public async removeUserFromList(userId: string, listId: string): Promise<List> {
     const list = await this.findOneOrFail(listId, { relations: ['users'] })
-    list.users = list.users.filter(u => u.id !== userId)
+    list.users = list.users.filter((u) => u.id !== userId)
     return this.save(list)
   }
 }

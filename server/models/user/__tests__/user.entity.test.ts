@@ -30,7 +30,7 @@ describe('User', () => {
     it('should be hashed', async () => {
       const user = await createUser({
         email: chance.email({ domain: 'example.com' }),
-        password: 'ya boring'
+        password: 'ya boring',
       })
 
       expect(user.password).not.toBe('ya boring')
@@ -43,7 +43,7 @@ describe('User', () => {
       const repo = getRepository(User)
       let user = await createUser({
         email: chance.email({ domain: 'example.com' }),
-        password: 'ya boring'
+        password: 'ya boring',
       })
 
       const hashSaved = await comparePassword('ya boring', user.password)
@@ -66,13 +66,13 @@ describe('User', () => {
       const email = chance.email({ domain: 'example.com' })
       await createUser({
         email,
-        password: 'passwerd'
+        password: 'passwerd',
       })
 
       await createUser({
         email,
-        password: 'passwerd'
-      }).catch(error => {
+        password: 'passwerd',
+      }).catch((error) => {
         expect(error.detail).toBeDefined()
         expect(error.detail.includes('already exists')).toBe(true)
       })

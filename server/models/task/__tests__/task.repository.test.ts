@@ -16,12 +16,12 @@ describe('TaskRepository', () => {
     const author = userRepo.create({
       id: authorId,
       email: chance.email({ domain: 'example.com' }),
-      password: chance.string({ length: 8 })
+      password: chance.string({ length: 8 }),
     })
     const other = userRepo.create({
       id: otherPersonId,
       email: chance.email({ domain: 'example.com' }),
-      password: chance.string({ length: 8 })
+      password: chance.string({ length: 8 }),
     })
 
     await userRepo.save([author, other])
@@ -43,7 +43,7 @@ describe('TaskRepository', () => {
 
       const list = listRepo.create({
         name: 'author list',
-        createdBy: authorId
+        createdBy: authorId,
       })
 
       await listRepo.save(list)
@@ -51,11 +51,11 @@ describe('TaskRepository', () => {
       const task1 = taskRepo.create({
         content: 'foo',
         createdBy: authorId,
-        list
+        list,
       })
       const task2 = taskRepo.create({
         content: 'bar',
-        createdBy: authorId
+        createdBy: authorId,
       })
 
       await taskRepo.save([task1, task2])
@@ -71,7 +71,7 @@ describe('TaskRepository', () => {
 
       const task = taskRepo.create({
         content: 'foo',
-        createdBy: authorId
+        createdBy: authorId,
       })
 
       await taskRepo.save(task)
@@ -89,7 +89,7 @@ describe('TaskRepository', () => {
       const task = taskRepo.create({
         content: 'foo',
         createdBy: authorId,
-        completedAt: new Date()
+        completedAt: new Date(),
       })
 
       await taskRepo.save(task)
@@ -106,14 +106,14 @@ describe('TaskRepository', () => {
 
       const task = taskRepo.create({
         content: 'foo',
-        createdBy: authorId
+        createdBy: authorId,
       })
 
       await taskRepo.save(task)
       expect(task.isCompleted).toBe(false)
 
       await taskRepo.apply(task, {
-        isCompleted: true
+        isCompleted: true,
       })
 
       expect(task.isCompleted).toBe(true)

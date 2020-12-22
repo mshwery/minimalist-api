@@ -8,7 +8,7 @@ let analytics: Analytics
 if (!writeKey || config.get('NODE_ENV') === 'test') {
   analytics = {
     identify: noop,
-    track: noop
+    track: noop,
   } as Analytics
 } else {
   analytics = new Analytics(writeKey)

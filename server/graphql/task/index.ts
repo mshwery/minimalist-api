@@ -7,5 +7,5 @@ export const typeDef = fs.readFileSync(path.join(__dirname, './task.graphql'), '
 
 export const resolvers = {
   Query,
-  Mutation
+  Mutation,
 }

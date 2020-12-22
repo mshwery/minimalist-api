@@ -23,7 +23,7 @@ import passportRouter from './passport'
 
 Sentry.init({
   environment: config.get('ENV'),
-  dsn: config.get('SENTRY_DSN')
+  dsn: config.get('SENTRY_DSN'),
 })
 
 const app = express()
@@ -92,7 +92,7 @@ function gracefulShutdown(exitCode: number = 1) {
     .then(() => {
       process.exit(exitCode)
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error('😱 Failed to close db connection.', err)
       process.exit(1)
     })
@@ -106,19 +106,19 @@ function gracefulShutdown(exitCode: number = 1) {
 
 /** start the server */
 initConnection()
-  .then(conn => {
+  .then((conn) => {
     connection = conn
 
     app.listen(port, () => {
       logger.info(`🚀 Server ready at http://localhost:${port}`)
     })
   })
-  .catch(err => {
+  .catch((err) => {
     logger.crit('😱 The server failed to initialize the db connection!', err)
     gracefulShutdown()
   })
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   logger.crit('😱 The server crashed from an uncaught exception!', err)
   gracefulShutdown()
 })

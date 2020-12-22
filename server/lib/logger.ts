@@ -6,9 +6,9 @@ const logger = winston.createLogger({
   transports: [
     // Output human readable logs directly to stdout
     new winston.transports.Console({
-      format: winston.format.simple()
-    })
-  ]
+      format: winston.format.simple(),
+    }),
+  ],
 })
 
 export default logger
