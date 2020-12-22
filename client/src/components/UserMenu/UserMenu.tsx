@@ -1,7 +1,6 @@
 import React from 'react'
 import { ChevronDown, LogOut } from 'react-feather'
 import { colors, scale, Avatar, Pane, Text, Icon, Menu, MenuItem, MenuDisclosure, useMenuState } from '../../base-ui'
-import { css } from 'emotion'
 
 interface UserMenuProps {
   email: string
