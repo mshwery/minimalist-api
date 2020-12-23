@@ -15,8 +15,7 @@
     "dev": "concurrently \"yarn server watch\" \"yarn web start\"",
     "build": "concurrently \"yarn server build\" \"yarn web build\"",
     "test": "yarn server test",
-    "start": "yarn server start",
-    "heroku-postbuild": "yarn build"
+    "start": "yarn server start"
   },
   "husky": {
     "hooks": {
