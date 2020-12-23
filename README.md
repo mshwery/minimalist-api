@@ -36,7 +36,7 @@ yarn start
 
 Typeorm is our ORM / query builder for connecting to a Postgres database.
 
-Migrations can be generated using Typeorm `yarn typeorm migration:generate -n NameOfMigration`.
+Migrations can be generated using Typeorm `yarn server typeorm migration:generate -n NameOfMigration`.
 
 To run migrations: `yarn migrate` or `yarn migrate:dev` (also runs the build, which is where typeorm's cli is looking for new migrations).
 

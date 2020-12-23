@@ -11,11 +11,11 @@
     "build": "rm -rf dist && tsc",
     "postbuild": "cpx 'src/**/*.graphql' dist/src",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
-    "premigrate": "yarn build",
     "migrate": "yarn typeorm migration:run",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "start": "node dist/src/index.js",
-    "test": "yarn lint && jest src --runInBand"
+    "test": "yarn lint && jest src --runInBand",
+    "typeorm": "ts-node ../node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
