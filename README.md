@@ -6,7 +6,7 @@ An api for managing tasks and lists of tasks.
 
 ## Requirements
 
-- Node >= 10.13
+- Node >= 10.21
 - Yarn >= 1.15
 - Postgresql 11.6
 
@@ -36,7 +36,7 @@ yarn start
 
 Typeorm is our ORM / query builder for connecting to a Postgres database.
 
-Migrations can be generated using Typeorm `yarn typeorm migration:generate -n NameOfMigration`.
+Migrations can be generated using Typeorm `yarn server typeorm migration:generate -n NameOfMigration`.
 
 To run migrations: `yarn migrate` or `yarn migrate:dev` (also runs the build, which is where typeorm's cli is looking for new migrations).
 
@@ -45,8 +45,8 @@ Because the tests rely on actually interacting with a database, we have a separa
 ### Yarn commands
 
 - `yarn install` to install dependencies
-- `yarn lint` to check (and fix many) syntax/formatting
-- `yarn migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
+<!-- - `yarn lint` to check (and fix many) syntax/formatting -->
+- `yarn server migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
 - `yarn build` to compile the build
 - `yarn test` to run lint checks and tests
 - `yarn dev` to run the server in watch mode
@@ -54,7 +54,7 @@ Because the tests rely on actually interacting with a database, we have a separa
 
 ### Heroku
 
-The entire app (server and create-react-app client) is served on Heroku. Deploys happen automatically after successful Circle CI builds to `master`.
+The entire app (server and create-react-app web client) is served on Heroku. Deploys happen automatically after successful Circle CI builds to `master`.
 
 To run migrations: `heroku run 'yarn install --frozen-lockfile --production=false && yarn migrate' -a getminimalist2`
 

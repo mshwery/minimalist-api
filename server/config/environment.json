@@ -1,0 +1,19 @@
+{
+  "APP_DOMAIN": "http://localhost:5000",
+  "ENV": "local",
+  "GOOGLE_CLIENT_ID": "363401776899-dbes6lu81086n256rafd2o6ep64mba1h.apps.googleusercontent.com",
+  "GOOGLE_CLIENT_SECRET": "UBjLZDtwTSyi44yJCAwOMEG_",
+  "JWT_SECRET": "sekret",
+  "NODE_ENV": "development",
+  "PGUSER": "postgres",
+  "PGPASSWORD": "password",
+  "PGDATABASE": "minimalist",
+  "PGHOST": "localhost",
+  "PGPORT": 5433,
+  "PGSSL": false,
+  "SENDGRID_API_KEY": "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",
+  "SENDGRID_SANDBOX_MODE": "false",
+  "SENTRY_DSN": "",
+  "TEST_PGPORT": 5436,
+  "TZ": "utc"
+}

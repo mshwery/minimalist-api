@@ -9,10 +9,10 @@ module.exports = {
   username: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
   ssl: config.get('PGSSL') || false,
-  // output dir after compilation
-  entities: ['dist/server/**/*.entity.js'],
-  // output dir after compilation
-  migrations: ['dist/migrations/*.js'],
+  synchronize: false,
+  migrationsRun: false,
+  entities: ['src/**/*.entity.ts'],
+  migrations: ['migrations/*.ts'],
   cli: {
     // where migrations get created from the cli
     migrationsDir: 'migrations',
