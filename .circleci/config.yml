@@ -21,7 +21,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run: yarn install --frozen-lockfile
@@ -30,7 +30,7 @@ jobs:
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
       - run:
-          name: Compile TypeScript
+          name: Compile server + web
           command: yarn build
       - run:
           name: Run tests
@@ -38,4 +38,6 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - server/node_modules
+            - web/node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}

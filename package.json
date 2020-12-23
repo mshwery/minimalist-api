@@ -13,7 +13,8 @@
     "web": "yarn workspace web",
     "server": "yarn workspace server",
     "dev": "concurrently \"yarn server watch\" \"yarn web start\"",
-    "build": "yarn workspaces run build",
+    "build": "concurrently \"yarn server build\" \"yarn web build\"",
+    "test": "concurrently \"yarn server test\" \"yarn web test\"",
     "heroku-postbuild": "yarn build"
   },
   "husky": {

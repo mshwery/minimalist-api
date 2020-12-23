@@ -1887,9 +1887,9 @@
   integrity sha512-zurD1ibz21BRlAOIKP8yhrxlqKx6L9VCwkB5kMiP6nZAhoF5MvC7qS1qPA7nRcr1GJolfkQC7/EAL4hdYejLtg==
 
 "@types/email-templates@^6.0.1":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@types/email-templates/-/email-templates-6.0.3.tgz#1bf983d802c8604d2aef1f3168b580a895176f08"
-  integrity sha512-qZAYxh11by8ZyxnsieBJ4Wb/grrrojSAIZYbVmQeUOFXmxEIeMcYVE0U+2NQ4ruNQAhVYuXopNRBpB6DjGxLpg==
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/email-templates/-/email-templates-6.0.1.tgz#a026be076d879dbc42dad4bb6403d5ca868fb354"
+  integrity sha512-28KZ8bTIoP9gY58a7lM3Bmc2lX6OTjYtLzRWI5rztCHyiAozEFnlR2wBIA7hqpvU8zPWJbS6tmgQnQvW6IuHxA==
   dependencies:
     "@types/html-to-text" "*"
     "@types/nodemailer" "*"
@@ -1989,9 +1989,9 @@
   integrity sha512-S78QIYirQcUoo6UJZx9CSP0O2ix9IaeAXwQi26Rhr/+mg7qqPy8TzaxHSUut7eGjL8WmLccT7/MXf304WjqHcA==
 
 "@types/html-to-text@*":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/html-to-text/-/html-to-text-6.0.0.tgz#71f05982784c06e3983f8aab6a825f1741a9e22d"
-  integrity sha512-MkE9pBbP8kXm6ReXDf2VbmWA0bC1svBzM0c76OdawqlUf2peGGsoHoLn/gv/Ldq/Sl9QJhbEQAj0qtQCkHWtEA==
+  version "1.4.31"
+  resolved "https://registry.yarnpkg.com/@types/html-to-text/-/html-to-text-1.4.31.tgz#3b73aa59f127551cc0ce615346caa730e7622f9f"
+  integrity sha512-9vTFw6vYZNnjPOep9WRXs7cw0vg04pAZgcX9bqx70q1BNT7y9sOJovpbiNIcSNyHF/6LscLvGhtb5Og1T0UEvA==
 
 "@types/http-assert@*":
   version "1.5.1"
@@ -2175,9 +2175,9 @@
     "@types/react" "^16"
 
 "@types/react-query@^0.3.0", "@types/react-query@^0.3.1":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@types/react-query/-/react-query-0.3.9.tgz#44632be07f89b17129f0382d69ffaf7f0672a2ad"
-  integrity sha512-di5EVtAy/3q95AdtbZWk2jo2yjKw+9AJDWnEllUaS/s5Zctvh1wppiMOZ+cUs3yR2V4xY6qwD5rQ7pP+fUC6/A==
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@types/react-query/-/react-query-0.3.2.tgz#fd7083f6a55ead0134a4a3c73bdd445b71f62364"
+  integrity sha512-TD0DN2NjmJ91h34dWV4HEl6anpTyh5jwm08/9ohsslqrWNTUsYPeXwAUWUaAESFpPKHaE0WPqI4j3BGPTi9Ncg==
   dependencies:
     "@types/react" "*"
 
@@ -11985,9 +11985,9 @@ react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-i
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 react-query@^0.3.13:
-  version "0.3.27"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-0.3.27.tgz#f59073e1f457db1c37057d145c966847b2dae954"
-  integrity sha512-d0f8DM4DyF0MGm8jezpE+irBectEDwbY83ZRCTCDQh/OQ/bZVdXOfz5t8QWx8AsTjzjjGFURdnNnsTnxVHpARg==
+  version "0.3.15"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-0.3.15.tgz#023e27bef1cc53daaeda3d2a01290809abff8374"
+  integrity sha512-FhS66AtdQ63GIgH9UPQSVdHkmcbFzbvm5zKhG9vg3+me6MqG5VHX6lE3y8hovEG2IXsNUw7zPT0qb5LUAlS9xg==
   dependencies:
     "@types/react-query" "^0.3.0"
 

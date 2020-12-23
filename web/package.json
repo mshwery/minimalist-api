@@ -27,7 +27,7 @@
     "lint": "tslint --project tsconfig.json 'src/**/*.tsx?'",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "yarn lint && react-scripts test",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
