@@ -42,7 +42,7 @@
       "name": "Dev Server",
       "type": "node",
       "request": "launch",
-      "args": ["./packages/server/index.ts"],
+      "args": ["./server/src/index.ts"],
       "env": {
         "TS_NODE_FILES": "true" // make sure our type definitions are included
       },

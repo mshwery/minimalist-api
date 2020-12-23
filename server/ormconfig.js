@@ -9,6 +9,8 @@ module.exports = {
   username: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
   ssl: config.get('PGSSL') || false,
+  synchronize: false,
+  migrationsRun: false,
   entities: ['src/**/*.entity.ts'],
   migrations: ['migrations/*.ts'],
   cli: {

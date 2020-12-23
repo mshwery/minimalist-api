@@ -9,6 +9,6 @@ module.exports = {
   globalSetup: '<rootDir>/test/global-setup.js',
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   moduleNameMapper: {
-    '@/(.+)': '<rootDir>/packages/server/$1',
+    '@/(.+)': '<rootDir>/server/$1',
   },
 }
