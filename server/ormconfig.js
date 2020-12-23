@@ -11,8 +11,7 @@ module.exports = {
   ssl: config.get('PGSSL') || false,
   synchronize: false,
   migrationsRun: false,
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['migrations/*.ts'],
+  migrations: config.get('NODE_ENV') === 'production' ? [] : ['migrations/*.ts'],
   cli: {
     // where migrations get created from the cli
     migrationsDir: 'migrations',
