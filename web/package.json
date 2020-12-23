@@ -40,8 +40,6 @@
     "@types/react-responsive": "^8.0.1",
     "@types/react-router-dom": "^5.1.0",
     "@types/uuid": "^8.3.0",
-    "husky": "^4.3.6",
-    "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "source-map-explorer": "^2.1.0",
     "tslint": "^5.14.0",
@@ -58,23 +56,9 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "printWidth": 120
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "tslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
   }
 }

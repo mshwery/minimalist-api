@@ -10,18 +10,13 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "postbuild": "cpx 'src/**/*.graphql' dist/src",
-    "client": "cd client && yarn start",
-    "dev": "concurrently \"yarn server\" \"yarn client\"",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
     "premigrate": "yarn build",
     "migrate": "yarn typeorm migration:run",
-    "server": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "start": "node dist/src/index.js",
-    "test": "yarn lint && jest src --runInBand",
-    "heroku-postbuild": "yarn build && cd client && yarn install --frozen-lockfile --production=false && yarn build"
+    "test": "yarn lint && jest src --runInBand"
   },
-  "author": "Matt Shwery",
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
     "@sentry/node": "^5.0.5",
@@ -52,24 +47,10 @@
     "typeorm": "^0.2.11",
     "winston": "^3.1.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "printWidth": 120
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "tslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
   },
   "devDependencies": {
     "@types/analytics-node": "^3.1.1",
@@ -92,9 +73,7 @@
     "chance": "^1.0.18",
     "cpx": "^1.5.0",
     "eslint": "^6.5.1",
-    "husky": "^4.3.6",
     "jest": "^24.7.1",
-    "lint-staged": "^10.5.3",
     "nodemon": "^1.18.9",
     "prettier": "^2.2.1",
     "ts-jest": "^24.0.2",

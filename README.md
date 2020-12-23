@@ -45,8 +45,8 @@ Because the tests rely on actually interacting with a database, we have a separa
 ### Yarn commands
 
 - `yarn install` to install dependencies
-- `yarn lint` to check (and fix many) syntax/formatting
-- `yarn migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
+<!-- - `yarn lint` to check (and fix many) syntax/formatting -->
+- `yarn server migrate` to run all `up` migrations. This is equivalent to running `npx typeorm migration:run`
 - `yarn build` to compile the build
 - `yarn test` to run lint checks and tests
 - `yarn dev` to run the server in watch mode

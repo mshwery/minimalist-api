@@ -5,7 +5,7 @@ import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
 import { Sidebar } from '../components/Sidebar'
 import UserMenu from '../components/UserMenu'
-import ListPage from '../pages/ListPage'
+import ListPage from './ListPage'
 
 const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> = ({ user }) => {
   const location = useLocation()

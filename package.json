@@ -1,20 +1,39 @@
 {
   "private": true,
   "name": "minimalist",
+  "author": "Matt Shwery",
   "engines": {
     "node": ">=10.21"
   },
   "workspaces": [
-    "packages/*"
+    "mobile",
+    "server",
+    "web"
   ],
   "scripts": {
     "web": "yarn workspace web",
     "server": "yarn workspace server",
     "dev": "concurrently \"yarn server watch\" \"yarn web start\"",
-    "premigrate": "yarn server build",
-    "migrate": ""
+    "build": "yarn server build && yarn web build",
+    "heroku-postbuild": "yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "tslint --fix",
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
-    "concurrently": "^5.3.0"
+    "concurrently": "^5.3.0",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3"
   }
 }
