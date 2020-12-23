@@ -55,10 +55,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "printWidth": 120
-  }
+  ]
 }
