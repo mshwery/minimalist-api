@@ -6,6 +6,7 @@ node_modules
 
 # local environment vars
 config/environment.json
+web/config/environment.json
 .env
 
 # compiled output
