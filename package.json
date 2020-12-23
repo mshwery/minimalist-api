@@ -6,7 +6,6 @@
     "node": ">=10.21"
   },
   "workspaces": [
-    "mobile",
     "server",
     "web"
   ],
@@ -14,7 +13,7 @@
     "web": "yarn workspace web",
     "server": "yarn workspace server",
     "dev": "concurrently \"yarn server watch\" \"yarn web start\"",
-    "build": "yarn server build && yarn web build",
+    "build": "yarn workspaces run build",
     "heroku-postbuild": "yarn build"
   },
   "husky": {
