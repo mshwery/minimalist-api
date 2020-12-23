@@ -7,6 +7,8 @@ import User from '../models/user/user.entity'
 const defaultOptions: ConnectionOptions = {
   ...(ormConfig as ConnectionOptions),
   entities: [List, Task, User],
+  // overwrite this so we dont try to read ts files
+  migrations: [],
 }
 
 export default function initConnection(options: Partial<ConnectionOptions> = {}): Promise<Connection> {
