@@ -1,14 +1,33 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2017,
+    ecmaFeatures: {
+      jsx: true
+    },
+    sourceType: 'module'
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
   extends: [
-    'eslint:recommended'
-  ],
-  plugins: [
-    '@typescript-eslint',
+    'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'prettier',
+    'prettier/react',
+    'prettier/@typescript-eslint'
   ],
+  plugins: [
+    'react',
+    'react-hooks',
+    '@typescript-eslint'
+  ],
+  ignorePatterns: ['build', 'dist', 'public', 'node_modules', 'mobile'],
   rules: {
     // '@typescript-eslint/adjacent-overload-signatures': 'error',
     // '@typescript-eslint/array-type': 'error',
@@ -90,36 +109,26 @@ module.exports = {
       files: ['server/**/*.{js,ts}'],
       env: {
         node: true,
-        es6: true
-      },
-      parserOptions: {
-        ecmaVersion: 2017,
-        sourceType: 'module'
-      },
+        es2017: true
+      }
     },
     {
       files: ['web/**/*.{js,ts,tsx}'],
       env: {
+        node: true,
         browser: true,
-        es6: true
+        es2017: true
       },
-      parserOptions: {
-        ecmaVersion: 2017,
-        ecmaFeatures: {
-          jsx: true
-        },
-        sourceType: 'module'
-      },
-      settings: {
-        react: {
-          version: 'detect'
-        }
-      },
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      }
     },
     {
       files: ['*-test.ts', '*.test.ts', '__tests__/**/*.ts', 'test/**/*.{js,ts}'],
       env: {
-        jest: true
+        node: true,
+        jest: true,
+        es2017: true
       }
     }
   ]

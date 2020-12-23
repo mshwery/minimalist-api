@@ -85,7 +85,7 @@ app.use(handleErrorResponse)
 
 let connection: Connection
 
-function gracefulShutdown(exitCode: number = 1) {
+function gracefulShutdown(exitCode = 1) {
   const promise = connection ? connection.close() : Promise.resolve()
 
   promise

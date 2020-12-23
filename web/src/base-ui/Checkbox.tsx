@@ -6,7 +6,7 @@ import { BaseUIProps } from './types'
 import { scale } from './scale'
 import { colors } from './colors'
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {}
+type Props = InputHTMLAttributes<HTMLInputElement>
 
 export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
   id,
