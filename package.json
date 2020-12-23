@@ -3,7 +3,7 @@
   "name": "minimalist",
   "author": "Matt Shwery",
   "engines": {
-    "node": ">=10.21"
+    "node": "10.x"
   },
   "workspaces": [
     "server",

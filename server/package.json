@@ -3,10 +3,6 @@
   "version": "1.5.1",
   "description": "",
   "private": true,
-  "engines": {
-    "node": "10.x",
-    "yarn": "1.x"
-  },
   "scripts": {
     "build": "rm -rf dist && tsc",
     "postbuild": "cpx 'src/**/*.graphql' dist/src",
