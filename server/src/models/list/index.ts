@@ -133,7 +133,7 @@ export class ListModel {
       .then((l) => {
         analytics.track({
           event: 'List Archived',
-          userId: viewer!,
+          userId: viewer as string,
           properties: {
             listId: l.id,
           },
@@ -157,7 +157,7 @@ export class ListModel {
       .then((l) => {
         analytics.track({
           event: 'List Unarchived',
-          userId: viewer!,
+          userId: viewer as string,
           properties: {
             listId: l.id,
           },
@@ -210,7 +210,7 @@ export class ListModel {
     const added = await getCustomRepository(ListRepository).addUserToList(email, id)
     if (added) {
       // This should always return a user model. If it doesn't there is a problem!
-      const owner = (await UserModel.fetchByViewer(viewer))!
+      const owner = (await UserModel.fetchByViewer(viewer)) as User
 
       // Send email to added user
       await sendEmail({
@@ -269,11 +269,11 @@ export class ListModel {
         throw new Forbidden(`You cannot remove users from lists you do not own.`)
       }
 
-      await getCustomRepository(ListRepository).removeUserFromList(user.id!, id)
+      await getCustomRepository(ListRepository).removeUserFromList(user.id, id)
 
       analytics.track({
         event: 'Removed User From List',
-        userId: viewer!,
+        userId: viewer as string,
         properties: {
           listId: list.id,
           uninvited: email,
@@ -298,11 +298,11 @@ export class ListModel {
       throw new Forbidden(`You cannot leave a list you own.`)
     }
 
-    await getCustomRepository(ListRepository).removeUserFromList(viewer!, id)
+    await getCustomRepository(ListRepository).removeUserFromList(viewer as string, id)
 
     analytics.track({
       event: 'Left List',
-      userId: viewer!,
+      userId: viewer as string,
       properties: {
         listId: list.id,
       },

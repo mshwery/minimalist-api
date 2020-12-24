@@ -19,7 +19,7 @@ const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> 
   return (
     <Pane display="flex" maxWidth="100vw" maxHeight="100vh" overflow="hidden">
       <Sidebar isOpen={isOpen} requestSideBarClose={() => setIsOpen(false)}>
-        <UserMenu {...user!} marginBottom={scale(4)} />
+        {user && <UserMenu {...user} marginBottom={scale(4)} />}
         <Lists />
       </Sidebar>
       <Pane flex="1" maxHeight="100%" overflowY="auto" overflowX="hidden">

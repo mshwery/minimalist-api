@@ -60,12 +60,17 @@ export class UserModel {
   /**
    * Gets or creates a user by email + googleId
    */
-  static async findOrCreateGoogleConnectedUser(email: string, googleId: string, image: string, name: string) {
+  static async findOrCreateGoogleConnectedUser(
+    email: string,
+    googleId: string,
+    image: string,
+    name: string
+  ): Promise<User> {
     const repo = getCustomRepository(UserRepository)
     const user = await repo.findOrCreate({ email })
 
     analytics.identify({
-      userId: user.id!,
+      userId: user.id,
       traits: {
         email,
         connectedToGoogle: true,
@@ -74,7 +79,7 @@ export class UserModel {
 
     analytics.track({
       event: 'Logged In',
-      userId: user.id!,
+      userId: user.id,
       properties: {
         loginMethod: 'google',
       },
@@ -105,7 +110,7 @@ export class UserModel {
     const user = await repo.save(repo.create(attrs))
 
     analytics.identify({
-      userId: user.id!,
+      userId: user.id,
       traits: {
         email: user.email,
         connectedToGoogle: false,
@@ -114,7 +119,7 @@ export class UserModel {
 
     analytics.track({
       event: 'User Created',
-      userId: user.id!,
+      userId: user.id,
     })
 
     return user
