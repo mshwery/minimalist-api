@@ -6,7 +6,6 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "postbuild": "cpx 'src/**/*.graphql' dist/src",
-    "lint": "echo 'Nope'",
     "migrate": "yarn typeorm migration:run",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "start": "node dist/src/index.js",
@@ -59,7 +58,7 @@
     "@types/jest": "^24.0.11",
     "@types/jsonwebtoken": "^8.3.0",
     "@types/lodash": "^4.14.119",
-    "@types/node": "^12.7.8",
+    "@types/node": "^14.0.0",
     "@types/passport": "^1.0.0",
     "chance": "^1.0.18",
     "cpx": "^1.5.0",
