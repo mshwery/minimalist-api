@@ -24,10 +24,9 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "lint": "eslint src",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "yarn lint && react-scripts test",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "devDependencies": {

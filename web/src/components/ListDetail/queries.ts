@@ -270,7 +270,11 @@ export const moveTaskMutation = `
   }
 `
 
-export async function moveTask(args: { id: string; listId: string; insertBefore: number }): Promise<{ task: Maybe<Task> }> {
+export async function moveTask(args: {
+  id: string
+  listId: string
+  insertBefore: number
+}): Promise<{ task: Maybe<Task> }> {
   const result = await client.request<MoveTaskData>(moveTaskMutation, {
     input: args,
   })
@@ -382,12 +386,28 @@ const getCollaboratorsQuery = `
   }
 `
 
-export async function getCollaborators(input: { id: string }) {
-  const result = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, input)
-  const list = result.list!
-  const collaborators = list.collaborators!.map((user) => ({ ...user, isOwner: false }))
-  const creator = Object.assign(list.creator, { isOwner: true })
-  return [creator, ...collaborators]
+interface Collaborator extends User {
+  isOwner: boolean
+}
+
+export async function getCollaborators(input: { id: string }): Promise<Array<Collaborator>> {
+  const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, input)
+  if (!list) {
+    return []
+  }
+
+  const collaborators: Collaborator[] = []
+
+  if (list.creator) {
+    const creator = Object.assign(list.creator, { isOwner: true })
+    collaborators.push(creator)
+  }
+
+  if (list && Array.isArray(list?.collaborators)) {
+    collaborators.push(...list.collaborators.map((user) => ({ ...user, isOwner: false })))
+  }
+
+  return collaborators
 }
 
 interface ShareListData {
@@ -416,9 +436,9 @@ export const shareListMutation = `
   }
 `
 
-export async function shareList(input: { id: string; email: string }): Promise<User[] | undefined> {
+export async function shareList(input: { id: string; email: string }): Promise<User[]> {
   const result = await client.request<ShareListData>(shareListMutation, { input })
-  return result.shareList.list!.collaborators
+  return result.shareList.list?.collaborators ?? []
 }
 
 interface UnshareListData {
@@ -449,5 +469,5 @@ export const unshareListMutation = `
 
 export async function unshareList(input: { id: string; email: string }): Promise<User[] | undefined> {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
-  return result.unshareList.list!.collaborators
+  return result.unshareList.list?.collaborators ?? []
 }

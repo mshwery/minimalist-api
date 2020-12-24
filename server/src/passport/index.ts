@@ -67,6 +67,7 @@ router.get(
   '/connect/google/callback',
   (req: Request, res: Response, next: NextFunction) => {
     const redirect = req.query.redirect ? decodeURIComponent(req.query.redirect as string) : '/'
+
     // @ts-ignore not sure what's up with these types
     passport.authenticate('google', {
       failureRedirect: redirect,
@@ -76,7 +77,7 @@ router.get(
   (req: express.Request, res: express.Response) => {
     // TODO move this so we aren't duplicating it for each provider
     const expires = addHours(new Date(), 24)
-    const token = generateJwt({ sub: req.user!.id })
+    const token = generateJwt({ sub: req.user?.id })
 
     // Persist token in an HTTP-only cookie
     res.cookie(SESSION_COOKIE, token, {
