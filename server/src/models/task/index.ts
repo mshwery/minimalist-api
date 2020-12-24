@@ -73,7 +73,7 @@ export class TaskModel {
       throw new NotFound(`No list found with id "${listId}"`)
     }
 
-    return list.tasks!
+    return list.tasks ?? []
   }
 
   /**
@@ -97,7 +97,7 @@ export class TaskModel {
 
     // TODO: fetch the list via DataLoaders
     const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
-    const tasks = list ? list.tasks! : []
+    const tasks = list?.tasks ?? []
 
     if (filters.status === TaskStatus.DONE) {
       return tasks.filter((t) => t.isCompleted)
@@ -162,7 +162,7 @@ export class TaskModel {
     }
 
     return TaskModel.moveTask(viewer, {
-      id: task.id!,
+      id: task.id,
       listId: attrs.listId || 'inbox',
       insertBefore: insertAt + 1,
     })
@@ -183,7 +183,7 @@ export class TaskModel {
       .then((t) => {
         analytics.track({
           event: 'Task Updated',
-          userId: viewer!,
+          userId: viewer as string,
           properties: {
             listId: t.listId,
             taskId: t.id,
@@ -232,7 +232,7 @@ export class TaskModel {
 
     analytics.track({
       event: 'Task Deleted',
-      userId: viewer!,
+      userId: viewer as string,
       properties: {
         listId: task.listId,
         taskId: task.id,

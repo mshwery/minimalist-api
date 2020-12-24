@@ -39,20 +39,20 @@ export class Task extends React.Component<Props, State> {
     optimisticChecked: this.props.isCompleted || false,
   }
 
-  emitDoneEditing = (event: React.SyntheticEvent<Element>, value: string) => {
+  emitDoneEditing = (event: React.SyntheticEvent<Element>, value: string): void => {
     if (typeof this.props.onDoneEditing === 'function') {
       this.props.onDoneEditing(event, value)
     }
   }
 
-  resetInput = (content: string) => {
+  resetInput = (content: string): void => {
     this.setState({ content })
     if (this.inputRef.current) {
       this.inputRef.current.resetInput(content)
     }
   }
 
-  handleBlur = (event: React.SyntheticEvent) => {
+  handleBlur = (event: React.SyntheticEvent): void => {
     const currentTarget = event.currentTarget
 
     if (!currentTarget.contains(document.activeElement)) {
@@ -60,15 +60,15 @@ export class Task extends React.Component<Props, State> {
     }
   }
 
-  handleChange = (_event: React.KeyboardEvent<Element>, value: string) => {
+  handleChange = (_event: React.KeyboardEvent<Element>, value: string): void => {
     this.setState({ content: value })
   }
 
-  handleFocus = (_event: React.SyntheticEvent) => {
+  handleFocus = (_event: React.SyntheticEvent): void => {
     this.setState({ hasFocus: true })
   }
 
-  handleKeyPress = (event: React.KeyboardEvent<Element>, value: string) => {
+  handleKeyPress = (event: React.KeyboardEvent<Element>, value: string): void => {
     if (event.key === 'Enter') {
       event.preventDefault()
       this.emitDoneEditing(event, value)
@@ -79,25 +79,25 @@ export class Task extends React.Component<Props, State> {
     }
   }
 
-  handleMouseMove = (_event: React.MouseEvent) => {
+  handleMouseMove = (_event: React.MouseEvent): void => {
     if (!this.state.hasHover && !this.props.isDraggingAnother) {
       this.setState({ hasHover: true })
     }
   }
 
-  handleMouseEnter = (_event: React.MouseEvent) => {
+  handleMouseEnter = (_event: React.MouseEvent): void => {
     if (!this.props.isDraggingAnother) {
       this.setState({ hasHover: true })
     }
   }
 
-  handleMouseLeave = (_event: React.MouseEvent) => {
+  handleMouseLeave = (_event: React.MouseEvent): void => {
     if (!this.props.isDraggingAnother) {
       this.setState({ hasHover: false })
     }
   }
 
-  handleCheckedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleCheckedChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const isOptimisticallyCompleted = event.target.checked
     this.setState({ optimisticChecked: isOptimisticallyCompleted })
 
@@ -108,7 +108,7 @@ export class Task extends React.Component<Props, State> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       autoFocus,
       canDelete,

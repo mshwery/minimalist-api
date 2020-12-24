@@ -14,7 +14,6 @@ export const client = new ApolloClient({
   },
   onError: ({ networkError }) => {
     if (networkError && networkError.name === 'ServerParseError') {
-      // @ts-ignore
       networkError.message = networkError.bodyText
     }
   },

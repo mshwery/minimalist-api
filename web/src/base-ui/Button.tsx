@@ -66,7 +66,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export class Button extends PureComponent<ButtonProps & BaseUIProps> {
-  render() {
+  render(): JSX.Element {
     const {
       children,
       disabled,

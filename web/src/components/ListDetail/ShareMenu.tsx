@@ -40,6 +40,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   const history = useHistory()
   const userContext = useCurrentUser()
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const currentUser = userContext.user!
   const isCurrentUserOwner = currentUser.id === creator
 

@@ -26,8 +26,8 @@ export default function formatError(error: GraphQLError): any {
   logger.error(error)
 
   // Remove exception information in production mode
-  if (config.get('NODE_ENV') === 'production') {
-    delete error.extensions!.exception
+  if (config.get('NODE_ENV') === 'production' && error.extensions) {
+    delete error.extensions.exception
   }
 
   // Only explicitly exposable errors should be returned as-is

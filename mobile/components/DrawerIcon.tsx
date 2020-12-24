@@ -2,7 +2,7 @@ import React from 'react'
 import { Feather } from '@expo/vector-icons'
 import IconButton from './IconButton'
 
-export function createDrawerIcon(iconName: string, iconSize: number = 20) {
+export function createDrawerIcon(iconName: string, iconSize = 20) {
   return (props) => <Feather name={iconName} size={iconSize} color={props.color} style={{ marginRight: -12 }} />
 }
 

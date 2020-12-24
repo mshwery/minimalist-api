@@ -217,7 +217,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     await deleteTask({ id })
   }
 
-  handleDragEnd = async (result: DropResult, provided: ResponderProvided) => {
+  handleDragEnd = async (result: DropResult, _provided: ResponderProvided) => {
     const task = this.state.tasks.find((t) => t.id === result.draggableId)
     if (task && result.destination) {
       // find the sortOrder in the full list (for now, since completed tasks are excluded in this `destination.index`)

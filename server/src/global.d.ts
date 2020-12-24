@@ -14,3 +14,5 @@ declare namespace Express {
     }
   }
 }
+
+type EmptyObject = Record<string, never>

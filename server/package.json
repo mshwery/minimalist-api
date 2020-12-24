@@ -6,11 +6,11 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "postbuild": "cpx 'src/**/*.graphql' dist/src",
-    "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
+    "lint": "echo 'Nope'",
     "migrate": "yarn typeorm migration:run",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "start": "node dist/src/index.js",
-    "test": "yarn lint && jest src --runInBand",
+    "test": "jest src --runInBand",
     "typeorm": "ts-node ../node_modules/typeorm/cli.js"
   },
   "dependencies": {
@@ -63,14 +63,10 @@
     "@types/passport": "^1.0.0",
     "chance": "^1.0.18",
     "cpx": "^1.5.0",
-    "eslint": "^6.5.1",
     "jest": "^24.7.1",
     "nodemon": "^1.18.9",
-    "prettier": "^2.2.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.1.0",
-    "tslint": "^5.12.0",
-    "tslint-config-prettier": "^1.17.0",
     "typescript": "^3.2.2"
   }
 }

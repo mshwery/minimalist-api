@@ -20,79 +20,79 @@ type MostTextProps = Omit<
 export class ContentEditableText extends React.Component<Props & MostTextProps> {
   elementRef = React.createRef<HTMLSpanElement>()
 
-  componentDidMount() {
+  componentDidMount(): void {
     if (this.props.autoFocus) {
       this.focusInput()
     }
   }
 
-  componentDidUpdate(prevProps: Props & MostTextProps) {
+  componentDidUpdate(prevProps: Props & MostTextProps): void {
     if (this.props.autoFocus && !prevProps.autoFocus) {
       this.focusInput()
     }
   }
 
-  focusInput = () => {
+  focusInput = (): void => {
     if (this.elementRef.current) {
       this.elementRef.current.focus()
     }
   }
 
-  resetInput = (content: string) => {
+  resetInput = (content: string): void => {
     if (this.elementRef.current) {
       this.elementRef.current.innerText = content
     }
   }
 
-  shouldComponentUpdate(nextProps: Props & MostTextProps) {
+  shouldComponentUpdate(nextProps: Props & MostTextProps): boolean {
     const props = omitBy(nextProps, (_value, key) => key.startsWith('on') || key === 'content')
-    const hasPropChanges = Object.entries(props).some(([key, value]) => {
+    const hasPropChanges = Object.entries(props).some(([key, _value]) => {
       return props[key] !== this.props[key]
     })
     return !this.elementRef.current || hasPropChanges || nextProps.content !== this.elementRef.current.innerText
   }
 
-  onBlur = (event: React.FocusEvent<HTMLSpanElement>) => {
-    const value = this.elementRef.current!.innerText
+  onBlur = (event: React.FocusEvent<HTMLSpanElement>): void => {
+    const value = this.elementRef.current?.innerText ?? ''
 
     if (typeof this.props.onBlur === 'function') {
       this.props.onBlur(event, value)
     }
   }
 
-  onInput = (event: React.KeyboardEvent<HTMLSpanElement>) => {
-    const value = this.elementRef.current!.innerText
+  onInput = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
+    const value = this.elementRef.current?.innerText ?? ''
 
     if (typeof this.props.onChange === 'function') {
       this.props.onChange(event, value)
     }
   }
 
-  onKeyPress = (event: React.KeyboardEvent<HTMLSpanElement>) => {
-    const value = this.elementRef.current!.innerText
+  onKeyPress = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
+    const value = this.elementRef.current?.innerText ?? ''
 
     if (typeof this.props.onKeyPress === 'function') {
       this.props.onKeyPress(event, value)
     }
   }
 
-  onKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>) => {
-    const value = this.elementRef.current!.innerText
+  onKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
+    const value = this.elementRef.current?.innerText ?? ''
 
     if (typeof this.props.onKeyUp === 'function') {
       this.props.onKeyUp(event, value)
     }
   }
 
-  onKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>) => {
-    const value = this.elementRef.current!.innerText
+  onKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
+    const value = this.elementRef.current?.innerText ?? ''
 
     if (typeof this.props.onKeyDown === 'function') {
       this.props.onKeyDown(event, value)
     }
   }
 
-  onPaste = (event: React.ClipboardEvent<HTMLSpanElement>) => {
+  onPaste = (event: React.ClipboardEvent<HTMLSpanElement>): void => {
     event.preventDefault()
 
     const text = event.clipboardData.getData('text')
@@ -103,7 +103,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { content = '', disabled, onBlur, onChange, onKeyPress, onKeyUp, onKeyDown, onPaste, ...props } = this.props
 
     return (

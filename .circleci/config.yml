@@ -31,10 +31,10 @@ jobs:
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
       - run:
           name: Compile server + web
-          command: yarn build
+          command: SKIP_PREFLIGHT_CHECK=true yarn build
       - run:
           name: Run tests
-          command: yarn test
+          command: yarn lint && yarn test
       - save_cache:
           paths:
             - node_modules

@@ -23,7 +23,7 @@ import ValidationError from '../ValidationError'
 })
 export default class Task {
   @PrimaryGeneratedColumn('uuid')
-  id?: UUID
+  id: UUID
 
   @Column('text')
   @IsDefined()

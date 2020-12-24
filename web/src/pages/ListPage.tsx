@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default class ListPage extends Component<RouteComponentProps<{ listId: string }, {}> & Props> {
-  render() {
+  render(): JSX.Element {
     const listId = this.props.match.params.listId
     const canEditList = listId !== 'inbox'
     return (

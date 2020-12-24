@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 const defaultState = {
-  refetchUser: () => undefined,
+  refetchUser: (): void => undefined,
   user: null,
 }
 
@@ -18,7 +18,7 @@ export interface Context {
 const context = React.createContext<Context>(defaultState)
 const { Provider, Consumer } = context
 
-export function useCurrentUser() {
+export function useCurrentUser(): Context {
   return useContext(context)
 }
 

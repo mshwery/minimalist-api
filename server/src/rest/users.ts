@@ -10,7 +10,7 @@ import { UserModel } from '../models/user'
 import config from '../../config'
 import { SESSION_COOKIE } from '../lib/auth'
 
-export async function me(req: Request, res: Response, next: NextFunction) {
+export async function me(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const viewer = get(req, 'user.sub')
     const user = await UserModel.fetchByViewer(viewer)
@@ -25,7 +25,7 @@ export async function me(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function createUser(req: Request, res: Response, next: NextFunction) {
+export async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const viewer = get(req, 'user.sub')
     const { email, password } = req.body
@@ -36,7 +36,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
   }
 }
 
-export async function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { email, password } = req.body
     const expires = addHours(new Date(), 24)

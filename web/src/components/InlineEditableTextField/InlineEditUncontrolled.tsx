@@ -16,14 +16,14 @@ interface State {
 }
 
 export default class InlineEditUncontrolled extends React.Component<InlineEditProps & BaseUIProps, State> {
-  confirmOnBlur = () => {
+  confirmOnBlur = (): void => {
     // if the wrapper receives blur we should trigger the confirm handler
     if (!this.state.wrapperFocused) {
       this.props.onConfirm()
     }
   }
 
-  onWrapperBlur = () => {
+  onWrapperBlur = (): void => {
     if (!this.props.isEditing) {
       return
     }
@@ -31,17 +31,17 @@ export default class InlineEditUncontrolled extends React.Component<InlineEditPr
     this.setState({ wrapperFocused: false }, () => this.confirmOnBlur())
   }
 
-  onWrapperClick = (event: React.SyntheticEvent) => {
+  onWrapperClick = (event: React.SyntheticEvent): void => {
     if (!this.props.isEditing) {
       this.props.onEditRequested(event)
     }
   }
 
-  onWrapperFocus = () => {
+  onWrapperFocus = (): void => {
     this.setState({ wrapperFocused: true })
   }
 
-  render() {
+  render(): JSX.Element {
     const { editView, readView, isEditing, onCancel, onConfirm, onEditRequested, ...props } = this.props
 
     return (
