@@ -24,14 +24,14 @@ jobs:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run: SKIP_PREFLIGHT_CHECK=true yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - run:
           name: Wait for DB
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
       - run:
           name: Compile server + web
-          command: yarn build
+          command: SKIP_PREFLIGHT_CHECK=true yarn build
       - run:
           name: Run tests
           command: yarn test
