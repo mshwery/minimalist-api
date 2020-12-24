@@ -10,7 +10,7 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/node:10.21
+      - image: circleci/node:12
       - image: circleci/postgres:11
         environment:
           POSTGRES_DB: minimalist_test

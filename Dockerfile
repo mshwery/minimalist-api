@@ -1,6 +1,6 @@
 # largely inspired by https://github.com/BretFisher/node-docker-good-defaults/blob/master/Dockerfile
 
-FROM node:10.21-alpine
+FROM node:12-alpine
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
