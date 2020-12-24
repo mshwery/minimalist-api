@@ -3,12 +3,14 @@
   "name": "minimalist",
   "author": "Matt Shwery",
   "engines": {
-    "node": "12"
+    "node": "14"
   },
-  "workspaces": [
-    "server",
-    "web"
-  ],
+  "workspaces": {
+    "packages": [
+      "server",
+      "web"
+    ]
+  },
   "scripts": {
     "web": "yarn workspace web",
     "server": "yarn workspace server",
