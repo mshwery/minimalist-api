@@ -73,7 +73,7 @@ export class TaskModel {
       throw new NotFound(`No list found with id "${listId}"`)
     }
 
-    return list.tasks ?? []
+    return list.tasks || []
   }
 
   /**
@@ -97,7 +97,7 @@ export class TaskModel {
 
     // TODO: fetch the list via DataLoaders
     const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
-    const tasks = list?.tasks ?? []
+    const tasks = list?.tasks || []
 
     if (filters.status === TaskStatus.DONE) {
       return tasks.filter((t) => t.isCompleted)

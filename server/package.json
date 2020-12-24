@@ -10,7 +10,7 @@
     "migrate": "yarn typeorm migration:run",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' --files src/index.ts",
     "start": "node dist/src/index.js",
-    "test": "yarn lint && jest src --runInBand",
+    "test": "jest src --runInBand",
     "typeorm": "ts-node ../node_modules/typeorm/cli.js"
   },
   "dependencies": {

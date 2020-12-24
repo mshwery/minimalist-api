@@ -53,7 +53,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   onBlur = (event: React.FocusEvent<HTMLSpanElement>): void => {
-    const value = this.elementRef.current?.innerText ?? ''
+    const value = this.elementRef.current?.innerText || ''
 
     if (typeof this.props.onBlur === 'function') {
       this.props.onBlur(event, value)
@@ -61,7 +61,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   onInput = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
-    const value = this.elementRef.current?.innerText ?? ''
+    const value = this.elementRef.current?.innerText || ''
 
     if (typeof this.props.onChange === 'function') {
       this.props.onChange(event, value)
@@ -69,7 +69,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   onKeyPress = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
-    const value = this.elementRef.current?.innerText ?? ''
+    const value = this.elementRef.current?.innerText || ''
 
     if (typeof this.props.onKeyPress === 'function') {
       this.props.onKeyPress(event, value)
@@ -77,7 +77,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   onKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
-    const value = this.elementRef.current?.innerText ?? ''
+    const value = this.elementRef.current?.innerText || ''
 
     if (typeof this.props.onKeyUp === 'function') {
       this.props.onKeyUp(event, value)
@@ -85,7 +85,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
   }
 
   onKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
-    const value = this.elementRef.current?.innerText ?? ''
+    const value = this.elementRef.current?.innerText || ''
 
     if (typeof this.props.onKeyDown === 'function') {
       this.props.onKeyDown(event, value)

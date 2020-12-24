@@ -15,7 +15,7 @@
     "dev": "concurrently \"yarn server watch\" \"yarn web start\"",
     "build": "concurrently \"yarn server build\" \"yarn web build\"",
     "lint": "eslint --ext .js,.ts,.tsx --ignore-path .gitignore --fix .",
-    "test": "yarn lint && yarn server test",
+    "test": "yarn server test",
     "start": "yarn server start"
   },
   "husky": {

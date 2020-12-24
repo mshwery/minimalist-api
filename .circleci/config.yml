@@ -34,7 +34,7 @@ jobs:
           command: SKIP_PREFLIGHT_CHECK=true yarn build
       - run:
           name: Run tests
-          command: yarn test
+          command: yarn lint && yarn test
       - save_cache:
           paths:
             - node_modules
