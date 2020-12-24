@@ -19,13 +19,13 @@ export class Portal extends React.Component<{}> {
     portalContainer.append(this.el)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.el) {
       portalContainer.removeChild(this.el)
     }
   }
 
-  render() {
+  render(): React.ReactPortal {
     return ReactDOM.createPortal(this.props.children, this.el)
   }
 }

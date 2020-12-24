@@ -6,7 +6,7 @@ import { colors } from './colors'
 type LinkProps = HTMLAttributes<HTMLAnchorElement>
 
 export class Link extends PureComponent<LinkProps & BaseUIProps> {
-  render() {
+  render(): JSX.Element {
     return <Box is="a" color={colors.text.action} textDecoration="underline" {...this.props} />
   }
 }

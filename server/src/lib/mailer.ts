@@ -30,7 +30,7 @@ interface SendEmailOptions {
  * Send an email using a given template. `data` is passed to the template(s)
  * Templates can be found under `./emails/<template>/{html,subject,text}.pug`
  */
-export async function sendEmail({ category, to, from = defaultFrom, replyTo, template, data }: SendEmailOptions) {
+export async function sendEmail({ category, to, from = defaultFrom, replyTo, template, data }: SendEmailOptions): ReturnType<typeof sendGrid.send> {
   // @ts-ignore types don't include `renderAll` yet and I can't easily augment it
   const { subject, text, html } = await emailTemplate.renderAll(template, data)
 

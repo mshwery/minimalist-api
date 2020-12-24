@@ -50,7 +50,7 @@ const getListQuery = `
   }
 `
 
-export function getList(id: string) {
+export function getList(id: string): Promise<GetListData> {
   return client.request<GetListData>(getListQuery, { id })
 }
 
@@ -73,7 +73,7 @@ const getTasksQuery = `
   }
 `
 
-export function getTasks(listId: string) {
+export function getTasks(listId: string): Promise<GetTasksData> {
   return client.request<GetTasksData>(getTasksQuery, { listId })
 }
 
@@ -94,7 +94,7 @@ export const renameListMutation = `
   }
 `
 
-export async function renameList(id: string, name: string) {
+export async function renameList(id: string, name: string): Promise<{ list: Maybe<List> }> {
   // Optimistic update
   setQueryData(
     LISTS_QUERY,
@@ -136,7 +136,7 @@ export const archiveListMutation = `
   }
 `
 
-export async function archiveList(id: string) {
+export async function archiveList(id: string): Promise<{ list: Maybe<List> }> {
   // Optimistic update
   setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
 
@@ -163,7 +163,7 @@ export const deleteListMutation = `
   }
 `
 
-export async function deleteList(id: string) {
+export async function deleteList(id: string): Promise<Maybe<string>> {
   // Optimistic update
   setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
 
@@ -206,7 +206,7 @@ interface CreateTaskArgs {
   listId?: string
 }
 
-export async function createTask({ id, content, position, listId }: CreateTaskArgs) {
+export async function createTask({ id, content, position, listId }: CreateTaskArgs): Promise<{ task: Maybe<Task> }> {
   const result = await client.request<CreateTaskData>(createTaskMutation, {
     input: {
       id,
@@ -242,7 +242,7 @@ export const updateTaskMutation = `
   }
 `
 
-export async function updateTask(input: { id: string; content: string }) {
+export async function updateTask(input: { id: string; content: string }): Promise<Maybe<Task>> {
   const result = await client.request<UpdateTaskData>(updateTaskMutation, { input })
   return result.updateTask.task
 }
@@ -270,7 +270,7 @@ export const moveTaskMutation = `
   }
 `
 
-export async function moveTask(args: { id: string; listId: string; insertBefore: number }) {
+export async function moveTask(args: { id: string; listId: string; insertBefore: number }): Promise<{ task: Maybe<Task> }> {
   const result = await client.request<MoveTaskData>(moveTaskMutation, {
     input: args,
   })
@@ -301,7 +301,7 @@ export const completeTaskMutation = `
   }
 `
 
-export async function completeTask(input: { id: string }) {
+export async function completeTask(input: { id: string }): Promise<Maybe<Task>> {
   const result = await client.request<CompleteTaskData>(completeTaskMutation, { input })
   return result.completeTask.task
 }
@@ -329,7 +329,7 @@ export const reopenTaskMutation = `
   }
 `
 
-export async function reopenTask(input: { id: string }) {
+export async function reopenTask(input: { id: string }): Promise<Maybe<Task>> {
   const result = await client.request<ReopenTaskData>(reopenTaskMutation, { input })
   return result.reopenTask.task
 }
@@ -348,7 +348,7 @@ export const deleteTaskMutation = `
   }
 `
 
-export async function deleteTask(input: { id: string }) {
+export async function deleteTask(input: { id: string }): Promise<string | undefined> {
   const result = await client.request<DeleteTaskData>(deleteTaskMutation, { input })
   return result.deleteTask.id
 }
@@ -416,7 +416,7 @@ export const shareListMutation = `
   }
 `
 
-export async function shareList(input: { id: string; email: string }) {
+export async function shareList(input: { id: string; email: string }): Promise<User[] | undefined> {
   const result = await client.request<ShareListData>(shareListMutation, { input })
   return result.shareList.list!.collaborators
 }
@@ -447,7 +447,7 @@ export const unshareListMutation = `
   }
 `
 
-export async function unshareList(input: { id: string; email: string }) {
+export async function unshareList(input: { id: string; email: string }): Promise<User[] | undefined> {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
   return result.unshareList.list!.collaborators
 }

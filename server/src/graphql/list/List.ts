@@ -16,11 +16,11 @@ export default {
     }
   },
 
-  async creator(list: List, _args, ctx: Context): Promise<User> {
+  async creator(list: List, _args: EmptyObject, ctx: Context): Promise<User> {
     return ListModel.fetchCreator(ctx.viewer, list)
   },
 
-  async collaborators(list: List, _args, ctx: Context): Promise<User[]> {
+  async collaborators(list: List, _args: EmptyObject, ctx: Context): Promise<User[]> {
     return UserModel.fetchAllByList(ctx.viewer, list.id!)
   },
 }

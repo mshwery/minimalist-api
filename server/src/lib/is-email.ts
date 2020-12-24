@@ -1,5 +1,5 @@
 // Email address matcher.
-const matcher = /.+\@.+\..+/
+const matcher = /.+@.+\..+/
 
 /**
  * Loosely validate an email address.

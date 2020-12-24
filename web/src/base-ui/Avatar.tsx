@@ -21,11 +21,11 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
     imageHasFailedLoading: false,
   }
 
-  handleError = () => {
+  handleError = (): void => {
     this.setState({ imageHasFailedLoading: true })
   }
 
-  render() {
+  render(): JSX.Element {
     const { size = 40, src, className, ...props } = this.props
 
     const imageUnavailable = !src || this.state.imageHasFailedLoading

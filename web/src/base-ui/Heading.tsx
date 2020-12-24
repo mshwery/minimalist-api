@@ -37,7 +37,7 @@ function getTextColor(color?: Color) {
 }
 
 export class Heading extends PureComponent<HeadingProps & BaseUIProps> {
-  render() {
+  render(): JSX.Element {
     const { size, color, ...props } = this.props
     const textColor = getTextColor(color)
     const fontSize = getFontSize(size)

@@ -1,7 +1,11 @@
 import { useRef, useEffect, MutableRefObject } from 'react'
 import createFocusTrap, { Options, FocusTrap } from 'focus-trap'
 
-export function useFocusTrap(isShown: boolean, options: Options = {}) {
+interface FocusTrapReturn {
+  ref: MutableRefObject<HTMLElement>
+}
+
+export function useFocusTrap(isShown: boolean, options: Options = {}): FocusTrapReturn {
   const elementRef = useRef() as MutableRefObject<HTMLElement>
   const trapRef = useRef() as MutableRefObject<FocusTrap>
 

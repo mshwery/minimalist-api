@@ -20,7 +20,7 @@ type MostTextProps = Omit<
 export class ContentEditableText extends React.Component<Props & MostTextProps> {
   elementRef = React.createRef<HTMLSpanElement>()
 
-  componentDidMount() {
+  componentDidMount(): void {
     if (this.props.autoFocus) {
       this.focusInput()
     }
@@ -68,7 +68,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  onKeyPress = (event: React.KeyboardEvent<HTMLSpanElement>) => {
+  onKeyPress = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
     const value = this.elementRef.current!.innerText
 
     if (typeof this.props.onKeyPress === 'function') {
@@ -76,7 +76,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  onKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>) => {
+  onKeyUp = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
     const value = this.elementRef.current!.innerText
 
     if (typeof this.props.onKeyUp === 'function') {
@@ -84,7 +84,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  onKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>) => {
+  onKeyDown = (event: React.KeyboardEvent<HTMLSpanElement>): void => {
     const value = this.elementRef.current!.innerText
 
     if (typeof this.props.onKeyDown === 'function') {
@@ -92,7 +92,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  onPaste = (event: React.ClipboardEvent<HTMLSpanElement>) => {
+  onPaste = (event: React.ClipboardEvent<HTMLSpanElement>): void => {
     event.preventDefault()
 
     const text = event.clipboardData.getData('text')
@@ -103,7 +103,7 @@ export class ContentEditableText extends React.Component<Props & MostTextProps> 
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { content = '', disabled, onBlur, onChange, onKeyPress, onKeyUp, onKeyDown, onPaste, ...props } = this.props
 
     return (

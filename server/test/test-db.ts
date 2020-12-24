@@ -20,7 +20,7 @@ export function createConnection(): Promise<Connection> {
  * Initializes a connection to our test db, drops everything and runs migrations (so each test run will start from scratch)
  * This allows you to ignore migrating the test db manually, too
  */
-export async function resetDb() {
+export async function resetDb(): Promise<void> {
   // TODO: investigate dropping the entire schema on every test?
   const connection: Connection = await createConnection()
   await connection.dropDatabase()

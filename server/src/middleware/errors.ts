@@ -10,7 +10,7 @@ interface HttpError extends Error {
 /**
  * Middleware to handle response for errors
  */
-export default function handleErrorResponse(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
+export default function handleErrorResponse(error: HttpError, _req: Request, res: Response, _next: NextFunction): void {
   const status = error.status || 500
   let message = 'Server Error'
 

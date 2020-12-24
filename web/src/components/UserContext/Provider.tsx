@@ -44,11 +44,11 @@ export default class UserProvider extends Component<{}, UserProviderState> {
     },
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     void this.fetchUser()
   }
 
-  async fetchUser() {
+  async fetchUser(): Promise<void> {
     try {
       const { me: user } = await client.request<Data>(getCurrentUserQuery)
       const context = {
@@ -76,7 +76,7 @@ export default class UserProvider extends Component<{}, UserProviderState> {
     }
   }
 
-  render() {
+  render(): JSX.Element | null {
     if (this.state.isLoading) {
       return null
     }

@@ -18,7 +18,9 @@ const defaultOptions = {
 
 export const SESSION_COOKIE = 'session_token'
 
-export async function comparePassword(password, hash): Promise<boolean> {
+export async function comparePassword(password: string, hash: string | null): Promise<boolean> {
+  if (hash === null) return false
+
   try {
     return await bcrypt.compare(password, hash)
   } catch (error) {
@@ -27,7 +29,7 @@ export async function comparePassword(password, hash): Promise<boolean> {
   }
 }
 
-export function hashPassword(password): Promise<string> {
+export function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10)
 }
 
@@ -48,7 +50,7 @@ export function generateJwt(
   return token
 }
 
-export function verifyJwt(token: string) {
+export function verifyJwt(token: string): string | object {
   const decoded = jwt.verify(token, secret)
   return decoded
 }
