@@ -438,7 +438,7 @@ export const shareListMutation = `
 
 export async function shareList(input: { id: string; email: string }): Promise<User[]> {
   const result = await client.request<ShareListData>(shareListMutation, { input })
-  return result.shareList.list?.collaborators || []
+  return result.shareList.list?.collaborators ?? []
 }
 
 interface UnshareListData {
@@ -469,5 +469,5 @@ export const unshareListMutation = `
 
 export async function unshareList(input: { id: string; email: string }): Promise<User[] | undefined> {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
-  return result.unshareList.list?.collaborators || []
+  return result.unshareList.list?.collaborators ?? []
 }
