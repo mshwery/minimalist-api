@@ -9,9 +9,6 @@
     "packages": [
       "server",
       "web"
-    ],
-    "nohoist": [
-      "**/react-scripts/**"
     ]
   },
   "scripts": {
