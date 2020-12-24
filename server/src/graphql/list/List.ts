@@ -21,6 +21,6 @@ export default {
   },
 
   async collaborators(list: List, _args: EmptyObject, ctx: Context): Promise<User[]> {
-    return UserModel.fetchAllByList(ctx.viewer, list.id!)
+    return UserModel.fetchAllByList(ctx.viewer, list.id)
   },
 }

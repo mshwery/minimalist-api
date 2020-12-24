@@ -21,7 +21,7 @@ import ValidationError from '../ValidationError'
 @Entity('lists')
 export default class List {
   @PrimaryGeneratedColumn('uuid')
-  id?: UUID
+  id: UUID
 
   @Column('text')
   @Length(1, 21)

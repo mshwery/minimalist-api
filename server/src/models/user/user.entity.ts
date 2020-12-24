@@ -19,7 +19,7 @@ import List from '../list/list.entity'
 @Entity('users')
 export default class User {
   @PrimaryGeneratedColumn('uuid')
-  id?: UUID
+  id: UUID
 
   @Column({ type: 'text', unique: true })
   @Index()
