@@ -20,7 +20,7 @@ const server = new ApolloServer({
   introspection: true,
   tracing: true,
   engine:
-    config.get('NODE_ENV') === 'production'
+    config.get('NODE_ENV') === 'production' && config.get('APOLLO_KEY')
       ? {
           graphVariant: 'current',
           reportSchema: true,

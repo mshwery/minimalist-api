@@ -28,7 +28,6 @@ Sentry.init({
 
 const app = express()
 const port = config.get('PORT') || 3000
-app.set('port', port)
 
 /** Provide access to request.ips = [x-forwarded-for headers] */
 app.enable('trust proxy')
