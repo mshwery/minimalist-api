@@ -8,7 +8,7 @@ module.exports = {
   database: config.get('PGDATABASE'),
   username: config.get('PGUSER'),
   password: config.get('PGPASSWORD'),
-  ssl: config.get('PGSSL') || false,
+  ssl: config.get('PGSSL') ? { rejectUnauthorized: false } : false,
   synchronize: false,
   migrationsRun: false,
   migrations: config.get('NODE_ENV') === 'production' ? [] : ['migrations/*.ts'],
