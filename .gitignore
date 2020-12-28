@@ -12,6 +12,7 @@ server/config/environment.json
 # compiled output
 dist
 build
+.eslintcache
 
 npm-debug.log*
 yarn-debug.log*
