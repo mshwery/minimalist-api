@@ -15,7 +15,7 @@ passport.deserializeUser((token: string, done) => {
   const user = verifyJwt(token)
   // Turn jwt into a user?
   // TODO: lookup full user in db
-  done(null, user)
+  done(null, user as Express.User)
 })
 
 passport.use(
