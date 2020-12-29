@@ -1,3 +1,4 @@
+import 'ts-node/register/transpile-only'
 import path from 'path'
 import { ConnectionOptions, Connection } from 'typeorm'
 import initConnection from '../src/lib/database'
