@@ -23,7 +23,7 @@ export function createConnection(): Promise<Connection> {
  */
 export async function resetDb(): Promise<void> {
   // TODO: investigate dropping the entire schema on every test?
-  const connection: Connection = await createConnection()
+  const connection = await createConnection()
   await connection.dropDatabase()
   await connection.runMigrations({ transaction: 'all' })
 
