@@ -57,6 +57,7 @@ export function verifyJwt(token: string): string | object {
 
 export const verifyJwtMiddleware = expressJwt({
   secret,
+  algorithms: ['HS256'],
   issuer: defaultOptions.issuer,
   // avoid clashing with passport `req.user`
   requestProperty: 'jwt',
