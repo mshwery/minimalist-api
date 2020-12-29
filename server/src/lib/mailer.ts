@@ -30,8 +30,14 @@ interface SendEmailOptions {
  * Send an email using a given template. `data` is passed to the template(s)
  * Templates can be found under `./emails/<template>/{html,subject,text}.pug`
  */
-export async function sendEmail({ category, to, from = defaultFrom, replyTo, template, data }: SendEmailOptions): ReturnType<typeof sendGrid.send> {
-  // @ts-ignore types don't include `renderAll` yet and I can't easily augment it
+export async function sendEmail({
+  category,
+  to,
+  from = defaultFrom,
+  replyTo,
+  template,
+  data,
+}: SendEmailOptions): ReturnType<typeof sendGrid.send> {
   const { subject, text, html } = await emailTemplate.renderAll(template, data)
 
   return sendGrid.send({
@@ -39,6 +45,7 @@ export async function sendEmail({ category, to, from = defaultFrom, replyTo, tem
     from,
     replyTo,
     text,
+    html,
     // default sendgrid template for minimalist
     templateId: 'd-49c3d73ce4794fea8bed08e1382514b3',
     dynamicTemplateData: {
