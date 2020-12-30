@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes } from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { Check, Square } from 'react-feather'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'

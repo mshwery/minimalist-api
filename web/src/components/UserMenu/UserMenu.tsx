@@ -1,6 +1,6 @@
 import React from 'react'
 import { ChevronDown, LogOut } from 'react-feather'
-import { colors, scale, Avatar, Pane, Text, Icon, Menu, MenuItem, MenuDisclosure, useMenuState } from '../../base-ui'
+import { colors, scale, Avatar, Pane, Text, Icon, Menu, MenuItem, MenuButton, useMenuState } from '../../base-ui'
 
 interface UserMenuProps {
   email: string
@@ -19,7 +19,7 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({
 
   return (
     <>
-      <MenuDisclosure
+      <MenuButton
         {...menu}
         as={Pane}
         display="flex"
@@ -38,7 +38,7 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({
           </Text>
         </Pane>
         <Icon icon={ChevronDown} color={colors.fill.secondary} size={scale(2)} marginTop={scale(0.5)} />
-      </MenuDisclosure>
+      </MenuButton>
       <Menu {...menu} aria-label="User Settings" width="100%">
         <MenuItem
           {...menu}

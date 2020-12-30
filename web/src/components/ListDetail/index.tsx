@@ -1,4 +1,4 @@
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { Sidebar as SidebarIcon, ChevronDown, ChevronUp } from 'react-feather'
@@ -6,7 +6,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
-import { Heading, Text, Pane, scale, Input, colors, Icon } from '../../base-ui'
+import { Heading, Text, Pane, scale, Input, colors, Icon, Spinner } from '../../base-ui'
 import {
   List,
   Task as TaskType,
@@ -291,7 +291,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     const { isLoading, tasks, name, autoFocusId, showCompletedTasks } = this.state
 
     if (isLoading) {
-      return <Container>Loading...</Container>
+      return (
+        <Container>
+          <Spinner showDelay={250} />
+        </Container>
+      )
     }
 
     const placeholder = 'Untitled'

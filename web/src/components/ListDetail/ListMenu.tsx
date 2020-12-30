@@ -1,6 +1,6 @@
 import React from 'react'
 import { MoreVertical, Trash2, Archive } from 'react-feather'
-import { Icon, scale, colors, Text, Menu, MenuItem, MenuDisclosure, useMenuState } from '../../base-ui'
+import { Icon, scale, colors, Text, Menu, MenuItem, MenuButton, useMenuState } from '../../base-ui'
 
 interface Props {
   onDeleteList: () => void
@@ -12,7 +12,7 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
 
   return (
     <>
-      <MenuDisclosure {...menu} as={Icon} icon={MoreVertical} color={colors.fill.secondary} />
+      <MenuButton {...menu} as={Icon} icon={MoreVertical} color={colors.fill.secondary} />
       <Menu {...menu} aria-label="List Settings">
         <MenuItem
           {...menu}

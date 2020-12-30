@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import { Trash2, Menu as DragIcon } from 'react-feather'
 import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'

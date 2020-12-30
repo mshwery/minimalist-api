@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { scale, Card, Icon, colors, Text } from '../../base-ui'
 
 interface Props {
