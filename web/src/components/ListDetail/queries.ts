@@ -1,6 +1,6 @@
 import { setQueryData } from 'react-query'
 import { Maybe } from '../../@types/type-helpers'
-import client from '../../lib/graphql-client'
+import client, { gql } from '../../lib/graphql-client'
 import { LISTS_QUERY } from '../Lists'
 
 export interface Task {
@@ -36,9 +36,9 @@ interface GetListData {
   list: Maybe<List>
 }
 
-const getListQuery = `
+const getListQuery = gql`
   query GetList($id: ID!) {
-    list(id: $id)  {
+    list(id: $id) {
       id
       name
       isArchived
@@ -58,7 +58,7 @@ interface GetTasksData {
   tasks: Task[]
 }
 
-const getTasksQuery = `
+const getTasksQuery = gql`
   query GetTasks($listId: ID!) {
     tasks(listId: $listId) {
       id
@@ -83,7 +83,7 @@ interface RenameListData {
   }
 }
 
-export const renameListMutation = `
+export const renameListMutation = gql`
   mutation RenameList($input: RenameListInput!) {
     renameList(input: $input) {
       list {
@@ -125,7 +125,7 @@ interface ArchiveListData {
   }
 }
 
-export const archiveListMutation = `
+export const archiveListMutation = gql`
   mutation ArchiveList($input: ArchiveListInput!) {
     archiveList(input: $input) {
       list {
@@ -155,7 +155,7 @@ interface DeleteListData {
   }
 }
 
-export const deleteListMutation = `
+export const deleteListMutation = gql`
   mutation DeleteList($input: DeleteListInput!) {
     deleteList(input: $input) {
       id
@@ -182,7 +182,7 @@ interface CreateTaskData {
   }
 }
 
-export const createTaskMutation = `
+export const createTaskMutation = gql`
   mutation CreateTask($input: CreateTaskInput!) {
     createTask(input: $input) {
       task {
@@ -225,7 +225,7 @@ interface UpdateTaskData {
   }
 }
 
-export const updateTaskMutation = `
+export const updateTaskMutation = gql`
   mutation UpdateTask($input: UpdateTaskInput!) {
     updateTask(input: $input) {
       task {
@@ -253,7 +253,7 @@ interface MoveTaskData {
   }
 }
 
-export const moveTaskMutation = `
+export const moveTaskMutation = gql`
   mutation MoveTask($input: MoveTaskInput!) {
     moveTask(input: $input) {
       task {
@@ -288,7 +288,7 @@ interface CompleteTaskData {
   }
 }
 
-export const completeTaskMutation = `
+export const completeTaskMutation = gql`
   mutation CompleteTask($input: CompleteTaskInput!) {
     completeTask(input: $input) {
       task {
@@ -316,7 +316,7 @@ interface ReopenTaskData {
   }
 }
 
-export const reopenTaskMutation = `
+export const reopenTaskMutation = gql`
   mutation ReopenTask($input: ReopenTaskInput!) {
     reopenTask(input: $input) {
       task {
@@ -344,7 +344,7 @@ interface DeleteTaskData {
   }
 }
 
-export const deleteTaskMutation = `
+export const deleteTaskMutation = gql`
   mutation DeleteTask($input: DeleteTaskInput!) {
     deleteTask(input: $input) {
       id
@@ -366,7 +366,7 @@ interface GetCollaboratorsData {
   >
 }
 
-const getCollaboratorsQuery = `
+const getCollaboratorsQuery = gql`
   query GetCollaborators($id: ID!) {
     list(id: $id) {
       id
@@ -420,7 +420,7 @@ interface ShareListData {
   }
 }
 
-export const shareListMutation = `
+export const shareListMutation = gql`
   mutation ShareList($input: ShareListInput!) {
     shareList(input: $input) {
       list {
@@ -451,7 +451,7 @@ interface UnshareListData {
   }
 }
 
-export const unshareListMutation = `
+export const unshareListMutation = gql`
   mutation UnshareList($input: UnshareListInput!) {
     unshareList(input: $input) {
       list {

@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "emotion": "^10.0.17",
-    "focus-trap": "^5.1.0",
-    "graphql-request": "^1.8.2",
+    "focus-trap": "^6.2.3",
+    "graphql-request": "^3.4.0",
     "http-proxy-middleware": "^0.20.0",
     "lodash": "^4.17.15",
     "ms": "^2.1.2",

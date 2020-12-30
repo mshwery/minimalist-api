@@ -1,5 +1,5 @@
 import { useRef, useEffect, MutableRefObject } from 'react'
-import createFocusTrap, { Options, FocusTrap } from 'focus-trap'
+import { createFocusTrap, Options, FocusTrap } from 'focus-trap'
 
 interface FocusTrapReturn {
   ref: MutableRefObject<HTMLElement>
