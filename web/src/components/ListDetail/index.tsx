@@ -33,7 +33,7 @@ const Container: React.FunctionComponent<any> = (props) => (
     {...props}
     flex="none"
     width="100%"
-    maxWidth={scale(90)}
+    maxWidth={scale(100)}
     minWidth={scale(40)}
     minHeight="100vh"
     className={css`
@@ -103,6 +103,7 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           this.setState({ list, name: list.name })
         } else {
           this.props.history.push('/lists')
+          return
         }
       }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import Box from 'ui-box'
 import { css, keyframes } from '@emotion/css'
 import { colors } from './colors'
+import { useTimeout } from './useTimeout'
 
 const showAnimation = keyframes`
   from {
@@ -22,16 +23,10 @@ interface Props {
   showDelay?: number
 }
 
-export const Spinner: React.FC<Props> = ({ showDelay = 0 }) => {
-  const [isShown, setIsShown] = React.useState(false)
+export const Spinner: React.FC<Props> = ({ showDelay }) => {
+  const [isShown, setIsShown] = React.useState(typeof showDelay === 'number' ? false : true)
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsShown(true), showDelay)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [showDelay])
+  useTimeout(() => setIsShown(true), showDelay)
 
   if (!isShown) {
     return null
