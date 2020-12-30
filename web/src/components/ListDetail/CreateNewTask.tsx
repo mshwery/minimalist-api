@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { Plus } from 'react-feather'
 import { TextButton, scale, Icon } from '../../base-ui'
 import Task from '../Task'

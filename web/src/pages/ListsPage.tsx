@@ -5,7 +5,8 @@ import { Context } from '../components/UserContext/context'
 import Lists from '../components/Lists'
 import { Sidebar } from '../components/Sidebar'
 import UserMenu from '../components/UserMenu'
-import ListPage from './ListPage'
+
+const ListPage = React.lazy(() => import('./ListPage'))
 
 const ListsPage: React.FunctionComponent<RouteComponentProps<{}, {}> & Context> = ({ user }) => {
   const location = useLocation()

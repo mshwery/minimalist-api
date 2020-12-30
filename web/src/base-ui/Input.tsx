@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { Text } from './Text'
 import { scale } from './scale'
 import { colors } from './colors'

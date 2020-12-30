@@ -1,4 +1,4 @@
-import client from '../../lib/graphql-client'
+import client, { gql } from '../../lib/graphql-client'
 
 export interface List {
   id: string
@@ -9,7 +9,7 @@ interface GetListsData {
   lists: List[]
 }
 
-const getListsQuery = `
+const getListsQuery = gql`
   query GetLists {
     lists(status: ACTIVE) {
       id
@@ -30,7 +30,7 @@ interface CreateListData {
   }
 }
 
-const createListMutation = `
+const createListMutation = gql`
   mutation CreateList($input: CreateListInput!) {
     createList(input: $input) {
       list {

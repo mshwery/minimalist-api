@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { scale, Button, Card, Paragraph, Pane, colors } from '../../base-ui'
 import { ReactComponent as Logo } from '../../minimalist.svg'
 

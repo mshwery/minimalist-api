@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Maybe } from '../../@types/type-helpers'
-import client from '../../lib/graphql-client'
+import client, { gql } from '../../lib/graphql-client'
 import { identify } from '../../lib/analytics'
 import { Provider } from './context'
 
-const getCurrentUserQuery = `
+const getCurrentUserQuery = gql`
   query GetCurrentUser {
     me {
       id

@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import { Trash2, Menu as DragIcon } from 'react-feather'
 import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'
@@ -130,6 +130,7 @@ export class Task extends React.Component<Props, State> {
         alignItems="flex-start"
         marginLeft={scale(-3)}
         marginRight={scale(-1)}
+        marginBottom={1}
         paddingRight={scale(1)}
         backgroundColor={showActions || isDragging ? colors.fill.background : undefined}
         borderRadius={4}
@@ -140,10 +141,10 @@ export class Task extends React.Component<Props, State> {
         onMouseLeave={this.handleMouseLeave}
         onMouseMove={this.handleMouseMove}
         className={css`
-          min-height: 30px;
+          min-height: 32px;
 
           @media (max-width: 600px) {
-            min-height: 36px;
+            min-height: 40px;
           }
         `}
       >
@@ -161,12 +162,12 @@ export class Task extends React.Component<Props, State> {
           onChange={this.handleCheckedChange}
           marginRight={scale(1)}
           className={css`
-            margin-top: 5px;
-            margin-bottom: 5px;
+            margin-top: 6px;
+            margin-bottom: 6px;
 
             @media (max-width: 600px) {
-              margin-top: 8px;
-              margin-bottom: 8px;
+              margin-top: 10px;
+              margin-bottom: 10px;
             }
           `}
         />
@@ -185,14 +186,14 @@ export class Task extends React.Component<Props, State> {
           className={css`
             flex: 1;
             outline: none;
-            padding-top: 3px;
-            padding-bottom: 3px;
+            padding-top: 4px;
+            padding-bottom: 4px;
             line-height: 24px;
 
             @media (max-width: 600px) {
-              line-height: 26px;
-              padding-top: 5px;
-              padding-bottom: 5px;
+              line-height: 28px;
+              padding-top: 6px;
+              padding-bottom: 6px;
             }
           `}
         />

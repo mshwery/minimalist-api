@@ -1,9 +1,9 @@
 import React from 'react'
-import { css, cx } from 'emotion'
-import { Menu as ReakitMenu, MenuItem as ReakitMenuItem, MenuDisclosure, useMenuState, MenuStateReturn } from 'reakit'
+import { css, cx } from '@emotion/css'
+import { Menu as ReakitMenu, MenuItem as ReakitMenuItem, MenuButton, useMenuState, MenuStateReturn } from 'reakit'
 import { scale, colors, Card, Text } from '../base-ui'
 
-export { MenuDisclosure, useMenuState }
+export { MenuButton, useMenuState }
 
 export const MenuItem: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Text>> = (props) => (
   <ReakitMenuItem

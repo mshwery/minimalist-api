@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { css, cx } from 'emotion'
+import { css, cx } from '@emotion/css'
 import { User } from 'react-feather'
 import Box from 'ui-box'
 import { BaseUIProps } from './types'
@@ -62,7 +62,7 @@ export class Avatar extends PureComponent<AvatarProps & BaseUIProps, AvatarState
             <User size={size / 2} color={colors.text.muted} />
           </Box>
         ) : (
-          <Box is="img" width="auto" height="100%" src={src} onError={this.handleError} />
+          <img width="auto" height={size} src={src} onError={this.handleError} />
         )}
       </Box>
     )

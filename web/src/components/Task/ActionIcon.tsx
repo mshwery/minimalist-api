@@ -1,5 +1,5 @@
 import React from 'react'
-import { css, cx } from 'emotion'
+import { css, cx } from '@emotion/css'
 import { Icon } from '../../base-ui'
 
 export const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Icon>> = ({ className, ...props }) => (
@@ -12,14 +12,14 @@ export const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Ico
     className={cx(
       className,
       css`
-        height: 30px;
+        height: 32px;
 
         &:focus {
           box-shadow: 0 0 0 2px rgba(16, 112, 202, 0.25);
         }
 
         @media (max-width: 600px) {
-          height: 36px;
+          height: 40px;
         }
       `
     )}
