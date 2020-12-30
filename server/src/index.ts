@@ -37,7 +37,7 @@ app.enable('trust proxy')
 app.use(Sentry.Handlers.requestHandler() as express.RequestHandler)
 
 /** node security modules */
-app.use(helmet())
+app.use(helmet({ contentSecurityPolicy: false }))
 
 /** accept json */
 app.use(bodyParser.urlencoded({ extended: true }))
