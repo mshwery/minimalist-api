@@ -2,7 +2,7 @@
 
 An api for managing tasks and lists of tasks.
 
-[![CircleCI](https://circleci.com/gh/mshwery/minimalist-api/tree/master.svg?style=svg)](https://circleci.com/gh/mshwery/minimalist-api/tree/master)
+[![CircleCI](https://circleci.com/gh/mshwery/minimalist-api/tree/main.svg?style=svg)](https://circleci.com/gh/mshwery/minimalist-api/tree/main)
 
 ## Requirements
 
@@ -54,7 +54,7 @@ Because the tests rely on actually interacting with a database, we have a separa
 
 ### Heroku
 
-The entire app (server and create-react-app web client) is served on Heroku. Deploys happen automatically after successful Circle CI builds to `master`.
+The entire app (server and create-react-app web client) is served on Heroku. Deploys happen automatically after successful Circle CI builds to `main`.
 
 To run migrations: `heroku run 'yarn install --frozen-lockfile --production=false && yarn migrate' -a getminimalist2`
 
