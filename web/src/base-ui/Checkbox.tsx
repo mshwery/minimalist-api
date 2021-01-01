@@ -55,7 +55,7 @@ export const Checkbox: React.FunctionComponent<Props & BaseUIProps> = ({
         zIndex={1}
         className={css`
           &:focus + svg {
-            box-shadow: 0 0 0 2px rgba(16, 112, 202, 0.25);
+            box-shadow: 0 0 0 3px ${colors.fill.primary}25;
           }
         `}
       />

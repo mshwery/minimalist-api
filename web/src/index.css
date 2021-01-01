@@ -1,5 +1,4 @@
 body {
-  margin: 0;
   padding: 0;
   color: #242527;
   background-color: #ffffff;
@@ -9,10 +8,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 a,
 svg,
 input,
@@ -20,8 +15,4 @@ textarea,
 button,
 [contenteditable='true'] {
   touch-action: manipulation;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

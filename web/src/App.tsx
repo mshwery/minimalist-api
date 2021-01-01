@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import { Spinner, Pane } from './base-ui'
 import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
-// import withSuspense from './components/withSuspense'
 import * as analytics from './lib/analytics'
 
 const ListsPage = React.lazy(() => import('./pages/ListsPage'))

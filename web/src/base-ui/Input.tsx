@@ -20,6 +20,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typ
       outline="none"
       className={css`
         &:focus {
+          box-shadow: 0 0 0 3px ${colors.fill.primary}25;
           border-color: ${colors.fill.primary};
         }
       `}

@@ -151,7 +151,7 @@ export class Task extends React.Component<Props, State> {
         <ActionIcon
           icon={DragIcon}
           size={scale(1.5)}
-          paddingLeft={scale(1)}
+          marginLeft={scale(1)}
           marginRight={scale(0.5)}
           color={colors.fill.secondary}
           opacity={(showActions || isDragging) && isDraggable ? 1 : 0}

@@ -71,6 +71,7 @@ export const Dialog: React.FunctionComponent<Props & BaseUIProps> = ({
           marginTop="12vmin"
           position="relative"
           overflowY="auto"
+          outline="none"
           {...props}
         >
           <Icon

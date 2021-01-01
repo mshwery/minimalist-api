@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import Box from 'ui-box'
+import { css, cx } from '@emotion/css'
 import { BaseUIProps } from './types'
 import { scale } from './scale'
 import { colors } from './colors'
@@ -13,7 +14,7 @@ const variants = {
   minimal: {
     background: 'white',
     border: `1px solid ${colors.fill.muted}`,
-    color: 'inherit',
+    color: colors.text.muted,
   },
   default: {
     background: colors.fill.primary,
@@ -69,6 +70,7 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
   render(): JSX.Element {
     const {
       children,
+      className,
       disabled,
       iconAfter,
       iconBefore,
@@ -88,18 +90,26 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         alignItems="center"
         appearance="none"
         borderRadius={3}
-        boxSizing="border-box"
         cursor="pointer"
         display="inline-flex"
-        fontWeight={400}
+        fontWeight={500}
         justifyContent="center"
         textDecoration="none"
         userSelect="none"
+        outline="none"
         disabled={isLoading || disabled}
         {...sizeProps}
         {...variantProps}
         {...(isLoading || disabled ? disabledStyles : {})}
         {...props}
+        className={cx(
+          className,
+          css`
+            &:focus {
+              box-shadow: 0 0 0 3px ${colors.fill.primary}25;
+            }
+          `
+        )}
       >
         {iconBefore && (
           <Box display="inline-flex" marginRight={scale(1)}>

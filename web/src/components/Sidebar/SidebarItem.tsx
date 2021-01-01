@@ -44,23 +44,20 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       aria-selected={isSelected}
       role="tab"
       cursor="pointer"
-      color={colors.text.default}
+      color={isSelected ? colors.text.action : colors.text.default}
       outline="none"
       fontWeight={isSelected ? 500 : 'normal'}
       className={css`
-        background-color: ${isSelected ? `${colors.fill.primary}30` : 'transparent'};
+        background-color: ${isSelected ? 'white' : 'transparent'};
 
-        &:hover {
-          background-color: ${colors.fill.secondary}30;
-        }
-
+        &:hover,
         &:focus {
-          background-color: ${colors.fill.primary}30;
+          background-color: ${colors.fill.secondary}30;
         }
       `}
       {...props}
     >
-      {icon && <Icon color={colors.text.muted} icon={icon} size={scale(2)} marginRight={scale(1)} />}
+      {icon && <Icon icon={icon} size={scale(2)} marginRight={scale(1)} />}
       <Text size={400}>{children}</Text>
     </Card>
   )

@@ -8,6 +8,7 @@
     "graphql-request": "^3.4.0",
     "http-proxy-middleware": "^0.20.0",
     "lodash": "^4.17.15",
+    "modern-normalize": "^1.0.0",
     "ms": "^2.1.2",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^12.0.0",
