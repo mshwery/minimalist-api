@@ -36,8 +36,8 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       alignItems="center"
       textDecoration="none"
       width="100%"
-      lineHeight={2}
-      paddingX={scale(1)}
+      paddingY={scale(1.5)}
+      paddingX={scale(1.5)}
       marginX={0}
       marginBottom={scale(0.5)}
       tabIndex={0}
@@ -58,7 +58,7 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       {...props}
     >
       {icon && <Icon icon={icon} size={scale(2)} marginRight={scale(1)} />}
-      <Text size={400}>{children}</Text>
+      <Text size={300}>{children}</Text>
     </Card>
   )
 }

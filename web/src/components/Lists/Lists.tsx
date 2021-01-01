@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
-import { Pane, Dialog, scale, Heading, Button, Input } from '../../base-ui'
+import { Divider, Pane, Dialog, scale, Heading, Button, Input } from '../../base-ui'
 import { SidebarItem, SidebarList } from '../Sidebar'
 
 interface List {
@@ -37,7 +37,8 @@ const Lists: React.FunctionComponent<Props> = (props) => {
             {list.name}
           </SidebarItem>
         ))}
-        <SidebarItem icon={PlusCircle} onClick={() => setIsDialogShown(true)}>
+        <Divider marginY={scale(1)} />
+        <SidebarItem icon={PlusCircle} marginY={scale(1)} onClick={() => setIsDialogShown(true)}>
           Create List
         </SidebarItem>
       </SidebarList>
