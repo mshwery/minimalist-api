@@ -15,7 +15,7 @@ export const UserMenu: React.FunctionComponent<UserMenuProps> = ({
   name = '',
   marginBottom,
 }) => {
-  const menu = useMenuState({ placement: 'top-end' })
+  const menu = useMenuState({ placement: 'top-end', gutter: scale(0.5) })
 
   return (
     <>
