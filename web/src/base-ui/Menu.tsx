@@ -40,7 +40,6 @@ export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProp
       maxHeight={350}
       overflow="auto"
       paddingY={scale(0.5)}
-      marginTop={scale(0.5)}
       outline="none"
     />
   )

@@ -1,4 +1,4 @@
-import { QueryFunctionContext } from 'react-query'
+import { useQueryClient, useQuery, useMutation } from 'react-query'
 import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
 import { queryClient } from '../../lib/query-client'
@@ -53,6 +53,16 @@ const getListQuery = `
 
 export function getList(id: string) {
   return client.request<GetListData>(getListQuery, { id })
+}
+
+export function useList(id: string) {
+  const { data, isLoading, error } = useQuery(['list', id], () => getList(id))
+
+  return {
+    list: data,
+    isLoading,
+    error,
+  }
 }
 
 interface GetTasksData {
@@ -393,15 +403,19 @@ const getCollaboratorsQuery = `
   }
 `
 
-type GetCollaboratorsQuery = QueryFunctionContext<[string, { id: string }]>
+export function useCollaborators(listId: string) {
+  const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
+    const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
+    const collaborators = list!.collaborators!.map((user) => ({ ...user, isOwner: false }))
+    const creator = Object.assign(list!.creator, { isOwner: true })
+    return [creator, ...collaborators]
+  })
 
-export const getCollaborators = async ({ queryKey }: GetCollaboratorsQuery) => {
-  const [, { id }] = queryKey
-  const result = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id })
-  const list = result.list!
-  const collaborators = list.collaborators!.map((user) => ({ ...user, isOwner: false }))
-  const creator = Object.assign(list.creator, { isOwner: true })
-  return [creator, ...collaborators]
+  return {
+    collaborators: data,
+    isLoading,
+    error,
+  }
 }
 
 interface ShareListData {
@@ -430,9 +444,17 @@ export const shareListMutation = `
   }
 `
 
-export async function shareList(input: { id: string; email: string }) {
+async function shareList(input: { id: string; email: string }) {
   const result = await client.request<ShareListData>(shareListMutation, { input })
   return result.shareList.list!.collaborators
+}
+
+export function useAddCollaborator(listId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation(shareList, {
+    onSuccess: () => queryClient.invalidateQueries(['collaborators', listId]),
+  })
 }
 
 interface UnshareListData {
@@ -461,7 +483,22 @@ export const unshareListMutation = `
   }
 `
 
-export async function unshareList(input: { id: string; email: string }) {
+async function unshareList(input: { id: string; email: string }) {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
   return result.unshareList.list!.collaborators
+}
+
+export function useRemoveCollaborator(listId: string, isOwner: boolean) {
+  const queryClient = useQueryClient()
+
+  return useMutation(unshareList, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['collaborators', listId])
+
+      // Non-owners will only be "leaving" lists, so we should refetch the lists they have access to after leaving
+      if (!isOwner) {
+        queryClient.invalidateQueries('lists')
+      }
+    },
+  })
 }

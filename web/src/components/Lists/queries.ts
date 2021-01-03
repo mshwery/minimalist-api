@@ -1,3 +1,5 @@
+import ms from 'ms'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import client, { gql } from '../../lib/graphql-client'
 
 export interface List {
@@ -19,9 +21,22 @@ const getListsQuery = gql`
   }
 `
 
-export async function getLists(): Promise<List[]> {
+async function getLists(): Promise<List[]> {
   const { lists } = await client.request<GetListsData>(getListsQuery)
   return lists
+}
+
+export function useLists() {
+  const { error, isLoading, data } = useQuery('lists', getLists, {
+    // No need to refetch this so often...
+    staleTime: ms('5m'),
+  })
+
+  return {
+    error,
+    isLoading,
+    lists: data,
+  }
 }
 
 interface CreateListData {
@@ -41,7 +56,17 @@ const createListMutation = gql`
   }
 `
 
-export async function createList(input: { name: string }): Promise<List> {
+async function createList(input: { name: string }): Promise<List> {
   const result = await client.request<CreateListData>(createListMutation, { input })
   return result.createList.list
+}
+
+export function useCreateList() {
+  const queryClient = useQueryClient()
+
+  return useMutation(createList, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('lists')
+    },
+  })
 }

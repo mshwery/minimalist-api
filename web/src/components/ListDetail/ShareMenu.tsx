@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
 import { UserPlus, X as RemoveIcon, LogOut } from 'react-feather'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router'
 import {
@@ -17,7 +16,7 @@ import {
   Avatar,
   Text,
 } from '../../base-ui'
-import { shareList, unshareList, getCollaborators } from './queries'
+import { useAddCollaborator, useRemoveCollaborator, useCollaborators } from './queries'
 import { useCurrentUser } from '../UserContext'
 
 const MAX_AVATARS_SHOWN = 4
@@ -56,22 +55,14 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const currentUser = userContext.user!
   const isCurrentUserOwner = currentUser.id === creator
-  const queryClient = useQueryClient()
 
-  const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators)
+  const { collaborators, isLoading } = useCollaborators(listId)
+  const addCollaborator = useAddCollaborator(listId)
+  const removeCollaborator = useRemoveCollaborator(listId, isCurrentUserOwner)
 
-  const addCollaborator = useMutation(shareList, {
-    onSuccess: () => queryClient.invalidateQueries(['collaborators', { id: listId }]),
-  })
-
-  const refetchQueries: Array<string | [string, any]> = [['collaborators', { id: listId }]]
-  // Non-owners will only be "leaving" lists, so we should refetch the lists they have access to after leaving
-  if (!isCurrentUserOwner) {
-    refetchQueries.push('lists')
-  }
-  const removeCollaborator = useMutation(unshareList, {
-    onSuccess: () => queryClient.invalidateQueries(refetchQueries),
-  })
+  React.useEffect(() => {
+    console.log(`mounted ${listId}`)
+  }, [])
 
   if (listId === 'inbox') {
     return null
