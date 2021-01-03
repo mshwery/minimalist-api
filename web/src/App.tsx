@@ -1,9 +1,11 @@
 import React, { Suspense } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import { QueryClientProvider } from 'react-query'
 import { Spinner, Pane } from './base-ui'
 import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
 import * as analytics from './lib/analytics'
+import { queryClient } from './lib/query-client'
 
 const ListsPage = React.lazy(() => import('./pages/ListsPage'))
 const LoginPage = React.lazy(() => import('./pages/LoginPage'))
@@ -19,25 +21,27 @@ const Container: React.FC = (props) => {
 
 const App: React.FunctionComponent<{}> = () => (
   <UserContextProvider>
-    <Router>
-      <Route component={trackPageView} />
-      <main>
-        <Suspense
-          fallback={
-            <Container>
-              <Spinner />
-            </Container>
-          }
-        >
-          <Switch>
-            {/* Temporarily redirect while we have no landing page */}
-            <Redirect from="/" to="/lists/inbox" exact />
-            <Route path="/login" component={LoginPage} />
-            <PrivateRoute path="/lists" component={ListsPage} />
-          </Switch>
-        </Suspense>
-      </main>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Route component={trackPageView} />
+        <main>
+          <Suspense
+            fallback={
+              <Container>
+                <Spinner />
+              </Container>
+            }
+          >
+            <Switch>
+              {/* Temporarily redirect while we have no landing page */}
+              <Redirect from="/" to="/lists/inbox" exact />
+              <Route path="/login" component={LoginPage} />
+              <PrivateRoute path="/lists" component={ListsPage} />
+            </Switch>
+          </Suspense>
+        </main>
+      </Router>
+    </QueryClientProvider>
   </UserContextProvider>
 )
 

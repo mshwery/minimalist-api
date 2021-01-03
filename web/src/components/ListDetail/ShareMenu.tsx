@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { UserPlus, X as RemoveIcon, LogOut } from 'react-feather'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router'
 import {
@@ -56,10 +56,12 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const currentUser = userContext.user!
   const isCurrentUserOwner = currentUser.id === creator
+  const queryClient = useQueryClient()
 
   const { data: collaborators, isLoading } = useQuery(['collaborators', { id: listId }], getCollaborators)
-  const [addCollaborator, { isLoading: isUpdating }] = useMutation(shareList, {
-    refetchQueries: [['collaborators', { id: listId }]],
+
+  const addCollaborator = useMutation(shareList, {
+    onSuccess: () => queryClient.invalidateQueries(['collaborators', { id: listId }]),
   })
 
   const refetchQueries: Array<string | [string, any]> = [['collaborators', { id: listId }]]
@@ -67,7 +69,9 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   if (!isCurrentUserOwner) {
     refetchQueries.push('lists')
   }
-  const [removeCollaborator, { isLoading: isRemoving }] = useMutation(unshareList, { refetchQueries })
+  const removeCollaborator = useMutation(unshareList, {
+    onSuccess: () => queryClient.invalidateQueries(refetchQueries),
+  })
 
   if (listId === 'inbox') {
     return null
@@ -107,7 +111,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
             }
 
             const email = emailRef.current.value.trim()
-            await addCollaborator({ id: listId, email })
+            await addCollaborator.mutateAsync({ id: listId, email })
 
             // Reset input
             emailRef.current.value = ''
@@ -125,7 +129,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
               ref={emailRef}
               type="email"
               width="100%"
-              disabled={isUpdating}
+              disabled={addCollaborator.isLoading}
             />
           </Pane>
           <Pane marginTop={scale(2)}>
@@ -142,16 +146,16 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
                   </Pane>
                   {!user.isOwner && (isCurrentUserOwner || user.email === currentUser.email) && (
                     <Icon
-                      disabled={isRemoving}
+                      disabled={removeCollaborator.isLoading}
                       icon={user.email === currentUser.email ? LogOut : RemoveIcon}
                       color={colors.fill.secondary}
                       size={scale(2)}
                       title={user.email === currentUser.email ? 'Leave this list' : 'Unshare'}
                       onClick={async () => {
-                        if (isRemoving) {
+                        if (removeCollaborator.isLoading) {
                           return
                         }
-                        await removeCollaborator({ id: listId, email: user.email })
+                        await removeCollaborator.mutateAsync({ id: listId, email: user.email })
                         if (user.email === currentUser.email) {
                           setIsDialogShown(false)
                           history.push('/lists/inbox')
@@ -163,7 +167,11 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
               ))}
           </Pane>
           <Pane display="flex" justifyContent="flex-end" alignItems="center" marginTop={scale(4)}>
-            <Button isLoading={isLoading || isUpdating} onClick={() => setIsDialogShown(false)} variant="minimal">
+            <Button
+              isLoading={isLoading || addCollaborator.isLoading}
+              onClick={() => setIsDialogShown(false)}
+              variant="minimal"
+            >
               Done
             </Button>
           </Pane>
