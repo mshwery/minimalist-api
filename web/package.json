@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.0.0",
     "@emotion/css": "^11.1.3",
     "focus-trap": "^6.2.3",
+    "graphql": "^14.0.0",
     "graphql-request": "^3.4.0",
     "http-proxy-middleware": "^0.20.0",
     "lodash": "^4.17.15",
@@ -19,7 +21,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "4.0.1",
     "react-use": "^15.3.4",
-    "reakit": "^1.0.0-beta.11",
+    "reakit": "^1.3.3",
     "ui-box": "^4.1.0",
     "uuid": "^8.3.2"
   },
@@ -31,7 +33,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.166",
+    "@types/lodash": "^4.14.167",
     "@types/ms": "^0.7.31",
     "@types/react": "^16.9.4",
     "@types/react-beautiful-dnd": "^11.0.3",
