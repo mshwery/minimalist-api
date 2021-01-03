@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useQueryClient, useQuery, useMutation } from 'react-query'
 import { Maybe } from '../../@types/type-helpers'
 import client from '../../lib/graphql-client'
@@ -406,8 +407,10 @@ const getCollaboratorsQuery = `
 export function useCollaborators(listId: string) {
   const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
     const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
-    const collaborators = list!.collaborators!.map((user) => ({ ...user, isOwner: false }))
-    const creator = Object.assign(list!.creator, { isOwner: true })
+    if (!list) return []
+
+    const collaborators = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
+    const creator = Object.assign(list.creator ?? {}, { isOwner: true })
     return [creator, ...collaborators]
   })
 
@@ -446,7 +449,7 @@ export const shareListMutation = `
 
 async function shareList(input: { id: string; email: string }) {
   const result = await client.request<ShareListData>(shareListMutation, { input })
-  return result.shareList.list!.collaborators
+  return result.shareList.list?.collaborators ?? []
 }
 
 export function useAddCollaborator(listId: string) {
@@ -485,7 +488,7 @@ export const unshareListMutation = `
 
 async function unshareList(input: { id: string; email: string }) {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
-  return result.unshareList.list!.collaborators
+  return result.unshareList.list?.collaborators ?? []
 }
 
 export function useRemoveCollaborator(listId: string, isOwner: boolean) {

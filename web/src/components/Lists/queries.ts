@@ -1,5 +1,6 @@
 import ms from 'ms'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from 'react-query'
+import { QueryResult } from '../../@types/type-helpers'
 import client, { gql } from '../../lib/graphql-client'
 
 export interface List {
@@ -26,7 +27,7 @@ async function getLists(): Promise<List[]> {
   return lists
 }
 
-export function useLists() {
+export function useLists(): QueryResult<{ lists: List[] }> {
   const { error, isLoading, data } = useQuery('lists', getLists, {
     // No need to refetch this so often...
     staleTime: ms('5m'),
@@ -35,7 +36,7 @@ export function useLists() {
   return {
     error,
     isLoading,
-    lists: data,
+    lists: data ?? [],
   }
 }
 
@@ -61,7 +62,7 @@ async function createList(input: { name: string }): Promise<List> {
   return result.createList.list
 }
 
-export function useCreateList() {
+export function useCreateList(): UseMutationResult<List, unknown, { name: string }> {
   const queryClient = useQueryClient()
 
   return useMutation(createList, {
