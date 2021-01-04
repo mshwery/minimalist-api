@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchiveList }) => {
-  const menu = useMenuState({ placement: 'top-end' })
+  const menu = useMenuState({ placement: 'top-end', gutter: scale(0.5) })
 
   return (
     <>

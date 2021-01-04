@@ -1,8 +1,11 @@
 import { Analytics } from '../lib/analytics'
 
-export type Difference<T, K> = Omit<T, keyof K>
-
 export type Maybe<T> = T | null
+
+export type QueryResult<Data> = Data & {
+  error: unknown
+  isLoading: boolean
+}
 
 declare global {
   interface Window {

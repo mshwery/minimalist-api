@@ -1,6 +1,8 @@
-import { setQueryData } from 'react-query'
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { useQueryClient, useQuery, useMutation } from 'react-query'
 import { Maybe } from '../../@types/type-helpers'
-import client, { gql } from '../../lib/graphql-client'
+import client from '../../lib/graphql-client'
+import { queryClient } from '../../lib/query-client'
 import { LISTS_QUERY } from '../Lists'
 
 export interface Task {
@@ -36,9 +38,9 @@ interface GetListData {
   list: Maybe<List>
 }
 
-const getListQuery = gql`
+const getListQuery = `
   query GetList($id: ID!) {
-    list(id: $id) {
+    list(id: $id)  {
       id
       name
       isArchived
@@ -50,15 +52,25 @@ const getListQuery = gql`
   }
 `
 
-export function getList(id: string): Promise<GetListData> {
+export function getList(id: string) {
   return client.request<GetListData>(getListQuery, { id })
+}
+
+export function useList(id: string) {
+  const { data, isLoading, error } = useQuery(['list', id], () => getList(id))
+
+  return {
+    list: data,
+    isLoading,
+    error,
+  }
 }
 
 interface GetTasksData {
   tasks: Task[]
 }
 
-const getTasksQuery = gql`
+const getTasksQuery = `
   query GetTasks($listId: ID!) {
     tasks(listId: $listId) {
       id
@@ -73,7 +85,7 @@ const getTasksQuery = gql`
   }
 `
 
-export function getTasks(listId: string): Promise<GetTasksData> {
+export function getTasks(listId: string) {
   return client.request<GetTasksData>(getTasksQuery, { listId })
 }
 
@@ -83,7 +95,7 @@ interface RenameListData {
   }
 }
 
-export const renameListMutation = gql`
+export const renameListMutation = `
   mutation RenameList($input: RenameListInput!) {
     renameList(input: $input) {
       list {
@@ -94,20 +106,20 @@ export const renameListMutation = gql`
   }
 `
 
-export async function renameList(id: string, name: string): Promise<{ list: Maybe<List> }> {
+export async function renameList(id: string, name: string) {
   // Optimistic update
-  setQueryData(
-    LISTS_QUERY,
-    (lists: List[]) =>
-      lists.map((list) => {
-        if (list.id === id) {
-          return { ...list, name }
-        }
+  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+    if (!lists) {
+      return []
+    }
+    return lists.map((list) => {
+      if (list.id === id) {
+        return { ...list, name }
+      }
 
-        return list
-      }),
-    { shouldRefetch: false }
-  )
+      return list
+    })
+  })
 
   const result = await client.request<RenameListData>(renameListMutation, {
     input: {
@@ -125,7 +137,7 @@ interface ArchiveListData {
   }
 }
 
-export const archiveListMutation = gql`
+export const archiveListMutation = `
   mutation ArchiveList($input: ArchiveListInput!) {
     archiveList(input: $input) {
       list {
@@ -136,9 +148,14 @@ export const archiveListMutation = gql`
   }
 `
 
-export async function archiveList(id: string): Promise<{ list: Maybe<List> }> {
+export async function archiveList(id: string) {
   // Optimistic update
-  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
+  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+    if (!lists) {
+      return []
+    }
+    return lists.filter((l) => l.id !== id)
+  })
 
   const result = await client.request<ArchiveListData>(archiveListMutation, {
     input: {
@@ -155,7 +172,7 @@ interface DeleteListData {
   }
 }
 
-export const deleteListMutation = gql`
+export const deleteListMutation = `
   mutation DeleteList($input: DeleteListInput!) {
     deleteList(input: $input) {
       id
@@ -163,9 +180,14 @@ export const deleteListMutation = gql`
   }
 `
 
-export async function deleteList(id: string): Promise<Maybe<string>> {
+export async function deleteList(id: string) {
   // Optimistic update
-  setQueryData(LISTS_QUERY, (lists: List[]) => lists.filter((l) => l.id !== id), { shouldRefetch: false })
+  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+    if (!lists) {
+      return []
+    }
+    return lists.filter((l) => l.id !== id)
+  })
 
   const result = await client.request<DeleteListData>(deleteListMutation, {
     input: {
@@ -182,7 +204,7 @@ interface CreateTaskData {
   }
 }
 
-export const createTaskMutation = gql`
+export const createTaskMutation = `
   mutation CreateTask($input: CreateTaskInput!) {
     createTask(input: $input) {
       task {
@@ -206,7 +228,7 @@ interface CreateTaskArgs {
   listId?: string
 }
 
-export async function createTask({ id, content, position, listId }: CreateTaskArgs): Promise<{ task: Maybe<Task> }> {
+export async function createTask({ id, content, position, listId }: CreateTaskArgs) {
   const result = await client.request<CreateTaskData>(createTaskMutation, {
     input: {
       id,
@@ -225,7 +247,7 @@ interface UpdateTaskData {
   }
 }
 
-export const updateTaskMutation = gql`
+export const updateTaskMutation = `
   mutation UpdateTask($input: UpdateTaskInput!) {
     updateTask(input: $input) {
       task {
@@ -242,7 +264,7 @@ export const updateTaskMutation = gql`
   }
 `
 
-export async function updateTask(input: { id: string; content: string }): Promise<Maybe<Task>> {
+export async function updateTask(input: { id: string; content: string }) {
   const result = await client.request<UpdateTaskData>(updateTaskMutation, { input })
   return result.updateTask.task
 }
@@ -253,7 +275,7 @@ interface MoveTaskData {
   }
 }
 
-export const moveTaskMutation = gql`
+export const moveTaskMutation = `
   mutation MoveTask($input: MoveTaskInput!) {
     moveTask(input: $input) {
       task {
@@ -270,11 +292,7 @@ export const moveTaskMutation = gql`
   }
 `
 
-export async function moveTask(args: {
-  id: string
-  listId: string
-  insertBefore: number
-}): Promise<{ task: Maybe<Task> }> {
+export async function moveTask(args: { id: string; listId: string; insertBefore: number }) {
   const result = await client.request<MoveTaskData>(moveTaskMutation, {
     input: args,
   })
@@ -288,7 +306,7 @@ interface CompleteTaskData {
   }
 }
 
-export const completeTaskMutation = gql`
+export const completeTaskMutation = `
   mutation CompleteTask($input: CompleteTaskInput!) {
     completeTask(input: $input) {
       task {
@@ -305,7 +323,7 @@ export const completeTaskMutation = gql`
   }
 `
 
-export async function completeTask(input: { id: string }): Promise<Maybe<Task>> {
+export async function completeTask(input: { id: string }) {
   const result = await client.request<CompleteTaskData>(completeTaskMutation, { input })
   return result.completeTask.task
 }
@@ -316,7 +334,7 @@ interface ReopenTaskData {
   }
 }
 
-export const reopenTaskMutation = gql`
+export const reopenTaskMutation = `
   mutation ReopenTask($input: ReopenTaskInput!) {
     reopenTask(input: $input) {
       task {
@@ -333,7 +351,7 @@ export const reopenTaskMutation = gql`
   }
 `
 
-export async function reopenTask(input: { id: string }): Promise<Maybe<Task>> {
+export async function reopenTask(input: { id: string }) {
   const result = await client.request<ReopenTaskData>(reopenTaskMutation, { input })
   return result.reopenTask.task
 }
@@ -344,7 +362,7 @@ interface DeleteTaskData {
   }
 }
 
-export const deleteTaskMutation = gql`
+export const deleteTaskMutation = `
   mutation DeleteTask($input: DeleteTaskInput!) {
     deleteTask(input: $input) {
       id
@@ -352,7 +370,7 @@ export const deleteTaskMutation = gql`
   }
 `
 
-export async function deleteTask(input: { id: string }): Promise<string | undefined> {
+export async function deleteTask(input: { id: string }) {
   const result = await client.request<DeleteTaskData>(deleteTaskMutation, { input })
   return result.deleteTask.id
 }
@@ -366,7 +384,7 @@ interface GetCollaboratorsData {
   >
 }
 
-const getCollaboratorsQuery = gql`
+const getCollaboratorsQuery = `
   query GetCollaborators($id: ID!) {
     list(id: $id) {
       id
@@ -390,24 +408,21 @@ interface Collaborator extends User {
   isOwner: boolean
 }
 
-export async function getCollaborators(input: { id: string }): Promise<Array<Collaborator>> {
-  const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, input)
-  if (!list) {
-    return []
+export function useCollaborators(listId: string) {
+  const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
+    const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
+    if (!list) return []
+
+    const collaborators: Collaborator[] = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
+    const creator: Collaborator = Object.assign(list.creator, { isOwner: true })
+    return [creator, ...collaborators]
+  })
+
+  return {
+    collaborators: data,
+    isLoading,
+    error,
   }
-
-  const collaborators: Collaborator[] = []
-
-  if (list.creator) {
-    const creator = Object.assign(list.creator, { isOwner: true })
-    collaborators.push(creator)
-  }
-
-  if (list && Array.isArray(list?.collaborators)) {
-    collaborators.push(...list.collaborators.map((user) => ({ ...user, isOwner: false })))
-  }
-
-  return collaborators
 }
 
 interface ShareListData {
@@ -420,7 +435,7 @@ interface ShareListData {
   }
 }
 
-export const shareListMutation = gql`
+export const shareListMutation = `
   mutation ShareList($input: ShareListInput!) {
     shareList(input: $input) {
       list {
@@ -436,9 +451,17 @@ export const shareListMutation = gql`
   }
 `
 
-export async function shareList(input: { id: string; email: string }): Promise<User[]> {
+async function shareList(input: { id: string; email: string }) {
   const result = await client.request<ShareListData>(shareListMutation, { input })
   return result.shareList.list?.collaborators ?? []
+}
+
+export function useAddCollaborator(listId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation(shareList, {
+    onSuccess: () => queryClient.invalidateQueries(['collaborators', listId]),
+  })
 }
 
 interface UnshareListData {
@@ -451,7 +474,7 @@ interface UnshareListData {
   }
 }
 
-export const unshareListMutation = gql`
+export const unshareListMutation = `
   mutation UnshareList($input: UnshareListInput!) {
     unshareList(input: $input) {
       list {
@@ -467,7 +490,22 @@ export const unshareListMutation = gql`
   }
 `
 
-export async function unshareList(input: { id: string; email: string }): Promise<User[] | undefined> {
+async function unshareList(input: { id: string; email: string }) {
   const result = await client.request<UnshareListData>(unshareListMutation, { input })
   return result.unshareList.list?.collaborators ?? []
+}
+
+export function useRemoveCollaborator(listId: string, isOwner: boolean) {
+  const queryClient = useQueryClient()
+
+  return useMutation(unshareList, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['collaborators', listId])
+
+      // Non-owners will only be "leaving" lists, so we should refetch the lists they have access to after leaving
+      if (!isOwner) {
+        queryClient.invalidateQueries('lists')
+      }
+    },
+  })
 }
