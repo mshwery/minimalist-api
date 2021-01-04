@@ -60,10 +60,6 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   const addCollaborator = useAddCollaborator(listId)
   const removeCollaborator = useRemoveCollaborator(listId, isCurrentUserOwner)
 
-  React.useEffect(() => {
-    console.log(`mounted ${listId}`)
-  }, [])
-
   if (listId === 'inbox') {
     return null
   }

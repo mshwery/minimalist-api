@@ -404,13 +404,17 @@ const getCollaboratorsQuery = `
   }
 `
 
+interface Collaborator extends User {
+  isOwner: boolean
+}
+
 export function useCollaborators(listId: string) {
   const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
     const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
     if (!list) return []
 
-    const collaborators = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
-    const creator = Object.assign(list.creator ?? {}, { isOwner: true })
+    const collaborators: Collaborator[] = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
+    const creator: Collaborator = Object.assign(list.creator, { isOwner: true })
     return [creator, ...collaborators]
   })
 
