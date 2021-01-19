@@ -6,7 +6,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
-import { Heading, Text, Pane, scale, Input, colors, Icon, Spinner } from '../../base-ui'
+import { Heading, Text, Pane, scale, Input, colors, Icon, Spinner, RichInput } from '../../base-ui'
 import {
   List,
   Task as TaskType,
@@ -410,6 +410,8 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
           </Droppable>
         </DragDropContext>
         <CreateNewTask onDoneEditing={this.createNewTask} />
+
+        <RichInput />
 
         {completedTasks.length > 0 && (
           <Pane marginTop={scale(4)} borderTop={`1px solid ${colors.fill.muted}`}>
