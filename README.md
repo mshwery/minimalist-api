@@ -6,7 +6,7 @@ An api for managing tasks and lists of tasks.
 
 ## Requirements
 
-- Node >= 10.21
+- Node >= 14
 - Yarn >= 1.15
 - Postgresql 11.6
 
