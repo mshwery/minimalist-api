@@ -23,12 +23,26 @@ const fontSizes: { [key: string]: number } = {
   '600': scale(2.5),
 }
 
-function getFontSize(size?: number) {
+const lineHeights: Record<string, string> = {
+  '200': '1.25',
+  '300': '1.4',
+  '400': '1.4',
+  '500': '1.5',
+  '600': '1.5',
+}
+
+function getFontStyles(size?: number) {
   if (!size) {
-    return fontSizes[400]
+    return {
+      fontSize: fontSizes[400],
+      lineHeight: lineHeights[400],
+    }
   }
 
-  return fontSizes[size]
+  return {
+    fontSize: fontSizes[size],
+    lineHeight: lineHeights[size],
+  }
 }
 
 const colors: { [key: string]: string } = {
@@ -45,10 +59,10 @@ function getTextColor(color?: Color) {
 
 export const Text = React.forwardRef<HTMLSpanElement, TextProps & BaseUIProps>(
   ({ size = 400, color, ...props }, ref) => {
-    const fontSize = getFontSize(size)
+    const fontStyles = getFontStyles(size)
     const textColor = getTextColor(color)
 
-    // TODO: lineHeight, fontWeight, letterSpacing, marginTop, fontFamily?, color
-    return <Box is="span" ref={ref} fontSize={fontSize} color={textColor} {...props} />
+    // TODO: fontWeight, letterSpacing, marginTop, fontFamily?, color
+    return <Box is="span" ref={ref} {...fontStyles} color={textColor} {...props} />
   }
 )
