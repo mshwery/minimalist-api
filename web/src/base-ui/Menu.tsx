@@ -12,7 +12,7 @@ export const MenuItem: React.FunctionComponent<MenuStateReturn & React.Component
     display="flex"
     alignItems="center"
     size={300}
-    lineHeight={2.6}
+    paddingY={scale(1)}
     paddingX={scale(1.5)}
     fontWeight={400}
     cursor="pointer"
