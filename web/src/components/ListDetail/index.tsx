@@ -255,29 +255,33 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   handleKeyDown = (event: React.KeyboardEvent<Element>, value: string, id: string, index: number) => {
+    const isCompleted = this.state.tasks.find((task) => task.id === id)?.isCompleted ?? false
+
     // Use onKeyDown because we want to check that the value is already empty
     if (event.key === 'Backspace' && value === '') {
       void this.deleteTask(id)
-      this.focusPreviousTask(index)
+      this.focusPreviousTask(index, isCompleted)
     }
 
     if (event.key === 'ArrowDown') {
-      this.focusNextTask(index)
+      this.focusNextTask(index, isCompleted)
     }
 
     if (event.key === 'ArrowUp') {
-      this.focusPreviousTask(index)
+      this.focusPreviousTask(index, isCompleted)
     }
   }
 
-  focusNextTask = (currentIndex: number) => {
-    const nextTask = this.state.tasks[currentIndex + 1]
+  focusNextTask = (currentIndex: number, isCompleted: boolean) => {
+    const tasks = this.state.tasks.filter((task) => task.isCompleted === isCompleted)
+    const nextTask = tasks[currentIndex + 1]
     const autoFocusId = nextTask ? nextTask.id : null
     this.setState({ autoFocusId })
   }
 
-  focusPreviousTask = (currentIndex: number) => {
-    const nextTask = this.state.tasks[currentIndex - 1]
+  focusPreviousTask = (currentIndex: number, isCompleted: boolean) => {
+    const tasks = this.state.tasks.filter((task) => task.isCompleted === isCompleted)
+    const nextTask = tasks[currentIndex - 1]
     const autoFocusId = nextTask ? nextTask.id : null
     this.setState({ autoFocusId })
   }
