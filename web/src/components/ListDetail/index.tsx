@@ -156,29 +156,47 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       tasks: optimisticTasks,
     })
 
-    void createTask({ id, content, position, listId })
+    try {
+      await createTask({ id, content, position, listId })
+    } catch (error) {
+      // TODO toast
+    }
   }
 
   updateTaskContent = async (id: string, content: string) => {
     const input = { id, content }
 
-    // TODO handle error
-    const task = await updateTask(input)
-    this.updateTaskInState(task)
+    try {
+      const task = await updateTask(input)
+      this.updateTaskInState(task)
+    } catch (error) {
+      // TODO toast
+    }
   }
 
   handleMarkComplete = async (id: string) => {
-    // Optimistic update
-    this.updateTaskInState({ id, isCompleted: true, completedAt: new Date().toISOString() })
-    const task = await completeTask({ id })
-    this.updateTaskInState(task)
+    try {
+      // Optimistic update
+      this.updateTaskInState({ id, isCompleted: true, completedAt: new Date().toISOString() })
+      const task = await completeTask({ id })
+      this.updateTaskInState(task)
+    } catch (error) {
+      // TODO toast
+      this.updateTaskInState({ id, isCompleted: false, completedAt: undefined })
+    }
   }
 
   handleMarkIncomplete = async (id: string) => {
-    // Optimistic update
-    this.updateTaskInState({ id, isCompleted: false, completedAt: undefined })
-    const task = await reopenTask({ id })
-    this.updateTaskInState(task)
+    const original = this.state.tasks.find((t) => t.id === id)
+    try {
+      // Optimistic update
+      this.updateTaskInState({ id, isCompleted: false, completedAt: undefined })
+      const task = await reopenTask({ id })
+      this.updateTaskInState(task)
+    } catch (error) {
+      // TODO toast
+      this.updateTaskInState({ id, isCompleted: true, completedAt: original?.completedAt })
+    }
   }
 
   updateTaskInState = (task: Maybe<Partial<TaskType>>) => {
@@ -209,13 +227,19 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 
   deleteTask = async (id: string) => {
+    const tasks = this.state.tasks
+
     // Optimistic update
     this.setState((prevState) => ({
       tasks: prevState.tasks.filter((t) => t.id !== id),
     }))
 
-    // TODO handle error
-    await deleteTask({ id })
+    try {
+      await deleteTask({ id })
+    } catch (error) {
+      // TODO toast
+      this.setState({ tasks })
+    }
   }
 
   handleDragEnd = async (result: DropResult, _provided: ResponderProvided) => {
@@ -243,7 +267,11 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       }
 
       // Update async
-      void moveTask(moveTaskInput)
+      try {
+        await moveTask(moveTaskInput)
+      } catch (error) {
+        // TODO toast w/ reload message
+      }
     }
   }
 

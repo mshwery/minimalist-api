@@ -149,21 +149,25 @@ export const archiveListMutation = `
 `
 
 export async function archiveList(id: string) {
-  // Optimistic update
-  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
-    if (!lists) {
-      return []
-    }
-    return lists.filter((l) => l.id !== id)
-  })
+  try {
+    // Optimistic update
+    queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+      if (!lists) {
+        return []
+      }
+      return lists.filter((l) => l.id !== id)
+    })
 
-  const result = await client.request<ArchiveListData>(archiveListMutation, {
-    input: {
-      id,
-    },
-  })
+    const result = await client.request<ArchiveListData>(archiveListMutation, {
+      input: {
+        id,
+      },
+    })
 
-  return result.archiveList
+    return result.archiveList
+  } catch (error) {
+    // TODO toast
+  }
 }
 
 interface DeleteListData {
@@ -181,21 +185,25 @@ export const deleteListMutation = `
 `
 
 export async function deleteList(id: string) {
-  // Optimistic update
-  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
-    if (!lists) {
-      return []
-    }
-    return lists.filter((l) => l.id !== id)
-  })
+  try {
+    // Optimistic update
+    queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+      if (!lists) {
+        return []
+      }
+      return lists.filter((l) => l.id !== id)
+    })
 
-  const result = await client.request<DeleteListData>(deleteListMutation, {
-    input: {
-      id,
-    },
-  })
+    const result = await client.request<DeleteListData>(deleteListMutation, {
+      input: {
+        id,
+      },
+    })
 
-  return result.deleteList.id
+    return result.deleteList.id
+  } catch (error) {
+    // TODO toast
+  }
 }
 
 interface CreateTaskData {
