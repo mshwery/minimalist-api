@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { QueryClientProvider } from 'react-query'
-import { Spinner, Pane } from './base-ui'
+import { Spinner, Pane, ToastProvider } from './base-ui'
 import { UserContextProvider } from './components/UserContext'
 import PrivateRoute from './components/PrivateRoute'
 import * as analytics from './lib/analytics'
@@ -20,31 +20,33 @@ const Container: React.FC = (props) => {
 }
 
 const App: React.FunctionComponent<{}> = () => (
-  <UserContextProvider>
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Route component={trackPageView} />
-        <main>
-          <Suspense
-            fallback={
-              <Container>
-                <Spinner />
-              </Container>
-            }
-          >
-            <Switch>
-              {/* Temporarily redirect while we have no landing page */}
-              <Route exact path="/login" component={LoginPage} />
-              <PrivateRoute path="/lists" component={ListsPage} />
-              <Route path="*">
-                <Redirect to="/lists/inbox" />
-              </Route>
-            </Switch>
-          </Suspense>
-        </main>
-      </Router>
-    </QueryClientProvider>
-  </UserContextProvider>
+  <ToastProvider>
+    <UserContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Route component={trackPageView} />
+          <main>
+            <Suspense
+              fallback={
+                <Container>
+                  <Spinner />
+                </Container>
+              }
+            >
+              <Switch>
+                {/* Temporarily redirect while we have no landing page */}
+                <Route exact path="/login" component={LoginPage} />
+                <PrivateRoute path="/lists" component={ListsPage} />
+                <Route path="*">
+                  <Redirect to="/lists/inbox" />
+                </Route>
+              </Switch>
+            </Suspense>
+          </main>
+        </Router>
+      </QueryClientProvider>
+    </UserContextProvider>
+  </ToastProvider>
 )
 
 export default App
