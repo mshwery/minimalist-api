@@ -5,6 +5,13 @@ import client from '../../lib/graphql-client'
 import { queryClient } from '../../lib/query-client'
 import { LISTS_QUERY } from '../Lists'
 
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'AuthError'
+  }
+}
+
 export interface Task {
   id: string
   content: string
@@ -53,7 +60,9 @@ const getListQuery = `
 `
 
 export function getList(id: string) {
-  return client.request<GetListData>(getListQuery, { id })
+  return handleError(
+    client.request<GetListData>(getListQuery, { id })
+  )
 }
 
 export function useList(id: string) {
@@ -86,7 +95,9 @@ const getTasksQuery = `
 `
 
 export function getTasks(listId: string) {
-  return client.request<GetTasksData>(getTasksQuery, { listId })
+  return handleError(
+    client.request<GetTasksData>(getTasksQuery, { listId })
+  )
 }
 
 interface RenameListData {
@@ -121,12 +132,14 @@ export async function renameList(id: string, name: string) {
     })
   })
 
-  const result = await client.request<RenameListData>(renameListMutation, {
-    input: {
-      id,
-      name,
-    },
-  })
+  const result = await handleError(
+    client.request<RenameListData>(renameListMutation, {
+      input: {
+        id,
+        name,
+      },
+    })
+  )
 
   return result.renameList
 }
@@ -149,25 +162,23 @@ export const archiveListMutation = `
 `
 
 export async function archiveList(id: string) {
-  try {
-    // Optimistic update
-    queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
-      if (!lists) {
-        return []
-      }
-      return lists.filter((l) => l.id !== id)
-    })
+  // Optimistic update
+  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+    if (!lists) {
+      return []
+    }
+    return lists.filter((l) => l.id !== id)
+  })
 
-    const result = await client.request<ArchiveListData>(archiveListMutation, {
+  const result = await handleError(
+    client.request<ArchiveListData>(archiveListMutation, {
       input: {
         id,
       },
     })
+  )
 
-    return result.archiveList
-  } catch (error) {
-    // TODO toast
-  }
+  return result.archiveList
 }
 
 interface DeleteListData {
@@ -185,25 +196,23 @@ export const deleteListMutation = `
 `
 
 export async function deleteList(id: string) {
-  try {
-    // Optimistic update
-    queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
-      if (!lists) {
-        return []
-      }
-      return lists.filter((l) => l.id !== id)
-    })
+  // Optimistic update
+  queryClient.setQueryData(LISTS_QUERY, (lists?: List[]) => {
+    if (!lists) {
+      return []
+    }
+    return lists.filter((l) => l.id !== id)
+  })
 
-    const result = await client.request<DeleteListData>(deleteListMutation, {
+  const result = await handleError(
+    client.request<DeleteListData>(deleteListMutation, {
       input: {
         id,
       },
     })
+  )
 
-    return result.deleteList.id
-  } catch (error) {
-    // TODO toast
-  }
+  return result.deleteList.id
 }
 
 interface CreateTaskData {
@@ -237,14 +246,16 @@ interface CreateTaskArgs {
 }
 
 export async function createTask({ id, content, position, listId }: CreateTaskArgs) {
-  const result = await client.request<CreateTaskData>(createTaskMutation, {
-    input: {
-      id,
-      content,
-      insertAt: position,
-      listId,
-    },
-  })
+  const result = await handleError(
+    client.request<CreateTaskData>(createTaskMutation, {
+      input: {
+        id,
+        content,
+        insertAt: position,
+        listId,
+      },
+    })
+  )
 
   return result.createTask
 }
@@ -273,7 +284,9 @@ export const updateTaskMutation = `
 `
 
 export async function updateTask(input: { id: string; content: string }) {
-  const result = await client.request<UpdateTaskData>(updateTaskMutation, { input })
+  const result = await handleError(
+    client.request<UpdateTaskData>(updateTaskMutation, { input })
+  )
   return result.updateTask.task
 }
 
@@ -301,9 +314,11 @@ export const moveTaskMutation = `
 `
 
 export async function moveTask(args: { id: string; listId: string; insertBefore: number }) {
-  const result = await client.request<MoveTaskData>(moveTaskMutation, {
-    input: args,
-  })
+  const result = await handleError(
+    client.request<MoveTaskData>(moveTaskMutation, {
+      input: args,
+    })
+  )
 
   return result.moveTask
 }
@@ -331,8 +346,26 @@ export const completeTaskMutation = `
   }
 `
 
+async function handleError<T>(promise: Promise<T>): Promise<T> {
+  try {
+    return await promise
+  } catch (error) {
+    if (error?.response?.status === 401) {
+      throw new AuthError('Your session is no longer active. Please log in again.')
+    }
+
+    if (error?.response?.error) {
+      throw new Error(error.response.error)
+    }
+
+    throw error
+  }
+}
+
 export async function completeTask(input: { id: string }) {
-  const result = await client.request<CompleteTaskData>(completeTaskMutation, { input })
+  const result = await handleError(
+    client.request<CompleteTaskData>(completeTaskMutation, { input })
+  )
   return result.completeTask.task
 }
 
@@ -360,7 +393,9 @@ export const reopenTaskMutation = `
 `
 
 export async function reopenTask(input: { id: string }) {
-  const result = await client.request<ReopenTaskData>(reopenTaskMutation, { input })
+  const result = await handleError(
+    client.request<ReopenTaskData>(reopenTaskMutation, { input })
+  )
   return result.reopenTask.task
 }
 
@@ -379,7 +414,9 @@ export const deleteTaskMutation = `
 `
 
 export async function deleteTask(input: { id: string }) {
-  const result = await client.request<DeleteTaskData>(deleteTaskMutation, { input })
+  const result = await handleError(
+    client.request<DeleteTaskData>(deleteTaskMutation, { input })
+  )
   return result.deleteTask.id
 }
 
@@ -418,7 +455,9 @@ interface Collaborator extends User {
 
 export function useCollaborators(listId: string) {
   const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
-    const { list } = await client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
+    const { list } = await handleError(
+      client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
+    )
     if (!list) return []
 
     const collaborators: Collaborator[] = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
@@ -460,7 +499,9 @@ export const shareListMutation = `
 `
 
 async function shareList(input: { id: string; email: string }) {
-  const result = await client.request<ShareListData>(shareListMutation, { input })
+  const result = await handleError(
+    client.request<ShareListData>(shareListMutation, { input })
+  )
   return result.shareList.list?.collaborators ?? []
 }
 
@@ -499,7 +540,9 @@ export const unshareListMutation = `
 `
 
 async function unshareList(input: { id: string; email: string }) {
-  const result = await client.request<UnshareListData>(unshareListMutation, { input })
+  const result = await handleError(
+    client.request<UnshareListData>(unshareListMutation, { input })
+  )
   return result.unshareList.list?.collaborators ?? []
 }
 

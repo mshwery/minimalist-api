@@ -4,3 +4,5 @@ export type { Toast, ToastWithID, Context as ToastContextType } from './ToastCon
 export { ToastItem } from './ToastItem'
 export { ToastProvider } from './ToastProvider'
 export { useToasts } from './useToasts'
+export { withToasts } from './withToasts'
+export type { WithToastProps } from './withToasts'

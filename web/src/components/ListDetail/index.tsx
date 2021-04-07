@@ -6,7 +6,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Maybe } from '../../@types/type-helpers'
 import { move } from '../../lib/array-move'
-import { Heading, Text, Pane, scale, Input, colors, Icon, Spinner } from '../../base-ui'
+import { Heading, Text, Pane, scale, Input, colors, Icon, Spinner, withToasts, WithToastProps } from '../../base-ui'
 import {
   List,
   Task as TaskType,
@@ -21,12 +21,15 @@ import {
   moveTask,
   archiveList,
   deleteList,
+  AuthError,
 } from './queries'
 import Task from '../Task'
 import InlineEdit from '../InlineEditableTextField'
 import { CreateNewTask } from './CreateNewTask'
 import { ListMenu } from './ListMenu'
 import { ShareMenu } from './ShareMenu'
+import { withUserContext } from '../UserContext'
+import type { UserContext } from '../UserContext'
 
 const Container: React.FunctionComponent<any> = (props) => (
   <Pane
@@ -59,13 +62,12 @@ interface State {
   list: Maybe<List>
   tasks: TaskType[]
   name: string
-  error: Maybe<Error>
   isLoading: boolean
   showCompletedTasks: boolean
 }
 
 // TODO: break this up into the list detail view and the task editor
-class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, State> {
+class ListWithData extends PureComponent<Props & UserContext & WithToastProps & RouteComponentProps<{}, {}>, State> {
   nameRef = React.createRef<HTMLInputElement>()
 
   state: State = {
@@ -73,7 +75,6 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     list: null,
     tasks: [],
     name: '',
-    error: null,
     isLoading: true,
     showCompletedTasks: false,
   }
@@ -111,7 +112,9 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       this.setState({ tasks })
     } catch (error) {
       // TODO add frontend Segment + error tracking
-      this.setState({ error })
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
     } finally {
       this.setState({ isLoading: false })
     }
@@ -159,7 +162,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     try {
       await createTask({ id, content, position, listId })
     } catch (error) {
-      // TODO toast
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't create task: ${error.message}` })
     }
   }
 
@@ -170,7 +176,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       const task = await updateTask(input)
       this.updateTaskInState(task)
     } catch (error) {
-      // TODO toast
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't update task: ${error.message}` })
     }
   }
 
@@ -181,7 +190,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       const task = await completeTask({ id })
       this.updateTaskInState(task)
     } catch (error) {
-      // TODO toast
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't update task: ${error.message}` })
       this.updateTaskInState({ id, isCompleted: false, completedAt: undefined })
     }
   }
@@ -194,7 +206,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       const task = await reopenTask({ id })
       this.updateTaskInState(task)
     } catch (error) {
-      // TODO toast
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't update task: ${error.message}` })
       this.updateTaskInState({ id, isCompleted: true, completedAt: original?.completedAt })
     }
   }
@@ -221,8 +236,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     try {
       await renameList(this.props.listId, name)
     } catch (error) {
-      // TODO handle error
-      this.setState({ error })
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't rename list: ${error.message}` })
     }
   }
 
@@ -237,7 +254,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
     try {
       await deleteTask({ id })
     } catch (error) {
-      // TODO toast
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+      this.props.addToast({ text: `Couldn't delete task: ${error.message}` })
       this.setState({ tasks })
     }
   }
@@ -270,7 +290,10 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
       try {
         await moveTask(moveTaskInput)
       } catch (error) {
-        // TODO toast w/ reload message
+        if (error instanceof AuthError) {
+          this.props.unsetUser()
+        }
+        this.props.addToast({ text: `Couldn't move tasks: ${error.message}` })
       }
     }
   }
@@ -393,10 +416,12 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
                 onArchiveList={async () => {
                   this.props.history.push('/lists/inbox')
                   await archiveList(this.props.listId)
+                  this.props.addToast({ text: `Archived "${this.state.name}"` })
                 }}
                 onDeleteList={async () => {
                   this.props.history.push('/lists/inbox')
                   await deleteList(this.props.listId)
+                  this.props.addToast({ text: `Deleted "${this.state.name}"` })
                 }}
               />
             </>
@@ -481,4 +506,4 @@ class ListWithData extends PureComponent<Props & RouteComponentProps<{}, {}>, St
   }
 }
 
-export default withRouter(ListWithData)
+export default withRouter(withToasts(withUserContext(ListWithData)))

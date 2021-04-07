@@ -20,4 +20,13 @@ export { TextButton } from './TextButton'
 export { colors } from './colors'
 export { scale } from './scale'
 export { useTimeout } from './useTimeout'
-export { ToastContainer, ToastProvider, ToastItem, ToastContext, useToastContext, useToasts } from './use-toasts'
+export {
+  ToastContainer,
+  ToastProvider,
+  ToastItem,
+  ToastContext,
+  useToastContext,
+  useToasts,
+  withToasts,
+} from './use-toasts'
+export type { WithToastProps } from './use-toasts'

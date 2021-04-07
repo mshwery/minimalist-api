@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Maybe } from '../../@types/type-helpers'
 import client, { gql } from '../../lib/graphql-client'
 import { identify } from '../../lib/analytics'
-import { Provider } from './context'
+import { Provider, Context } from './context'
 
 const getCurrentUserQuery = gql`
   query GetCurrentUser {
@@ -29,9 +29,7 @@ interface Data {
 interface UserProviderState {
   error: Maybe<Error>
   isLoading: boolean
-  context: {
-    user: Maybe<Viewer>
-  }
+  context: Context
 }
 
 export default class UserProvider extends Component<{}, UserProviderState> {
@@ -40,12 +38,29 @@ export default class UserProvider extends Component<{}, UserProviderState> {
     isLoading: true,
     context: {
       user: null,
+      unsetUser: this.unsetUser,
       refetchUser: this.fetchUser,
     },
   }
 
+  constructor(props = {}) {
+    super(props)
+    this.unsetUser = this.unsetUser.bind(this)
+    this.fetchUser = this.fetchUser.bind(this)
+  }
+
   componentDidMount(): void {
     void this.fetchUser()
+  }
+
+  unsetUser(): void {
+    this.setState({
+      context: {
+        user: null,
+        unsetUser: this.unsetUser,
+        refetchUser: this.fetchUser,
+      },
+    })
   }
 
   async fetchUser(): Promise<void> {
@@ -53,6 +68,7 @@ export default class UserProvider extends Component<{}, UserProviderState> {
       const { me: user } = await client.request<Data>(getCurrentUserQuery)
       const context = {
         user,
+        unsetUser: this.unsetUser,
         refetchUser: this.fetchUser,
       }
 
@@ -66,11 +82,7 @@ export default class UserProvider extends Component<{}, UserProviderState> {
       this.setState({ context })
     } catch (error) {
       // TODO add frontend Segment + error tracking
-      const context = {
-        user: null,
-        refetchUser: this.fetchUser,
-      }
-      this.setState({ context })
+      this.unsetUser()
     } finally {
       this.setState({ isLoading: false })
     }

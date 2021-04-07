@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card } from '../Card'
+import { Text } from '../Text'
 import type { ToastWithID } from './ToastContext'
 
 const maxHeight = 75
@@ -74,7 +75,7 @@ export function ToastItem({ toast, index, total, isEngaged }: ToastProps): JSX.E
       right={0}
       width="100%"
       maxHeight={maxHeight}
-      elevation={3}
+      elevation={2}
       display="flex"
       justifyContent="space-between"
       alignItems="center"
@@ -85,7 +86,7 @@ export function ToastItem({ toast, index, total, isEngaged }: ToastProps): JSX.E
       transform={transform}
       transition="transform 400ms ease 0ms, visibility 200ms ease 0ms, opacity 200ms ease 0ms"
     >
-      {toast.id} <br /> {toast.text} {toast.dismissing ? 'dismissing...' : ''}
+      <Text>{toast.text}</Text>
     </Card>
   )
 }

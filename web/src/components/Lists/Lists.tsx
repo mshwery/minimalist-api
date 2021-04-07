@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
-import { Divider, Pane, Dialog, scale, Heading, Button, Input, useToasts } from '../../base-ui'
+import { Divider, Pane, Dialog, scale, Heading, Button, Input } from '../../base-ui'
 import { SidebarItem, SidebarList } from '../Sidebar'
 
 interface List {
@@ -19,7 +19,6 @@ const Lists: React.FunctionComponent<Props> = (props) => {
   const { pathname } = useLocation()
   const nameRef = useRef<HTMLInputElement>(null)
   const [isDialogShown, setIsDialogShown] = useState(false)
-  const { addToast } = useToasts()
 
   return (
     <Pane>
@@ -42,7 +41,6 @@ const Lists: React.FunctionComponent<Props> = (props) => {
         <SidebarItem icon={PlusCircle} marginY={scale(1)} onClick={() => setIsDialogShown(true)}>
           Create List
         </SidebarItem>
-        <SidebarItem onClick={() => addToast({ text: 'Testing!' })}>Add Toast</SidebarItem>
       </SidebarList>
 
       <Dialog isShown={isDialogShown} requestClose={() => setIsDialogShown(false)} width={scale(60)}>
