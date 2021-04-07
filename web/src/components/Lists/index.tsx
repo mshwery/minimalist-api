@@ -1,5 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useToasts } from '../../base-ui'
 import Lists from './Lists'
 import { useLists, useCreateList } from './queries'
 
@@ -7,6 +8,7 @@ export const LISTS_QUERY = 'lists'
 
 const ListsView: React.FunctionComponent = () => {
   const { lists, isLoading } = useLists()
+  const { addToast } = useToasts()
   const createList = useCreateList()
 
   const history = useHistory()
@@ -14,7 +16,11 @@ const ListsView: React.FunctionComponent = () => {
     try {
       const list = await createList.mutateAsync({ name })
       history.push(`/lists/${list.id}`)
+      return list
     } catch (error) {
+      addToast({
+        text: `Shoot, there was an issue creating your list "${name}"`,
+      })
       // TODO: capture error via Sentry
     }
   }

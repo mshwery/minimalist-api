@@ -92,7 +92,9 @@ router.get(
       redirect = decodeURIComponent(req.query.redirect as string) + `?token=${token}`
     } else if (req.cookies.redirectTo) {
       res.clearCookie('redirectTo')
-      redirect = req.cookies.redirectTo + `?token=${token}`
+      // Temporarily disabling because... not doing React Native yet
+      // We want to support redirectTo for web, but without the token in the url
+      redirect = req.cookies.redirectTo // + `?token=${token}`
     }
 
     res.redirect(redirect)

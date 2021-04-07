@@ -12,7 +12,7 @@ interface List {
 interface Props {
   isCreatingList?: boolean
   lists: List[]
-  onCreateList: (name: string) => Promise<void>
+  onCreateList: (name: string) => Promise<List | undefined>
 }
 
 const Lists: React.FunctionComponent<Props> = (props) => {
@@ -49,9 +49,11 @@ const Lists: React.FunctionComponent<Props> = (props) => {
             event.preventDefault()
 
             if (nameRef.current && nameRef.current.value) {
-              await props.onCreateList(nameRef.current.value)
+              const list = await props.onCreateList(nameRef.current.value)
               // TODO handle errors
-              setIsDialogShown(false)
+              if (list) {
+                setIsDialogShown(false)
+              }
             }
           }}
         >

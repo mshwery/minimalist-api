@@ -2,11 +2,13 @@ import React, { useContext } from 'react'
 
 const defaultState = {
   refetchUser: (): void => undefined,
+  unsetUser: (): void => undefined,
   user: null,
 }
 
 export interface Context {
   refetchUser: () => Promise<void> | void
+  unsetUser: () => void
   user: null | {
     id: string
     email: string

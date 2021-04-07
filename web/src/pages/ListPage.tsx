@@ -13,6 +13,7 @@ export default class ListPage extends Component<RouteComponentProps<{ listId: st
     const canEditList = listId !== 'inbox'
     return (
       <ListDetail
+        key={listId}
         listId={listId}
         canEditList={canEditList}
         requestSideBar={this.props.requestSideBar}
