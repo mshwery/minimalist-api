@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
-    <title>Group</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="logomark">
-            <g id="Group">
-                <rect id="rectangle" fill="#2E8AE6" x="0" y="0" width="56" height="56" rx="2"></rect>
-                <polygon id="check" fill="#FFFFFF" points="23.8 33.2334175 16.45 25.8834175 14 28.3334175 23.8 38.1334175 43.1500842 18.7833333 40.7000842 16.3333333"></polygon>
-            </g>
-        </g>
-    </g>
+<svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id='g1' y2='1'>
+      <stop stop-color='#2d89e6'/>
+      <stop offset='.01' stop-color='#5cbef3'/>
+      <stop offset='1' stop-color='#3448df'/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect fill="url(#g1)" width="56" height="56" rx="2"/>
+    <path fill="#FFF" d="M23.8 33.2334175l-7.35-7.35-2.45 2.45 9.8 9.8 19.3500842-19.3500842-2.45-2.45z"/>
+  </g>
 </svg>
