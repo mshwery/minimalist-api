@@ -1,5 +1,6 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router'
+import { css } from '@emotion/css'
 import { scale, Avatar, Button, Pane, Link, Text, Heading, Paragraph } from '../base-ui'
 import { ReactComponent as Logo } from '../minimalist.svg'
 
@@ -15,9 +16,30 @@ const TopBar: React.FunctionComponent<{}> = () => {
   return (
     <Pane is="header" paddingY={scale(6)}>
       <Wrap>
-        <Pane display="flex" justifyContent="space-between" alignItems="center">
+        <Pane
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="space-between"
+          alignItems="center"
+          className={css`
+            @media (max-width: 600px) {
+              justify-content: center;
+            }
+          `}
+        >
           <Logo />
-          <Text display="inline-flex" alignItems="center" fontWeight={500}>
+          <Text
+            display="inline-flex"
+            alignItems="center"
+            fontWeight={500}
+            marginY={scale(1)}
+            className={css`
+              @media (max-width: 600px) {
+                flex-basis: 100%;
+                justify-content: center;
+              }
+            `}
+          >
             Made with ♥ by
             <Avatar
               size={scale(3)}
@@ -65,11 +87,49 @@ const Hero: React.FunctionComponent<{}> = () => {
   )
 }
 
+const Feature: React.FunctionComponent<{ title: string; description: string }> = ({ title, description }) => {
+  return (
+    <Pane>
+      <Heading size={400}>{title}</Heading>
+      <Paragraph marginY={scale(1)}>{description}</Paragraph>
+    </Pane>
+  )
+}
+
+const Features: React.FunctionComponent<{}> = () => {
+  return (
+    <Pane is="section" paddingY={scale(6)}>
+      <Wrap>
+        <Pane
+          display="grid"
+          gridColumnGap={scale(10)}
+          gridRowGap={scale(6)}
+          gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
+        >
+          <Feature
+            title="Minimal and bloat-free"
+            description="Beautifully simple, with all the basic features you expect. No bloat-ware here."
+          />
+          <Feature
+            title="With you everywhere"
+            description="Your lists are available anywhere you are. Easily access them from your phone, tablet, or laptop."
+          />
+          <Feature
+            title="Work better together"
+            description="Invite others to your lists to help get things done – because some lists are better shared (and some are not)."
+          />
+        </Pane>
+      </Wrap>
+    </Pane>
+  )
+}
+
 const LandingPage: React.FunctionComponent<RouteComponentProps> = () => {
   return (
     <>
       <TopBar />
       <Hero />
+      <Features />
     </>
   )
 }

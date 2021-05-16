@@ -35,7 +35,6 @@ const App: React.FunctionComponent<{}> = () => (
               }
             >
               <Switch>
-                {/* Temporarily redirect while we have no landing page */}
                 <Route exact path="/login" component={LoginPage} />
                 <PrivateRoute path="/lists" component={ListsPage} />
                 <Route exact path="/" component={LandingPage} />
