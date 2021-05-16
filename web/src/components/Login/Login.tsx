@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { css } from '@emotion/css'
+import { Link } from 'react-router-dom'
 import { scale, Button, Card, Paragraph, Pane, colors } from '../../base-ui'
 import { ReactComponent as Logo } from '../../minimalist.svg'
 
@@ -39,7 +40,9 @@ export const Login: React.FunctionComponent<LoginProps> = (props) => {
           }
         `}
       >
-        <Logo />
+        <Link to="/">
+          <Logo />
+        </Link>
         <Paragraph maxWidth={scale(38)} marginY={scale(2)} marginX="auto">
           The simplest way to keep track of the stuff you want to do.
         </Paragraph>

@@ -1,34 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="178px" height="34px" viewBox="0 0 178 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
-    <title>Group 3</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <rect id="path-1" x="0" y="0" width="26" height="26" rx="2"></rect>
-        <filter x="-26.9%" y="-19.2%" width="153.8%" height="153.8%" filterUnits="objectBoundingBox" id="filter-2">
-            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
-            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
-            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
-        </filter>
-    </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Desktop-Copy-4" transform="translate(-631.000000, -345.000000)">
-            <g id="Group-2" transform="translate(320.000000, 262.000000)">
-                <g id="Group" transform="translate(250.000000, 80.000000)">
-                    <g id="Group-3" transform="translate(65.000000, 0.000000)">
-                        <text id="minimalist" font-family="Circular-Medium, Circular" font-size="28" font-weight="400" fill="#262626">
-                            <tspan x="42.21" y="28">minimalist</tspan>
-                        </text>
-                        <g id="logomark" transform="translate(0.000000, 5.000000)">
-                            <g id="rectangle">
-                                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
-                                <use fill="#2E8AE6" fill-rule="evenodd" xlink:href="#path-1"></use>
-                            </g>
-                            <polygon id="check" fill="#FFFFFF" fill-rule="evenodd" points="11.05 15.429801 7.6375 12.017301 6.5 13.154801 11.05 17.704801 20.0339677 8.72083333 18.8964677 7.58333333"></polygon>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 178 34" width="178px" height="34px">
+  <defs>
+    <linearGradient id='g1' y2='1'>
+      <stop stop-color='#2d89e6'/>
+      <stop offset='.01' stop-color='#5cbef3'/>
+      <stop offset='1' stop-color='#3448df'/>
+    </linearGradient>
+    <filter x="-26.9%" y="-19.2%" width="153.8%" height="153.8%" filterUnits="objectBoundingBox" id="a">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" in="shadowBlurOuter1"/>
+    </filter>
+    <rect id="b" x="0" y="0" width="26" height="26" rx="2"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <text font-family="Circular-Medium, Circular" font-size="28" font-weight="400" fill="#262626" transform="translate(4 -3)">
+      <tspan x="42.21" y="28">minimalist</tspan>
+    </text>
+    <g transform="translate(4 2)">
+      <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+      <use fill="url(#g1)" xlink:href="#b"/>
     </g>
+    <path fill="#FFF" d="M15.05 17.429801l-3.4125-3.4125-1.1375 1.1375 4.55 4.55 8.9839677-8.98396767-1.1375-1.1375z"/>
+  </g>
 </svg>

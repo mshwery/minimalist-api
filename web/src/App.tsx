@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute'
 import * as analytics from './lib/analytics'
 import { queryClient } from './lib/query-client'
 
+const LandingPage = React.lazy(() => import('./pages/LandingPage'))
 const ListsPage = React.lazy(() => import('./pages/ListsPage'))
 const LoginPage = React.lazy(() => import('./pages/LoginPage'))
 
@@ -34,11 +35,11 @@ const App: React.FunctionComponent<{}> = () => (
               }
             >
               <Switch>
-                {/* Temporarily redirect while we have no landing page */}
                 <Route exact path="/login" component={LoginPage} />
                 <PrivateRoute path="/lists" component={ListsPage} />
+                <Route exact path="/" component={LandingPage} />
                 <Route path="*">
-                  <Redirect to="/lists/inbox" />
+                  <Redirect to="/" />
                 </Route>
               </Switch>
             </Suspense>
