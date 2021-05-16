@@ -15,10 +15,11 @@ export const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typ
       lineHeight={2.25}
       backgroundColor="white"
       borderRadius={3}
-      appearance="none"
       border={`1px solid ${colors.fill.muted}`}
       outline="none"
       className={css`
+        appearance: none;
+
         &:focus {
           box-shadow: 0 0 0 3px ${colors.fill.primary}25;
           border-color: ${colors.fill.primary};

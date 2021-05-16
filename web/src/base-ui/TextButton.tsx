@@ -25,7 +25,6 @@ export const TextButton: React.FunctionComponent<TextButtonProps & React.Compone
     <Text
       is="button"
       alignItems="center"
-      appearance="none"
       background="transparent"
       border="none"
       color="currentColor"
@@ -43,6 +42,8 @@ export const TextButton: React.FunctionComponent<TextButtonProps & React.Compone
       className={cx(
         className,
         css`
+          appearance: none;
+
           &:focus {
             box-shadow: 0 0 0 3px ${colors.fill.primary}25;
           }

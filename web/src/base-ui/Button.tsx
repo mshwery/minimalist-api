@@ -88,7 +88,6 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         is="button"
         type="button"
         alignItems="center"
-        appearance="none"
         borderRadius={3}
         cursor="pointer"
         display="inline-flex"
@@ -105,6 +104,8 @@ export class Button extends PureComponent<ButtonProps & BaseUIProps> {
         className={cx(
           className,
           css`
+            appearance: none;
+
             &:focus {
               box-shadow: 0 0 0 3px ${colors.fill.primary}25;
             }
