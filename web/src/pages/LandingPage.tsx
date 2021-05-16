@@ -3,8 +3,9 @@ import { RouteComponentProps } from 'react-router'
 import { css } from '@emotion/css'
 import { scale, Avatar, Button, Pane, Link, Text, Heading, Paragraph } from '../base-ui'
 import { ReactComponent as Logo } from '../minimalist.svg'
+import browserScreenshot from '../minimalist-screenshot.png'
 
-const Wrap: React.FunctionComponent<{}> = ({ children }) => {
+const Wrap: React.FunctionComponent = ({ children }) => {
   return (
     <Pane width="100%" maxWidth={1200} paddingX={scale(6)} marginX="auto">
       {children}
@@ -12,7 +13,7 @@ const Wrap: React.FunctionComponent<{}> = ({ children }) => {
   )
 }
 
-const TopBar: React.FunctionComponent<{}> = () => {
+const TopBar: React.FunctionComponent = () => {
   return (
     <Pane is="header" paddingY={scale(6)}>
       <Wrap>
@@ -60,7 +61,7 @@ const Hero: React.FunctionComponent<{}> = () => {
   const [isLoading, setIsLoading] = React.useState(false)
 
   return (
-    <Pane is="section" paddingY={scale(6)}>
+    <Pane is="section" paddingTop={scale(6)}>
       <Wrap>
         <Heading is="h1" fontSize={scale(8)} fontWeight={700} textAlign="center">
           Simple, shareable todo lists.
@@ -82,6 +83,9 @@ const Hero: React.FunctionComponent<{}> = () => {
             Sign in with Google
           </Button>
         </Pane>
+        <Pane>
+          <img width="100%" src={browserScreenshot} />
+        </Pane>
       </Wrap>
     </Pane>
   )
@@ -96,9 +100,9 @@ const Feature: React.FunctionComponent<{ title: string; description: string }> =
   )
 }
 
-const Features: React.FunctionComponent<{}> = () => {
+const Features: React.FunctionComponent = () => {
   return (
-    <Pane is="section" paddingY={scale(6)}>
+    <Pane is="section" paddingTop={scale(6)} paddingBottom={scale(12)}>
       <Wrap>
         <Pane
           display="grid"
@@ -124,12 +128,23 @@ const Features: React.FunctionComponent<{}> = () => {
   )
 }
 
+const Footer: React.FunctionComponent = () => {
+  return (
+    <Wrap>
+      <Pane textAlign="center" paddingY={scale(2)}>
+        <Text>© 2012-{new Date().getFullYear()} Matt Shwery</Text>
+      </Pane>
+    </Wrap>
+  )
+}
+
 const LandingPage: React.FunctionComponent<RouteComponentProps> = () => {
   return (
     <>
       <TopBar />
       <Hero />
       <Features />
+      <Footer />
     </>
   )
 }
