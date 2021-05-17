@@ -1,8 +1,9 @@
 import React from 'react'
 import { css } from '@emotion/css'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
-import { Trash2, Menu as DragIcon } from 'react-feather'
-import { Checkbox, Pane, scale, ContentEditableText, colors } from '../../base-ui'
+import { Trash2, AlertCircle, Menu as DragIcon } from 'react-feather'
+import { Checkbox, Pane, Stack, scale, ContentEditableText, colors } from '../../base-ui'
+import ScheduleMenu from '../ScheduleMenu'
 import { ActionIcon } from './ActionIcon'
 
 interface Props extends React.ComponentProps<typeof ContentEditableText> {
@@ -12,6 +13,7 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   content?: string
   isCompleted?: boolean
   id?: string
+  due?: string | null
   isDraggable?: boolean
   isDragging?: boolean
   isDraggingAnother?: boolean
@@ -19,13 +21,15 @@ interface Props extends React.ComponentProps<typeof ContentEditableText> {
   onDoneEditing?: (event: React.SyntheticEvent, content: string) => void
   onMarkComplete?: (event: React.SyntheticEvent) => void
   onMarkIncomplete?: (event: React.SyntheticEvent) => void
-  onRequestDelete?: (event: React.SyntheticEvent) => void
+  onSchedule?: (due: null | Date) => void
+  onRequestDelete?: () => void
 }
 
 interface State {
   content?: string
   hasFocus: boolean
   hasHover: boolean
+  confirmDelete: boolean
   optimisticChecked: boolean
 }
 
@@ -36,6 +40,7 @@ export class Task extends React.Component<Props, State> {
     content: this.props.content,
     hasFocus: false,
     hasHover: false,
+    confirmDelete: false,
     optimisticChecked: this.props.isCompleted || false,
   }
 
@@ -56,7 +61,7 @@ export class Task extends React.Component<Props, State> {
     const currentTarget = event.currentTarget
 
     if (!currentTarget.contains(document.activeElement)) {
-      this.setState({ hasFocus: false })
+      this.setState({ hasFocus: false, confirmDelete: false })
     }
   }
 
@@ -65,7 +70,7 @@ export class Task extends React.Component<Props, State> {
   }
 
   handleFocus = (_event: React.SyntheticEvent): void => {
-    this.setState({ hasFocus: true })
+    this.setState({ hasFocus: true, confirmDelete: false })
   }
 
   handleKeyPress = (event: React.KeyboardEvent<Element>, value: string): void => {
@@ -108,17 +113,19 @@ export class Task extends React.Component<Props, State> {
     }
   }
 
+  handleDeleteRequest = (_event: React.SyntheticEvent): void => {
+    if (this.state.confirmDelete && typeof this.props.onRequestDelete === 'function') {
+      this.setState({ confirmDelete: false })
+      this.props.onRequestDelete()
+      return
+    }
+
+    this.setState((prevState) => ({ confirmDelete: !prevState.confirmDelete }))
+  }
+
   render(): JSX.Element {
-    const {
-      autoFocus,
-      canDelete,
-      dragHandleProps,
-      isDraggable,
-      isDragging,
-      onKeyDown,
-      onKeyUp,
-      onRequestDelete,
-    } = this.props
+    const { autoFocus, canDelete, due, dragHandleProps, isDraggable, isDragging, onKeyDown, onKeyUp, onSchedule } =
+      this.props
 
     const { content, hasFocus, hasHover, optimisticChecked } = this.state
     const showActions = hasFocus || hasHover
@@ -155,6 +162,13 @@ export class Task extends React.Component<Props, State> {
           marginRight={scale(0.5)}
           color={colors.fill.secondary}
           opacity={(showActions || isDragging) && isDraggable ? 1 : 0}
+          className={css`
+            margin-top: 9px;
+
+            @media (max-width: 600px) {
+              margin-top: 13px;
+            }
+          `}
           {...dragHandleProps}
         />
         <Checkbox
@@ -197,18 +211,27 @@ export class Task extends React.Component<Props, State> {
             }
           `}
         />
-        {showDelete && (
-          <ActionIcon
-            icon={Trash2}
-            onClick={onRequestDelete}
+        {showActions && (
+          <Stack
+            direction="row"
             className={css`
-              color: ${colors.fill.muted};
+              margin-top: 5px;
 
-              &:hover {
-                color: ${colors.fill.danger};
+              @media (max-width: 600px) {
+                margin-top: 9px;
               }
             `}
-          />
+          >
+            {onSchedule && <ScheduleMenu onSchedule={onSchedule} due={due} />}
+            {showDelete && (
+              <ActionIcon
+                icon={this.state.confirmDelete ? AlertCircle : Trash2}
+                onClick={this.handleDeleteRequest}
+                color={this.state.confirmDelete ? colors.fill.danger : colors.fill.muted}
+                interactiveColor={this.state.confirmDelete ? colors.fill.danger : undefined}
+              />
+            )}
+          </Stack>
         )}
       </Pane>
     )

@@ -9,17 +9,12 @@ export const ActionIcon: React.FunctionComponent<React.ComponentProps<typeof Ico
     justifyContent="center"
     outline="none"
     tabIndex={0}
+    isInteractive
     className={cx(
       className,
       css`
-        height: 32px;
-
         &:focus {
           box-shadow: 0 0 0 3px ${colors.fill.primary}25;
-        }
-
-        @media (max-width: 600px) {
-          height: 40px;
         }
       `
     )}

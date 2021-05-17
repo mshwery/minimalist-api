@@ -79,33 +79,43 @@ export class TaskModel {
   /**
    * Gets all tasks that a viewer has access to
    */
-  static async fetchAllBy(viewer: Viewer, filters: { listId?: UUID | null; status?: TaskStatus }): Promise<Task[]> {
+  static async fetchAllBy(
+    viewer: Viewer,
+    filters: { listId?: UUID | null; status?: TaskStatus; dueBy?: string }
+  ): Promise<Task[]> {
     if (!viewer) {
       return []
     }
 
-    if (filters.listId === 'inbox' || filters.listId === null) {
+    const { listId, status, dueBy } = filters
+
+    if (listId === 'inbox' || listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         listId: null,
-        status: filters.status,
+        status,
+        dueBy,
       })
     }
 
-    if (filters.listId === undefined) {
+    if (listId === undefined) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, filters)
     }
 
     // TODO: fetch the list via DataLoaders
-    const list = await ListModel.fetch(viewer, filters.listId, { withTasks: true })
-    const tasks = list?.tasks ?? []
+    const list = await ListModel.fetch(viewer, listId, { withTasks: true })
+    let tasks = list?.tasks ?? []
 
-    if (filters.status === TaskStatus.DONE) {
-      return tasks.filter((t) => t.isCompleted)
-    } else if (filters.status === TaskStatus.REMAINING) {
-      return tasks.filter((t) => !t.isCompleted)
-    } else {
-      return tasks
+    if (status === TaskStatus.DONE) {
+      tasks = tasks.filter((t) => t.isCompleted)
+    } else if (status === TaskStatus.REMAINING) {
+      tasks = tasks.filter((t) => !t.isCompleted)
     }
+
+    if (dueBy) {
+      tasks = tasks.filter((t) => t.due && new Date(t.due) <= new Date(dueBy))
+    }
+
+    return tasks
   }
 
   /**

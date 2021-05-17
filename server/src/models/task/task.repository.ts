@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, Not, IsNull, FindConditions } from 'typeorm'
+import { EntityRepository, Repository, Not, IsNull, FindConditions, LessThanOrEqual } from 'typeorm'
 import Task from './task.entity'
 import { UUID, DateLike } from '../../types'
 import { TaskStatus } from '../../graphql/types'
@@ -6,6 +6,7 @@ import { TaskStatus } from '../../graphql/types'
 interface TaskFilters {
   listId?: UUID | null
   status?: TaskStatus
+  dueBy?: DateLike
 }
 
 @EntityRepository(Task)
@@ -29,6 +30,10 @@ export default class TaskRepository extends Repository<Task> {
 
     if (filters.status === TaskStatus.REMAINING) {
       attrs.completedAt = IsNull()
+    }
+
+    if (filters.dueBy) {
+      attrs.due = LessThanOrEqual(filters.dueBy)
     }
 
     return this.find(attrs)

@@ -20,6 +20,7 @@ export interface Task {
   updatedAt: string
   completedAt?: string
   sortOrder: number | null
+  due?: string | null
   listId?: string | null
 }
 
@@ -60,9 +61,7 @@ const getListQuery = `
 `
 
 export function getList(id: string) {
-  return handleError(
-    client.request<GetListData>(getListQuery, { id })
-  )
+  return handleError(client.request<GetListData>(getListQuery, { id }))
 }
 
 export function useList(id: string) {
@@ -89,15 +88,14 @@ const getTasksQuery = `
       updatedAt
       completedAt
       sortOrder
+      due
       listId
     }
   }
 `
 
 export function getTasks(listId: string) {
-  return handleError(
-    client.request<GetTasksData>(getTasksQuery, { listId })
-  )
+  return handleError(client.request<GetTasksData>(getTasksQuery, { listId }))
 }
 
 interface RenameListData {
@@ -232,6 +230,7 @@ export const createTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        due
         listId
       }
     }
@@ -277,6 +276,7 @@ export const updateTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        due
         listId
       }
     }
@@ -284,9 +284,7 @@ export const updateTaskMutation = `
 `
 
 export async function updateTask(input: { id: string; content: string }) {
-  const result = await handleError(
-    client.request<UpdateTaskData>(updateTaskMutation, { input })
-  )
+  const result = await handleError(client.request<UpdateTaskData>(updateTaskMutation, { input }))
   return result.updateTask.task
 }
 
@@ -307,6 +305,7 @@ export const moveTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        due
         listId
       }
     }
@@ -340,6 +339,7 @@ export const completeTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        due
         listId
       }
     }
@@ -363,9 +363,7 @@ async function handleError<T>(promise: Promise<T>): Promise<T> {
 }
 
 export async function completeTask(input: { id: string }) {
-  const result = await handleError(
-    client.request<CompleteTaskData>(completeTaskMutation, { input })
-  )
+  const result = await handleError(client.request<CompleteTaskData>(completeTaskMutation, { input }))
   return result.completeTask.task
 }
 
@@ -386,6 +384,7 @@ export const reopenTaskMutation = `
         updatedAt
         completedAt
         sortOrder
+        due
         listId
       }
     }
@@ -393,9 +392,7 @@ export const reopenTaskMutation = `
 `
 
 export async function reopenTask(input: { id: string }) {
-  const result = await handleError(
-    client.request<ReopenTaskData>(reopenTaskMutation, { input })
-  )
+  const result = await handleError(client.request<ReopenTaskData>(reopenTaskMutation, { input }))
   return result.reopenTask.task
 }
 
@@ -414,10 +411,30 @@ export const deleteTaskMutation = `
 `
 
 export async function deleteTask(input: { id: string }) {
-  const result = await handleError(
-    client.request<DeleteTaskData>(deleteTaskMutation, { input })
-  )
+  const result = await handleError(client.request<DeleteTaskData>(deleteTaskMutation, { input }))
   return result.deleteTask.id
+}
+
+interface ScheduleTaskData {
+  scheduleTask: {
+    task: Maybe<Task>
+  }
+}
+
+export const scheduleTaskMutation = `
+  mutation ScheduleTask($input: ScheduleTaskInput!) {
+    scheduleTask(input: $input) {
+      task {
+        id
+        due
+      }
+    }
+  }
+`
+
+export async function scheduleTask(input: { id: string; due: Date | null }) {
+  const result = await handleError(client.request<ScheduleTaskData>(scheduleTaskMutation, { input }))
+  return result.scheduleTask.task
 }
 
 interface GetCollaboratorsData {
@@ -455,9 +472,7 @@ interface Collaborator extends User {
 
 export function useCollaborators(listId: string) {
   const { data, isLoading, error } = useQuery(['collaborators', listId], async () => {
-    const { list } = await handleError(
-      client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId })
-    )
+    const { list } = await handleError(client.request<GetCollaboratorsData>(getCollaboratorsQuery, { id: listId }))
     if (!list) return []
 
     const collaborators: Collaborator[] = (list.collaborators ?? []).map((user) => ({ ...user, isOwner: false }))
@@ -499,9 +514,7 @@ export const shareListMutation = `
 `
 
 async function shareList(input: { id: string; email: string }) {
-  const result = await handleError(
-    client.request<ShareListData>(shareListMutation, { input })
-  )
+  const result = await handleError(client.request<ShareListData>(shareListMutation, { input }))
   return result.shareList.list?.collaborators ?? []
 }
 
@@ -540,9 +553,7 @@ export const unshareListMutation = `
 `
 
 async function unshareList(input: { id: string; email: string }) {
-  const result = await handleError(
-    client.request<UnshareListData>(unshareListMutation, { input })
-  )
+  const result = await handleError(client.request<UnshareListData>(unshareListMutation, { input }))
   return result.unshareList.list?.collaborators ?? []
 }
 

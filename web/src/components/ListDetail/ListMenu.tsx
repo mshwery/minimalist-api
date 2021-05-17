@@ -12,7 +12,7 @@ export const ListMenu: React.FunctionComponent<Props> = ({ onDeleteList, onArchi
 
   return (
     <>
-      <MenuButton {...menu} as={Icon} icon={MoreVertical} color={colors.fill.secondary} />
+      <MenuButton {...menu} as={Icon} icon={MoreVertical} isInteractive color={colors.fill.secondary} />
       <Menu {...menu} aria-label="List Settings">
         <MenuItem
           {...menu}

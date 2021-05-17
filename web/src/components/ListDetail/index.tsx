@@ -18,6 +18,7 @@ import {
   updateTask,
   getTasks,
   deleteTask,
+  scheduleTask,
   moveTask,
   archiveList,
   deleteList,
@@ -262,6 +263,19 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
     }
   }
 
+  scheduleTask = async (id: string, due: null | Date) => {
+    try {
+      const task = await scheduleTask({ id, due })
+      this.updateTaskInState(task)
+    } catch (error) {
+      if (error instanceof AuthError) {
+        this.props.unsetUser()
+      }
+
+      this.props.addToast({ text: `Couldn't schedule task: ${error.message}` })
+    }
+  }
+
   handleDragEnd = async (result: DropResult, _provided: ResponderProvided) => {
     const task = this.state.tasks.find((t) => t.id === result.draggableId)
     if (task && result.destination) {
@@ -449,6 +463,7 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
                           onMarkIncomplete={() => this.handleMarkIncomplete(task.id)}
                           onKeyPress={(event, value) => this.handleKeyPress(event, value, task.id, index)}
                           onKeyDown={(event, value) => this.handleKeyDown(event, value, task.id, index)}
+                          onSchedule={(due) => this.scheduleTask(task.id, due)}
                           onRequestDelete={() => this.deleteTask(task.id)}
                           onDoneEditing={(_event, content) => {
                             // Only update if there's an actual change.
