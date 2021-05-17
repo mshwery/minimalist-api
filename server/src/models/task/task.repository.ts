@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, Not, IsNull, FindConditions, LessThanOrEqual } from 'typeorm'
+import { EntityRepository, Repository, Not, IsNull, FindManyOptions, LessThanOrEqual, FindConditions } from 'typeorm'
 import Task from './task.entity'
 import { UUID, DateLike } from '../../types'
 import { TaskStatus } from '../../graphql/types'
@@ -20,6 +20,8 @@ export default class TaskRepository extends Repository<Task> {
       createdBy: viewer,
     }
 
+    const options: FindManyOptions<Task> = {}
+
     if (filters.listId !== undefined) {
       attrs.listId = filters.listId
     }
@@ -34,9 +36,13 @@ export default class TaskRepository extends Repository<Task> {
 
     if (filters.dueBy) {
       attrs.due = LessThanOrEqual(filters.dueBy)
+      options.order = {
+        due: 'ASC',
+        sortOrder: 'ASC',
+      }
     }
 
-    return this.find(attrs)
+    return this.find({ where: attrs, ...options })
   }
 
   public apply(task: Task, changes: Partial<Task>): Promise<Task> {

@@ -162,6 +162,7 @@ export class Task extends React.Component<Props, State> {
           marginRight={scale(0.5)}
           color={colors.fill.secondary}
           opacity={(showActions || isDragging) && isDraggable ? 1 : 0}
+          pointerEvents={!isDraggable ? 'none' : undefined}
           className={css`
             margin-top: 10px;
 

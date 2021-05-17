@@ -451,7 +451,12 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
             {(dropProvided, dropSnapshot) => (
               <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
                 {remainingTasks.map((task, index) => (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                  <Draggable
+                    key={task.id}
+                    draggableId={task.id}
+                    index={index}
+                    isDragDisabled={this.props.listId === 'upcoming'}
+                  >
                     {(dragProvided, dragSnapshot) => (
                       <div ref={dragProvided.innerRef} {...dragProvided.draggableProps}>
                         <Task
@@ -460,7 +465,7 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
                           autoFocus={autoFocusId === task.id}
                           canDelete={Boolean(task.id && !dropSnapshot.isDraggingOver)}
                           dragHandleProps={dragProvided.dragHandleProps}
-                          isDraggable
+                          isDraggable={this.props.listId !== 'upcoming'}
                           isDragging={dragSnapshot.isDragging}
                           isDraggingAnother={dropSnapshot.isDraggingOver}
                           onMarkComplete={() => this.handleMarkComplete(task.id)}

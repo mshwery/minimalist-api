@@ -61,7 +61,7 @@ export class TaskModel {
       return []
     }
 
-    if (listId === 'inbox' || listId === null) {
+    if (listId === 'inbox' || listId === 'upcoming' || listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         listId: null,
       })
@@ -262,6 +262,11 @@ export class TaskModel {
 
     if (!task) {
       throw new NotFound(`No task found with id "${args.id}"`)
+    }
+
+    // Upcoming list cannot be manually sorted (it's a view, not an actual list)
+    if (args.listId === 'upcoming') {
+      return task
     }
 
     const fromIndex = tasks.indexOf(task)
