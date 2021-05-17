@@ -48,4 +48,13 @@ export default {
       task,
     }
   },
+
+  async scheduleTask(
+    _root: EmptyObject,
+    args: MutationInput<{ id: string; due: string | null }>,
+    ctx: Context
+  ): Promise<{ task: Task }> {
+    const task = await TaskModel.scheduleTask(ctx.viewer, args.input)
+    return { task }
+  },
 }

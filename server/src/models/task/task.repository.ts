@@ -1,6 +1,6 @@
 import { EntityRepository, Repository, Not, IsNull, FindConditions } from 'typeorm'
 import Task from './task.entity'
-import { UUID } from '../../types'
+import { UUID, DateLike } from '../../types'
 import { TaskStatus } from '../../graphql/types'
 
 interface TaskFilters {
@@ -52,6 +52,11 @@ export default class TaskRepository extends Repository<Task> {
 
   public markIncomplete(task: Task): Promise<Task> {
     task.isCompleted = false
+    return this.save(task)
+  }
+
+  public schedule(task: Task, due: DateLike | null): Promise<Task> {
+    task.due = due
     return this.save(task)
   }
 }

@@ -291,4 +291,68 @@ describe('TaskModel', () => {
       expect(tasks[1].sortOrder).toEqual(2)
     })
   })
+
+  describe('scheduleTask', () => {
+    it('show throw if the task cannot be found', async () => {
+      const args = {
+        id: chance.guid({ version: 4 }),
+        due: new Date(),
+      }
+
+      await expect(TaskModel.scheduleTask(viewer, args)).rejects.toThrowError(/No task found with id/)
+    })
+
+    it('should throw if the associated list cannot be access by the viewer', async () => {
+      const list = await createList({
+        name: 'scheduleTask list',
+        createdBy: nonViewer,
+      })
+
+      const task = await createTask({
+        content: 'scheduleTask test',
+        createdBy: nonViewer,
+        list,
+      })
+
+      const args = {
+        id: task.id!,
+        due: new Date(),
+      }
+
+      await expect(TaskModel.scheduleTask(viewer, args)).rejects.toThrowError(/No task found with id/)
+    })
+
+    it('should update the task with a due date when provided', async () => {
+      const task = await createTask({
+        content: 'scheduleTask test',
+        createdBy: viewer,
+      })
+
+      const args = {
+        id: task.id!,
+        due: new Date(),
+      }
+
+      const updated = await TaskModel.scheduleTask(viewer, args)
+      expect(updated.due).toEqual(args.due)
+    })
+
+    it('should remove the due date from a task when given `null`', async () => {
+      const task = await createTask({
+        content: 'scheduleTask test',
+        createdBy: viewer,
+      })
+
+      const args = {
+        id: task.id!,
+        due: new Date(),
+      }
+
+      const scheduled = await TaskModel.scheduleTask(viewer, args)
+      expect(scheduled.due).toEqual(args.due)
+
+      const unscheduled = await TaskModel.scheduleTask(viewer, { ...args, due: null })
+      expect(unscheduled.due).toEqual(null)
+    })
+  })
 })
