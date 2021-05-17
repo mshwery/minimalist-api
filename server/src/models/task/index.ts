@@ -89,7 +89,8 @@ export class TaskModel {
 
     const { listId, status, dueBy } = filters
 
-    if (listId === 'inbox' || listId === 'upcoming' || listId === null) {
+    // When 'inbox' or explicitly `null`, grab tasks that _aren't on a list_
+    if (listId === 'inbox' || listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         listId: null,
         status,
@@ -97,8 +98,12 @@ export class TaskModel {
       })
     }
 
-    if (listId === undefined) {
-      return getCustomRepository(TaskRepository).allByAuthor(viewer, filters)
+    // When 'upcoming' or no list specified, grab tasks from any list
+    if (listId === 'upcoming' || listId === undefined) {
+      return getCustomRepository(TaskRepository).allByAuthor(viewer, {
+        status,
+        dueBy,
+      })
     }
 
     // TODO: fetch the list via DataLoaders
