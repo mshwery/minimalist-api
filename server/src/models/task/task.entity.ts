@@ -43,6 +43,10 @@ export default class Task {
   @IsDate()
   completedAt?: DateLike | null
 
+  @Column('timestamp with time zone', { nullable: true })
+  @IsDate()
+  due?: DateLike | null
+
   @CreateDateColumn({ type: 'timestamp with time zone' })
   @IsDate()
   createdAt?: Date

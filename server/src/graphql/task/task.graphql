@@ -16,6 +16,8 @@ extend type Mutation {
   deleteTask(input: DeleteTaskInput!): DeleteTaskResponse!
   # Moves a task to a specific position
   moveTask(input: MoveTaskInput!): MoveTaskResponse!
+  # Schedules a due date for a given task
+  scheduleTask(input: ScheduleTaskInput!): ScheduleTaskResponse!
 }
 
 type Task implements Node {
@@ -37,6 +39,8 @@ type Task implements Node {
   completedAt: DateTime
   # The user-defined order of this item amongst it's siblings
   sortOrder: Int
+  # When the task is scheduled
+  due: DateTime
 
   # TODO: evaluate exposing 'list' field to find associated parent list
   # (which could result in circular references: task.list.tasks[0].list.tasks etc)
@@ -132,6 +136,20 @@ input MoveTaskInput {
 # The response payload from moving a task
 type MoveTaskResponse {
   # The moved task
+  task: Task
+}
+
+# The input variables for scheduling a task
+input ScheduleTaskInput {
+  # The id of the task to update
+  id: ID!
+  # The datetime the task is due (or null to remove a datetime)
+  due: DateTime
+}
+
+# The response payload from scheduling a task
+type ScheduleTaskResponse {
+  # The scheduled task
   task: Task
 }
 

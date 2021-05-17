@@ -1,6 +1,6 @@
 import { BadRequest, Forbidden, NotFound, Unauthorized } from 'http-errors'
 import { getCustomRepository } from 'typeorm'
-import { Viewer, UUID } from '../../types'
+import { Viewer, UUID, DateLike } from '../../types'
 import { move } from '../../lib/array-move'
 import analytics from '../../lib/analytics'
 import { canEditList, ListModel } from '../list'
@@ -263,6 +263,30 @@ export class TaskModel {
     await getCustomRepository(TaskRepository).save(newSortedTasks)
 
     return task
+  }
+
+  /**
+   * Schedule a single task by id
+   */
+  static async scheduleTask(viewer: Viewer, args: { id: UUID; due: DateLike | null }): Promise<Task> {
+    const task = await TaskModel.fetch(viewer, args.id)
+    if (!task) {
+      throw new NotFound(`No task found with id "${args.id}"`)
+    }
+
+    const response = await getCustomRepository(TaskRepository).schedule(task, args.due)
+
+    analytics.track({
+      event: args.due ? 'Task Scheduled' : 'Task Unscheduled',
+      userId: viewer as string,
+      properties: {
+        listId: response.listId,
+        taskId: response.id,
+        due: args.due,
+      },
+    })
+
+    return response
   }
 }
 
