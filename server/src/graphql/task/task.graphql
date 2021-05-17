@@ -1,6 +1,6 @@
 extend type Query {
   # Get tasks with optional filters: by listId
-  tasks(listId: ID, status: TaskStatus, dueBy: Date): [Task]!
+  tasks(listId: ID, status: TaskStatus, dueBy: DateTime): [Task]!
 }
 
 extend type Mutation {

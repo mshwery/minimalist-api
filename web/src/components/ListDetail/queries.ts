@@ -79,8 +79,8 @@ interface GetTasksData {
 }
 
 const getTasksQuery = `
-  query GetTasks($listId: ID!) {
-    tasks(listId: $listId) {
+  query GetTasks($listId: ID!, $dueBy: DateTime) {
+    tasks(listId: $listId, dueBy: $dueBy) {
       id
       content
       isCompleted
@@ -94,8 +94,8 @@ const getTasksQuery = `
   }
 `
 
-export function getTasks(listId: string) {
-  return handleError(client.request<GetTasksData>(getTasksQuery, { listId }))
+export function getTasks(listId: string, dueBy?: string | null) {
+  return handleError(client.request<GetTasksData>(getTasksQuery, { listId, dueBy }))
 }
 
 interface RenameListData {

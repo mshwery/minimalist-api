@@ -36,7 +36,7 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       alignItems="center"
       textDecoration="none"
       width="100%"
-      paddingY={scale(1.5)}
+      paddingY={scale(1)}
       paddingX={scale(1.5)}
       marginX={0}
       marginBottom={scale(0.5)}
@@ -46,7 +46,6 @@ export const SidebarItem: React.FunctionComponent<Props & React.ComponentProps<t
       cursor="pointer"
       color={isSelected ? colors.text.action : colors.text.default}
       outline="none"
-      fontWeight={isSelected ? 500 : 'normal'}
       className={css`
         background-color: ${isSelected ? 'white' : 'transparent'};
 

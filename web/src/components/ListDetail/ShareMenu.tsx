@@ -60,7 +60,7 @@ export const ShareMenu: React.FunctionComponent<Props> = ({ listId, creator }) =
   const addCollaborator = useAddCollaborator(listId)
   const removeCollaborator = useRemoveCollaborator(listId, isCurrentUserOwner)
 
-  if (listId === 'inbox') {
+  if (listId === 'inbox' || listId === 'upcoming') {
     return null
   }
 

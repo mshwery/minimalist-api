@@ -1,4 +1,5 @@
 import { css } from '@emotion/css'
+import dayjs from 'dayjs'
 import React, { PureComponent } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult, ResponderProvided } from 'react-beautiful-dnd'
 import { Sidebar as SidebarIcon, ChevronDown, ChevronUp } from 'react-feather'
@@ -98,6 +99,8 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
     try {
       if (this.props.listId === 'inbox') {
         this.setState({ name: 'Inbox' })
+      } else if (this.props.listId === 'upcoming') {
+        this.setState({ name: 'Upcoming' })
       } else {
         const { list } = await getList(this.props.listId)
 
@@ -109,7 +112,8 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
         }
       }
 
-      const { tasks } = await getTasks(this.props.listId)
+      const dueBy = this.props.listId === 'upcoming' ? dayjs().endOf('week').endOf('day').toISOString() : null
+      const { tasks } = await getTasks(this.props.listId, dueBy)
       this.setState({ tasks })
     } catch (error) {
       // TODO add frontend Segment + error tracking
@@ -136,7 +140,7 @@ class ListWithData extends PureComponent<Props & UserContext & WithToastProps & 
 
   createNewTask = async (content: string, position?: number) => {
     const id = uuidv4()
-    const listId = this.props.listId === 'inbox' ? undefined : this.props.listId
+    const listId = ['inbox', 'upcoming'].includes(this.props.listId) ? undefined : this.props.listId
 
     const optimisticTask: TaskType = {
       id,

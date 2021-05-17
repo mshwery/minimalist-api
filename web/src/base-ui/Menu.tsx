@@ -33,7 +33,6 @@ export const MenuItem: React.FunctionComponent<MenuStateReturn & React.Component
 export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProps<typeof Card>> = (props) => {
   return (
     <ReakitMenu
-      {...props}
       as={Card}
       elevation={2}
       width={180}
@@ -41,6 +40,7 @@ export const Menu: React.FunctionComponent<MenuStateReturn & React.ComponentProp
       overflow="auto"
       paddingY={scale(0.5)}
       outline="none"
+      {...props}
     />
   )
 }

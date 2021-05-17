@@ -89,7 +89,7 @@ export class TaskModel {
 
     const { listId, status, dueBy } = filters
 
-    if (listId === 'inbox' || listId === null) {
+    if (listId === 'inbox' || listId === 'upcoming' || listId === null) {
       return getCustomRepository(TaskRepository).allByAuthor(viewer, {
         listId: null,
         status,

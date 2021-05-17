@@ -25,7 +25,7 @@ const fontSizes: { [key: string]: number } = {
 
 const lineHeights: Record<string, string> = {
   '200': '1.25',
-  '300': '1.4',
+  '300': '1.44',
   '400': '1.4',
   '500': '1.5',
   '600': '1.5',

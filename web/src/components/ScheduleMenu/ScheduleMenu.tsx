@@ -20,60 +20,85 @@ interface Props {
   onSchedule: (due: null | Date) => void
 }
 
+const getLaterToday = () => dayjs().endOf('day')
+const getTomorrow = () => dayjs().add(1, 'day')
+const getNextWeek = () => dayjs().endOf('week').add(2, 'days')
+const formatDate = (date: dayjs.ConfigType) => dayjs(date).format('ddd, MMM D')
+const isInPast = (date: dayjs.ConfigType) => dayjs().isAfter(dayjs(date))
+
 export const ScheduleMenu: React.FunctionComponent<Props> = ({ due, onSchedule }) => {
   const menu = useMenuState({ placement: 'top', gutter: scale(0.5) })
   const trigger = due ? (
-    <MenuButton {...menu} as={Text} size={300} marginTop={1} color={colors.text.muted}>
+    <MenuButton
+      {...menu}
+      as={Text}
+      size={300}
+      marginTop={1}
+      color={isInPast(due) ? colors.fill.danger : colors.text.muted}
+      cursor="pointer"
+    >
       {dayjs(due).calendar(undefined, calendarFormat)}
     </MenuButton>
   ) : (
     <MenuButton {...menu} as={Icon} icon={Calendar} isInteractive color={colors.fill.secondary} />
   )
 
+  const scheduleToday = React.useCallback(() => {
+    const due = getLaterToday().toDate()
+    onSchedule(due)
+    menu.hide()
+  }, [onSchedule, menu.hide])
+
+  const scheduleTomorrow = React.useCallback(() => {
+    const due = getTomorrow().toDate()
+    onSchedule(due)
+    menu.hide()
+  }, [onSchedule, menu.hide])
+
+  const scheduleNextWeek = React.useCallback(() => {
+    // Monday, next week
+    const due = getNextWeek().toDate()
+    onSchedule(due)
+    menu.hide()
+  }, [onSchedule, menu.hide])
+
+  const unschedule = React.useCallback(() => {
+    onSchedule(null)
+    menu.hide()
+  }, [onSchedule, menu.hide])
+
   return (
     <>
       {trigger}
-      <Menu {...menu} aria-label="Schedule Menu">
-        <MenuItem
-          {...menu}
-          onClick={() => {
-            const due = dayjs().endOf('day').toDate()
-            onSchedule(due)
-            menu.hide()
-          }}
-        >
+      <Menu {...menu} aria-label="Schedule Menu" width="auto">
+        <MenuItem {...menu} onClick={scheduleToday}>
           <Icon icon={Clock} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
-          <Text fontSize="inherit">Today</Text>
+          <Text fontSize="inherit" marginRight={scale(3)}>
+            Today
+          </Text>
+          <Text fontSize="inherit" color="muted" marginLeft="auto" whiteSpace="nowrap">
+            {formatDate(getLaterToday())}
+          </Text>
         </MenuItem>
-        <MenuItem
-          {...menu}
-          onClick={() => {
-            const due = dayjs().add(1, 'day').endOf('day').toDate()
-            onSchedule(due)
-            menu.hide()
-          }}
-        >
+        <MenuItem {...menu} onClick={scheduleTomorrow}>
           <Icon icon={Sunrise} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
-          <Text fontSize="inherit">Tomorrow</Text>
+          <Text fontSize="inherit" marginRight={scale(3)}>
+            Tomorrow
+          </Text>
+          <Text fontSize="inherit" color="muted" marginLeft="auto" whiteSpace="nowrap">
+            {formatDate(getTomorrow())}
+          </Text>
         </MenuItem>
-        <MenuItem
-          {...menu}
-          onClick={() => {
-            const due = dayjs().endOf('week').add(1, 'day').endOf('day').toDate()
-            onSchedule(due)
-            menu.hide()
-          }}
-        >
+        <MenuItem {...menu} onClick={scheduleNextWeek}>
           <Icon icon={FastForward} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
-          <Text fontSize="inherit">Next week</Text>
+          <Text fontSize="inherit" marginRight={scale(3)}>
+            Next week
+          </Text>
+          <Text fontSize="inherit" color="muted" marginLeft="auto" whiteSpace="nowrap">
+            {formatDate(getNextWeek())}
+          </Text>
         </MenuItem>
-        <MenuItem
-          {...menu}
-          onClick={() => {
-            onSchedule(null)
-            menu.hide()
-          }}
-        >
+        <MenuItem {...menu} onClick={unschedule}>
           <Icon icon={Slash} size={scale(2)} color={colors.text.muted} marginRight={scale(1)} />
           <Text fontSize="inherit">No due date</Text>
         </MenuItem>

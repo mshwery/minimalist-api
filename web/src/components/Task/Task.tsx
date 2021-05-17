@@ -163,7 +163,7 @@ export class Task extends React.Component<Props, State> {
           color={colors.fill.secondary}
           opacity={(showActions || isDragging) && isDraggable ? 1 : 0}
           className={css`
-            margin-top: 9px;
+            margin-top: 10px;
 
             @media (max-width: 600px) {
               margin-top: 13px;
@@ -211,28 +211,26 @@ export class Task extends React.Component<Props, State> {
             }
           `}
         />
-        {showActions && (
-          <Stack
-            direction="row"
-            className={css`
-              margin-top: 5px;
+        <Stack
+          direction="row"
+          className={css`
+            margin-top: 5px;
 
-              @media (max-width: 600px) {
-                margin-top: 9px;
-              }
-            `}
-          >
-            {onSchedule && <ScheduleMenu onSchedule={onSchedule} due={due} />}
-            {showDelete && (
-              <ActionIcon
-                icon={this.state.confirmDelete ? AlertCircle : Trash2}
-                onClick={this.handleDeleteRequest}
-                color={this.state.confirmDelete ? colors.fill.danger : colors.fill.muted}
-                interactiveColor={this.state.confirmDelete ? colors.fill.danger : undefined}
-              />
-            )}
-          </Stack>
-        )}
+            @media (max-width: 600px) {
+              margin-top: 9px;
+            }
+          `}
+        >
+          {(due || showActions) && onSchedule && <ScheduleMenu onSchedule={onSchedule} due={due} />}
+          {showDelete && (
+            <ActionIcon
+              icon={this.state.confirmDelete ? AlertCircle : Trash2}
+              onClick={this.handleDeleteRequest}
+              color={this.state.confirmDelete ? colors.fill.danger : colors.fill.muted}
+              interactiveColor={this.state.confirmDelete ? colors.fill.danger : undefined}
+            />
+          )}
+        </Stack>
       </Pane>
     )
   }

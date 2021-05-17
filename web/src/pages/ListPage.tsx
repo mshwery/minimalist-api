@@ -10,7 +10,7 @@ interface Props {
 export default class ListPage extends Component<RouteComponentProps<{ listId: string }, {}> & Props> {
   render(): JSX.Element {
     const listId = this.props.match.params.listId
-    const canEditList = listId !== 'inbox'
+    const canEditList = listId !== 'inbox' && listId !== 'upcoming'
     return (
       <ListDetail
         key={listId}

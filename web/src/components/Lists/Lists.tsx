@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { PlusCircle, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
+import { PlusCircle, Calendar, Inbox as InboxIcon, Menu as ListIcon } from 'react-feather'
 import { Divider, Pane, Dialog, scale, Heading, Button, Input } from '../../base-ui'
 import { SidebarItem, SidebarList } from '../Sidebar'
 
@@ -25,6 +25,9 @@ const Lists: React.FunctionComponent<Props> = (props) => {
       <SidebarList>
         <SidebarItem icon={InboxIcon} is={RouterLink} to="/lists/inbox" isSelected={pathname === '/lists/inbox'}>
           Inbox
+        </SidebarItem>
+        <SidebarItem icon={Calendar} is={RouterLink} to="/lists/upcoming" isSelected={pathname === '/lists/upcoming'}>
+          Upcoming
         </SidebarItem>
         {props.lists.map((list) => (
           <SidebarItem
